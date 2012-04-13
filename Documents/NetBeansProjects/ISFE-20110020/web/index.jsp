@@ -81,7 +81,7 @@
                 <div class="logo"><a href="index.jsp" ><img src="images/logo1.png" alt="ISFE" height="164"/></a></div>
             </div>
 		<div class="contenido_principal">
-		<!-- Comienza Menu -->
+		<!-- Comienza Menu -->              
                 <div class="menu">
 		<ul>
                     <li><a href=""><img src="images/icons/valida_ico.png" alt=""/>¿C&oacute;mo usar ISFE?</a></li>
