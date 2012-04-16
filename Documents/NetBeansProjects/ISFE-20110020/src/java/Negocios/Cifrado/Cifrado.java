@@ -6,7 +6,11 @@ package Negocios.Cifrado;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.security.*;
+import java.security.cert.CertificateException;
+import java.security.cert.CertificateFactory;
+import java.security.cert.X509Certificate;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.PKCS8EncodedKeySpec;
 import java.util.Date;
@@ -244,5 +248,33 @@ public class Cifrado {
             System.err.println("ERROR: Número impar o ilegal de caracteres");
         }
         return d;
+    }
+    /**
+     * 
+     * @param Certificado
+     * @return
+     * @throws CertificateException
+     * @throws IOException 
+     */
+    public static X509Certificate obtenerCertificado(byte[] Certificado) throws CertificateException,IOException{
+        CertificateFactory factory = CertificateFactory.getInstance("X.509");
+        InputStream certificado=new ByteArrayInputStream(Certificado);
+        X509Certificate cer=(X509Certificate)factory.generateCertificate(certificado);
+        return cer;
+    }
+    /**
+     * 
+     * @param Certificado
+     * @return
+     * @throws CertificateException
+     * @throws IOException 
+     */
+    public static String obtenerNumeroCertificado(byte[] Certificado) throws CertificateException,IOException{
+        CertificateFactory factory = CertificateFactory.getInstance("X.509");
+        InputStream certificado=new ByteArrayInputStream(Certificado);
+        X509Certificate cer=(X509Certificate)factory.generateCertificate(certificado);
+        byte[] arregloNoCertificado=cer.getSerialNumber().toByteArray();
+        String noCertificado=new String(arregloNoCertificado);
+        return noCertificado;
     }
 }
