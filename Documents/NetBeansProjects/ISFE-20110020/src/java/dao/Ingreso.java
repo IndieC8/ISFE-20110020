@@ -72,7 +72,7 @@ public class Ingreso extends HttpServlet {
                 session.setAttribute("contribuyente", nombre);
                 
                 //pagina a donde se enviara si se encuentra el usuario autenticado
-                response.sendRedirect("contact.jsp");
+                response.sendRedirect("index-user.jsp");
                 
                 
             }

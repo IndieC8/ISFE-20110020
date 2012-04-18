@@ -644,6 +644,12 @@ body
         font: 75% "Trebuchet MS", sans-serif;
 }
 
+.TablaTitulo{
+   font-family: "Trebuchet MS", sans-serif;
+   font-size: 7px;
+    
+}
+
 .estiloLink{
        color: #2191c0;
        text-decoration: none;        
