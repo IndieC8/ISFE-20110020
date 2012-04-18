@@ -2,8 +2,7 @@ package Datos;
 
 import Negocios.Cifrado.Cifrado;
 import Negocios.GenerarFactura.CadenaOriginal;
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
+import java.io.*;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.security.NoSuchProviderException;
@@ -11,11 +10,18 @@ import java.security.PrivateKey;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.xml.transform.TransformerConfigurationException;
+import javax.xml.transform.TransformerException;
 import org.apache.commons.codec.binary.Base64;
+import org.apache.fop.apps.FOPException;
 import org.jdom.Content;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.Namespace;
+import org.jdom.output.Format;
+import org.jdom.output.XMLOutputter;
 
 /**
  * Clase que representa y genera el formato XML para la factura electrónica
@@ -326,5 +332,69 @@ public class XML extends Formato{
         public Content obtenerTimbre(){
             return timbre.getRootElement().detach();
         }
+    }
+    /**
+     * 
+     * @param xml
+     * @param nombre
+     * @return 
+     */
+    public static byte[] convertirXMLaBytes(Document xml,String nombre){
+        byte[] bytesXML=null;
+        FileInputStream fis=null;
+        FileOutputStream fos=null;
+        try{
+            XMLOutputter out=new XMLOutputter(Format.getPrettyFormat());
+            File archivo=File.createTempFile(nombre, ".xml");
+            fos=new FileOutputStream(archivo);
+            out.output(xml, fos);
+            bytesXML=new byte[(int)archivo.length()];
+            fis=new FileInputStream(archivo);
+            fis.read(bytesXML);
+        }catch(IOException ex){
+            System.err.println(ex.getMessage());
+        }finally{
+            try {
+                fis.close();
+            } catch (Exception ex) {}
+            try {
+                fos.close();
+            } catch (Exception ex) {}
+        }
+        return bytesXML;
+    }
+    /**
+     * 
+     * @param xml
+     * @param nombre
+     * @return
+     * @throws IOException
+     * @throws FileNotFoundException
+     * @throws Exception 
+     */
+    public static File generarArchivoXML(byte[] xml,String nombre)throws IOException, FileNotFoundException,Exception{
+        File archivo=File.createTempFile(nombre, ".xml");
+        FileOutputStream fos=new FileOutputStream(archivo);
+        fos.write(xml);
+        fos.close();
+        return archivo;
+    }
+    /**
+     * 
+     * @param xml
+     * @param response
+     * @param request
+     * @throws IOException
+     * @throws FileNotFoundException
+     * @throws Exception 
+     */
+    public static void visualizarXML(File xml,HttpServletResponse response,HttpServletRequest request)throws IOException, FileNotFoundException, Exception{
+        response.setContentType("application/octet-stream");
+        response.addHeader("Content-Disposition", "attachment;filename=" + xml.getName());
+        byte[] bytePDF=new byte[(int)xml.length()];
+        FileInputStream fis=new FileInputStream(xml);
+        fis.read();
+        response.getOutputStream().write(bytePDF);
+        response.getOutputStream().close();
     }
 }
