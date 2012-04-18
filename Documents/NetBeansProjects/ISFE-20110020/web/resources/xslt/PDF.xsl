@@ -248,14 +248,9 @@
 				<fo:table-body>
 					<fo:table-row>
 						<fo:table-cell>
-							<xsl:variable name="QRstr" select="concat(string('?re='),string(../cfdi:Emisor/@rfc),
-                            string('&amp;rr='),string(../cfdi:Receptor/@rfc),
-                            string('&amp;tt='),string(../@total),
-                            string('&amp;id='),string(tfd:TimbreFiscalDigital/@UUID)
-                            )" />
-							<xsl:call-template name="QRCode">
-								<xsl:with-param name="str" select="$QRstr" />
-							</xsl:call-template>
+							<fo:block>
+								<fo:external-graphic src="url('http://localhost:8084/ISFE/resources/QR.gif')" content-height="40" content-width="40"/>
+							</fo:block>
 						</fo:table-cell>
 						<fo:table-cell space-start="0.25cm">
 							<fo:block font-weight="bold">
