@@ -182,10 +182,10 @@ public class Cliente extends HttpServlet {
                     ResultSet rs = sql.consulta("SELECT * FROM cliente WHERE rfc like '" + request.getParameter("rfc") + "' ");
                     out.println("<table align= \"center\" id=\"ResultadoBusquedaCliente\">");
                     out.println("<tr>");
-                    out.println("<th class=\"TablaTitulo\" align=\"center\">&nbsp; &nbsp; &nbsp; Nombre o Razón Social &nbsp; &nbsp;</th>");
-                    out.println("<th class=\"TablaTitulo\" align=\"center\">&nbsp; &nbsp; &nbsp; R.F.C. &nbsp; &nbsp;</th>");
-                    out.println("<th class=\"TablaTitulo\" align=\"center\">&nbsp; &nbsp; &nbsp; E-mail &nbsp; &nbsp;</th>");
-                    out.println("<th class=\"TablaTitulo\" align=\"center\">&nbsp; &nbsp;</th>");
+                    out.println("<th  align=\"center\">&nbsp; &nbsp; &nbsp; Nombre o Razón Social &nbsp; &nbsp;</th>");
+                    out.println("<th  align=\"center\">&nbsp; &nbsp; &nbsp; R.F.C. &nbsp; &nbsp;</th>");
+                    out.println("<th  align=\"center\">&nbsp; &nbsp; &nbsp; E-mail &nbsp; &nbsp;</th>");
+                    out.println("<th  align=\"center\">&nbsp; &nbsp;</th>");
                     out.println("</tr>");
                     while (rs.next()) {
                         out.println("<tr>");
