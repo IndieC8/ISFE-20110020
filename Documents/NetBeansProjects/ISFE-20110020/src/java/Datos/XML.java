@@ -2,8 +2,7 @@ package Datos;
 
 import Negocios.Cifrado.Cifrado;
 import Negocios.GenerarFactura.CadenaOriginal;
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
+import java.io.*;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.security.NoSuchProviderException;
@@ -11,11 +10,15 @@ import java.security.PrivateKey;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.codec.binary.Base64;
 import org.jdom.Content;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.Namespace;
+import org.jdom.output.Format;
+import org.jdom.output.XMLOutputter;
 
 /**
  * Clase que representa y genera el formato XML para la factura electrónica
@@ -32,17 +35,17 @@ public class XML extends Formato{
      * @param f factura con todos los datos necesarios para crear el XML
      * @param cadenaOriginal generada a partir de la Factura
      * @param cadenaTimbre generada previamente
-     * @param isfe 
+     * @param isfe
      * @return el xml de la factura electrónica
      * @throws SecurityException
      * @throws UnsupportedEncodingException
      * @throws IOException
-     * @throws NoSuchProviderException 
+     * @throws NoSuchProviderException
      */
     public Document generarXML(Factura f,ISFE isfe)throws SecurityException, UnsupportedEncodingException,IOException, NoSuchProviderException{
         /**
-         * Se crea la estructura del XML correspondiente con el espacio de 
-         * nombre cfdi (CertificadoFiscalDigitalporInternet) con los datos 
+         * Se crea la estructura del XML correspondiente con el espacio de
+         * nombre cfdi (CertificadoFiscalDigitalporInternet) con los datos
          * contenidos en la factura
          */
         CFDI cfdi=new CFDI(f);
@@ -52,7 +55,7 @@ public class XML extends Formato{
          */
         String cadenaOriginal=CadenaOriginal.generarCadenaOriginal("cadOriginalCFDI_3.xslt",xml);
         /**
-         * Se obtiene la llave privada de la FIEL del usuario (emisor) que esta 
+         * Se obtiene la llave privada de la FIEL del usuario (emisor) que esta
          * cifrada con el algoritmo RSA
          */
         PrivateKey llaveFIEL=Cifrado.getLlavePrivada(f.getFiel().getArchivoFiel(), f.getFiel().getPassword());
@@ -77,7 +80,7 @@ public class XML extends Formato{
          */
         PrivateKey llaveISFE=Cifrado.getLlavePrivada(isfe.getFiel().getArchivoFiel(), isfe.getFiel().getPassword());
         /**
-         * Se crea el Sello del SAT con la llave privada del ISFE (PAC) y la 
+         * Se crea el Sello del SAT con la llave privada del ISFE (PAC) y la
          * cadena del timbre fiscal y se agrega al timbre
          */
         String selloSAT=Cifrado.firmar(llaveISFE, cadenaTimbre.getBytes("UTF-8"));
@@ -326,5 +329,69 @@ public class XML extends Formato{
         public Content obtenerTimbre(){
             return timbre.getRootElement().detach();
         }
+    }
+    /**
+     *
+     * @param xml
+     * @param nombre
+     * @return
+     */
+    public static byte[] convertirXMLaBytes(Document xml,String nombre){
+        byte[] bytesXML=null;
+        FileInputStream fis=null;
+        FileOutputStream fos=null;
+        try{
+            XMLOutputter out=new XMLOutputter(Format.getPrettyFormat());
+            File archivo=File.createTempFile(nombre, ".xml");
+            fos=new FileOutputStream(archivo);
+            out.output(xml, fos);
+            bytesXML=new byte[(int)archivo.length()];
+            fis=new FileInputStream(archivo);
+            fis.read(bytesXML);
+        }catch(IOException ex){
+            System.err.println(ex.getMessage());
+        }finally{
+            try {
+                fis.close();
+            } catch (Exception ex) {}
+            try {
+                fos.close();
+            } catch (Exception ex) {}
+        }
+        return bytesXML;
+    }
+    /**
+     *
+     * @param xml
+     * @param nombre
+     * @return
+     * @throws IOException
+     * @throws FileNotFoundException
+     * @throws Exception
+     */
+    public static File generarArchivoXML(byte[] xml,String nombre)throws IOException, FileNotFoundException,Exception{
+        File archivo=File.createTempFile(nombre, ".xml");
+        FileOutputStream fos=new FileOutputStream(archivo);
+        fos.write(xml);
+        fos.close();
+        return archivo;
+    }
+    /**
+     *
+     * @param xml
+     * @param response
+     * @param request
+     * @throws IOException
+     * @throws FileNotFoundException
+     * @throws Exception
+     */
+    public static void visualizarXML(File xml,HttpServletResponse response,HttpServletRequest request)throws IOException, FileNotFoundException, Exception{
+        response.setContentType("application/octet-stream");
+        response.addHeader("Content-Disposition", "attachment;filename=" + xml.getName());
+        byte[] bytePDF=new byte[(int)xml.length()];
+        FileInputStream fis=new FileInputStream(xml);
+        fis.read();
+        response.getOutputStream().write(bytePDF);
+        response.getOutputStream().close();
     }
 }
