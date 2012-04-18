@@ -1,4 +1,4 @@
-<%-- 
+<%--
     Document   : Generar Factura Electronica
     Created on : 23/01/2012, 03:09:10 PM
     Author     : kawatoto
@@ -18,14 +18,14 @@
         <script type="text/javascript">
             $(document).ready(function(){
                 $("#descripcionFactura").validate();
-           
-            }); 
-             
+
+            });
+
             $(function(){
                 // Tabs
                 $('#tabs').tabs();
-	
-				
+
+
             });
         </script>
 
@@ -34,12 +34,12 @@
                 $( "input:submit, a, button", ".demo" ).button();
                 $( "a", ".demo" ).click(function() { return false; });
             });
-                
+
         </script>
         <script>
-                        
+
             function addComas(nStr,elemnt){
-                nStr = Math.round(nStr*100)/100; 
+                nStr = Math.round(nStr*100)/100;
                 nStr += '';
                 x = nStr.split('.');
                 x1 = x[0];
@@ -49,13 +49,13 @@
                     x1 = x1.replace(rgx, '$1' + ',' + '$2');
                 }
                 nStr =  x1 + x2;
-                
+
                 elemnt.value = nStr;
-     
+
             }
-            
+
             function ValidarSuma(){
-                
+
                 var cantidad = $("#cantidadFactura").val();
                 var valor = $("#valorUnitario").val();
                 if(cantidad == "0"){
@@ -64,34 +64,34 @@
                     var Total = valor * cantidad;
                     addComas(Total,document.getElementById("importeTotal"));
                     addComas(valor,document.getElementById("valorUnitario"));
-                    
+
                 }
             }
-            
+
             function OnlyNumber(value,elemnt){
                 if( isNaN(value) ){
                     elemnt.value = "";
                 }
             }
-            
+
             function BorrarError(id){
                 if(id == "unidadProducto"){
                     $("#errorUnidadProducto").text("");
-                }else{ 
+                }else{
                     $("#errorCantidadFactura").text("");
                     ValidarSuma();
                 }
             }
-            
+
             function agregarFila(obj){
                 $("#cant_campos").val(parseInt($("#cant_campos").val()) + 1);
-                
+
                 var cantidad = $("#cantidadFactura").val();
                 var nombre = $("#nombreProducto").val().toUpperCase();
                 var descripcion = $("#descripcionProducto").val().toUpperCase();
                 var unidad = $("#unidadProducto").val();
                 var unitario = $("#valorUnitario").val();
-                var importe = $("#importeTotal").val(); 
+                var importe = $("#importeTotal").val();
 
                 var strHtml1 = "<td class=\"TablaTitulo\">" + cantidad + '<input type="text" id="tbDetalleCantidad_' + oId + '" name="hdnNombre_' + oId + '" value="' + nombre + '"/></td>';
                 var strHtml2 = "<td class=\"TablaTitulo\">" + nombre + '<input type="text" id="tbDetalleNombre_' + oId + '" name="hdnEdad_' + oId + '" value="' + edad + '"/></td>' ;
@@ -108,25 +108,25 @@
                 $("#tbDetalleProducto").append(strHtmlTr);
                 //si se agrega el HTML de una sola vez se debe comentar la linea siguiente.
                 $("#rowDetalle_" + oId).html(strHtmlFinal);
-                
+
                 alert("Entra");
                 return false;
             }
-            
-            
-            
+
+
+
             $.validator.setDefaults({
                 submitHandler: function(){
-                    
+
                     if( $("#unidadProducto").val() == "0"){
                         $("#errorUnidadProducto").text("Indica la unidad del producto");
                     }else{
-                        
+
                         //agregarFila(document.getElementById('cant_campos'));
-                        
+
                         $("#mensajeConfirmacion").text("Producto Agregado");
                         $("#confirmacion").show();
-                        
+
                     }
                 }
             });
@@ -158,7 +158,7 @@
                                 <li><a href="../factura/generarFacturaElectronica.jsp">Generar Factura Electr&oacute;nica</a></li>
                                 <li><a href="../factura/generarFacturaImprimible.jsp">Generar Factura Imprimible</a></li>
                             </ul>
-                        </li>                       
+                        </li>
                         <li><a id="cerrarSesion"><img src="../images/icons/ingreso_ico.png" alt=""/> Cerrar Sesión</a></li>
                     </ul>
                 </div>
@@ -166,11 +166,12 @@
                 <br><br>
                 <div class="titulo_pagina">Generar Factura Electr&oacute;nica</div>
                 <center>
-                    <!--Comienza el formulario-->	
+                    <!--Comienza el formulario-->
                     <div id="tabs">
                         <ul>
                             <li><a href="#tabs-1">Nueva Factura</a></li>
                             <li><a href="#tabs-2">Confirmar Datos de la Factura</a></li>
+                            <li><a href="#tabs-3">Validar XML</a></li>
                         </ul>
                         <div id="tabs-1">
                             <form id="descripcionFactura">
@@ -206,7 +207,7 @@
                                                 <option value="Kg">Kg</option>
                                                 <option value="Pieza">Piezas</option>
                                                 <option value="Oz">Oz</option>
-                                                <option value="Mt">Mt</option>    
+                                                <option value="Mt">Mt</option>
                                             </select>
                                             <label id="errorUnidadProducto"></label>
                                         </td>
@@ -251,6 +252,9 @@
                             <br/>
                             <div id="confirmacion" style="display: none" align="right"><input type="submit" width="50" value="Confirmar Factura" class="ui-button ui-widget ui-state-default ui-corner-all" role="button" aria-disabled="false"/> </div>
                         </div>
+                        <div id="tabs-3">
+                            <iframe src="https://www.consulta.sat.gob.mx/SICOFI_WEB/ModuloECFD_Plus/ValidadorComprobantes/Validador.asp" width="770" height="930" frameborder="0"> </iframe>
+                        </div>
                     </div>
                     <br><br>
                 </center>
@@ -258,7 +262,7 @@
             <div class="footer">
                 <br><br>
                 Derechos reservados ISFE <br>
-                HTML5 | CSS 2.0 | JavaScript | Apache Tomcat | J2EE 
+                HTML5 | CSS 2.0 | JavaScript | Apache Tomcat | J2EE
                 <br>
                 <a href="http://twitter.com/" ><img src="../images/twitter.png" alt="http://twitter.com" width="25" height="25"></a>
                 <a href="http://www.facebook.com/" ><img src="../images/Facebook.png" alt="http://www.facebook.com" width="25" height="25"></a>
