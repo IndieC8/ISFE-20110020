@@ -54,7 +54,8 @@ public class EnvioMail
         BodyPart adjunto = new MimeBodyPart();
         Object archivoAdjunto = xml;
         adjunto.setDataHandler(new DataHandler(archivoAdjunto,"xml"));
-        adjunto.setFileName("futbol.gif");
+        //adjunto.setDataHandler(new DataHandler(new FileDataSource("")));
+        adjunto.setFileName("Factura Electronica");
 
         // Una MultiParte para agrupar texto e imagen.
         MimeMultipart multiParte = new MimeMultipart();
