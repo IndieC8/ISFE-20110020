@@ -9,6 +9,12 @@ a {
 	margin: 0;
 }
 
+.Instrucciones{
+    color: #2580A2;
+    font-size: 17px;
+    font-style: inherit;
+}
+
 .texto{
     color: black; 
 }
@@ -646,7 +652,7 @@ body
 
 .TablaTitulo{
    font-family: "Trebuchet MS", sans-serif;
-   font-size: 7px;
+   font-size: 9px;
     
 }
 

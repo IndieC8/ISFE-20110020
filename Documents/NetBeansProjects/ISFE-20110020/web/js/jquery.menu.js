@@ -12,8 +12,9 @@ function Sesion(){
     
 } 
 
-function CerrarSesion(){
-    
+function LimpiarError(){
+    $("#ErrorArchivoREQ").text("");
+    $("#ErrorArchivoCER").text("");
 }
 
 

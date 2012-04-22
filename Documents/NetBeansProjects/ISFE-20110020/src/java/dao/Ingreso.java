@@ -44,6 +44,7 @@ public class Ingreso extends HttpServlet {
             rfc = aux[0]+aux[1]+aux[2];
             String pwd = request.getParameter("passwordLogin");    
             
+            //out.println("ENTRANDDOOOO");
             int idUsuario = 0;
             String nombre = "";
             
@@ -59,7 +60,7 @@ public class Ingreso extends HttpServlet {
             
             
             
-            out.println(idUsuario);
+            //out.println(idUsuario);
             if(idUsuario == 0){
                 out.println("No estas dado de alta");
             }else{

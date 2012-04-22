@@ -29,18 +29,18 @@
 	<center>
             <div class="principal">
             <div class="header">
-                <div class="logo"><a href="index.jsp" ><img src="images/logo1.png" alt="ISFE" height="164"/></a></div>
+                <div class="logo"><a href="index-user.jsp" ><img src="images/logo1.png" alt="ISFE" height="164"/></a></div>
             </div>
 		<div class="contenido_principal">
 		<!-- Comienza Menu -->
                 <div class="menu">
-		<ul>
-                        <li><a href="" ><img src="images/icons/home.png" alt="" height="20"/> Home</a></li>
+                    <ul>
+                        <li><a href="index-user.jsp" ><img src="images/icons/home.png" alt="" height="20"/> Home</a></li>
                         <li><a href="contact.jsp"><img src="images/icons/contacto_ico.png" alt=""/> Contacto</a></li>
-                        <li><a href=""><img src="images/icons/valida_ico.png" alt=""/>¿C&oacute;mo usar ISFE?</a></li>
+                        <li><a href="Usar.jsp"><img src="images/icons/valida_ico.png" alt=""/>¿C&oacute;mo usar ISFE?</a></li>
                         <li><a href="perfil.jsp" id="current"><img src="images/icons/perfil_ico.png" alt=""/> Perfil</a>
                             <ul>
-                                <li><a href="perfil/consultarPerfil.jsp">Consultar Perfil</a></li>
+                              <!--  <li><a href="perfil/consultarPerfil.jsp">Consultar Perfil</a></li> -->
                                 <li><a href="perfil/modificarPerfil.jsp">Modificar Perfil</a></li>
                                 <li><a href="perfil/administrarFIELyCSD.jsp">Administrar FIEL y CSD</a></li>
                                 <li><a href="perfil/administrarClientes.jsp">Administrar Clientes</a></li>
@@ -52,7 +52,8 @@
                                 <li><a href="factura/generarFacturaImprimible.jsp">Generar Factura Imprimible</a></li>
                             </ul>
                         </li>                       
-                        <li><a id="cerrarSesion"><img src="images/icons/ingreso_ico.png" alt=""/> Cerrar Sesión</a></li>
+                        <li><a href="cerrar.jsp" id="cerrarSesion"><img src="images/icons/ingreso_ico.png"/> Cerrar Sesión</a>
+                        </li>    
                     </ul>
                 </div>
 		<!-- Termina Menu -->

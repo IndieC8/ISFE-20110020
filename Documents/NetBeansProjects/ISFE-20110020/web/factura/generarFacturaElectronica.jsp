@@ -82,35 +82,46 @@
                     ValidarSuma();
                 }
             }
+            
+            function borrarProducto(){
+                $("#cantidadFactura").val("0");
+                $("#nombreProducto").val("");
+                $("#numIdentificacion").val("");
+                $("#descripcionProducto").val("");
+                $("#unidadProducto").val("0");
+                $("#valorUnitario").val("");
+                $("#importeTotal").val("");
+                
+                return false;
+            }
 
-            function agregarFila(obj){
-                $("#cant_campos").val(parseInt($("#cant_campos").val()) + 1);
+            function agregarFila(){
+                var oId = parseInt($("#cant_campos").val() );
+                $("#cant_campos").val( oId + 1);
 
                 var cantidad = $("#cantidadFactura").val();
                 var nombre = $("#nombreProducto").val().toUpperCase();
-                var descripcion = $("#descripcionProducto").val().toUpperCase();
                 var unidad = $("#unidadProducto").val();
                 var unitario = $("#valorUnitario").val();
                 var importe = $("#importeTotal").val();
 
-                var strHtml1 = "<td class=\"TablaTitulo\">" + cantidad + '<input type="text" id="tbDetalleCantidad_' + oId + '" name="hdnNombre_' + oId + '" value="' + nombre + '"/></td>';
-                var strHtml2 = "<td class=\"TablaTitulo\">" + nombre + '<input type="text" id="tbDetalleNombre_' + oId + '" name="hdnEdad_' + oId + '" value="' + edad + '"/></td>' ;
-                var strHtml3 = "<td class=\"TablaTitulo\">" + descripcion + '<input type="text" id="tbDetalleDescripcion_' + oId + '" name="hdnDireccion_' + oId + '" value="' + direccion + '"/></td>' ;
-                var strHtml4 = "<td class=\"TablaTitulo\">" + unidad + '<input type="text" id="tbDetalleUnidad_' + oId + '" name="hdnSexo_' + oId + '" value="' + sexo + '"/></td>' ;
-                var strHtml5 = "<td class=\"TablaTitulo\">" + unitario + '<input type="text" id="tbDetalleUnitario_' + oId + '" name="hdnEstCivil_' + oId + '" value="' + estCivil + '"/></td>' ;
-                var strHtml6 = "<td class=\"TablaTitulo\">" + importe + '<input type="text" id="tbDetalleImporte_' + oId + '" name="hdnEstCivil_' + oId + '" value="' + estCivil + '"/></td>' ;
-                var strHtml7 = '<td class=\"TablaTitulo\"><img src=\"../images/formularios/delete.png\" width=\"16\" height=\"16\" alt=\"Eliminar\" "/>';
-                strHtml7 += '<input type="text" id="hdnIdCampos_' + oId +'" name="hdnIdCampos[]" value="' + oId + '" /></td>';
+                
+                var strHtml1 = "<td class=\"TablaTitulo\">" + cantidad + "<input type=\"hidden\" id=\"tbDetalleCantidad_" + oId + "\" value=\" " + cantidad + "\"/></td>";
+                var strHtml2 = "<td class=\"TablaTitulo\">" + nombre + "<input type=\"hidden\" id=\"tbDetalleNombre_" + oId + "\" value=\" " + nombre + "\"/></td>";
+                var strHtml3 = "<td class=\"TablaTitulo\">" + unidad + "<input type=\"hidden\" id=\"tbDetalleUnidad_" + oId + "\" value=\" " + unidad + "\"/></td>";
+                var strHtml4 = "<td class=\"TablaTitulo\"> $ " + unitario + "<input type=\"hidden\" id=\"tbDetalleUnitario_" + oId + "\" value=\" " + unitario + "\"/></td>";
+                var strHtml5 = "<td class=\"TablaTitulo\"> $ " + importe + "<input type=\"hidden\" id=\"tbDetalleImporte_" + oId + "\" value=\" " + importe + "\"/></td>";
+                
+                var strHtml6 = '<td class=\"TablaTitulo\"><img src=\"../images/formularios/delete.png\" width=\"16\" height=\"16\" alt=\"Eliminar\" style=\"cursor:pointer\" "/>';
+                strHtml6 += '<input type="hidden" id="hdnIdCampos_' + oId +'" name="hdnIdCampos[]" value="' + oId + '" /></td>';
+                
                 var strHtmlTr = "<tr id='rowDetalle_" + oId + "'></tr>";
-                var strHtmlFinal = strHtml1 + strHtml2 + strHtml3 + strHtml4 + strHtml5 + strHtml6+ strHtml7;
-                //tambien se puede agregar todo el HTML de una sola vez.
-                //var strHtmlTr = "<tr id='rowDetalle_" + oId + "'>" + strHtml1 + strHtml2 + strHtml3 + strHtml4 + strHtml5 + strHtml6 +"</tr>";
+                var strHtmlFinal = strHtml1 + strHtml2 +strHtml3 + strHtml4 + strHtml5 + strHtml6;
+                
                 $("#tbDetalleProducto").append(strHtmlTr);
-                //si se agrega el HTML de una sola vez se debe comentar la linea siguiente.
-                $("#rowDetalle_" + oId).html(strHtmlFinal);
+                
+                $("#rowDetalle_" + oId).html(strHtmlFinal); 
 
-                alert("Entra");
-                return false;
             }
 
 
@@ -122,10 +133,10 @@
                         $("#errorUnidadProducto").text("Indica la unidad del producto");
                     }else{
 
-                        //agregarFila(document.getElementById('cant_campos'));
-
+                        agregarFila();
+                        borrarProducto();
                         $("#mensajeConfirmacion").text("Producto Agregado");
-                        $("#confirmacion").show();
+                        //$("#confirmacion").show();
 
                     }
                 }
@@ -136,18 +147,18 @@
     <center>
         <div class="principal">
             <div class="header">
-                <div class="logo"><a href="../index.jsp" ><img src="../images/logo1.png" alt="ISFE" height="164"/></a></div>
+                <div class="logo"><a href="../index-user.jsp" ><img src="../images/logo1.png" alt="ISFE" height="164"/></a></div>
             </div>
             <div class="contenido_principal">
                 <!-- Comienza Menu -->
                 <div class="menu">
                     <ul>
-                        <li><a href="" ><img src="../images/icons/home.png" alt="" height="20"/> Home</a></li>
+                        <li><a href="../index-user.jsp" ><img src="../images/icons/home.png" alt="" height="20"/> Home</a></li>
                         <li><a href="../contact.jsp"><img src="../images/icons/contacto_ico.png" alt=""/> Contacto</a></li>
-                        <li><a href=""><img src="../images/icons/valida_ico.png" alt=""/>¿C&oacute;mo usar ISFE?</a></li>
+                        <li><a href="../Usar.jsp"><img src="../images/icons/valida_ico.png" alt=""/>¿C&oacute;mo usar ISFE?</a></li>
                         <li><a href="../perfil.jsp" id="current"><img src="../images/icons/perfil_ico.png" alt=""/> Perfil</a>
                             <ul>
-                                <li><a href="../perfil/consultarPerfil.jsp">Consultar Perfil</a></li>
+                              <!--  <li><a href="../perfil/consultarPerfil.jsp">Consultar Perfil</a></li> -->
                                 <li><a href="../perfil/modificarPerfil.jsp">Modificar Perfil</a></li>
                                 <li><a href="../perfil/administrarFIELyCSD.jsp">Administrar FIEL y CSD</a></li>
                                 <li><a href="../perfil/administrarClientes.jsp">Administrar Clientes</a></li>
@@ -239,7 +250,6 @@
                                     <tr>
                                         <th class="TablaTitulo">Cantidad</th>
                                         <th class="TablaTitulo">Producto</th>
-                                        <th class="TablaTitulo">Descripción</th>
                                         <th class="TablaTitulo">Unidad</th>
                                         <th class="TablaTitulo">Valor Unitario</th>
                                         <th class="TablaTitulo">Importe</th>

@@ -41,7 +41,7 @@ public class ObtenerLocalidad extends HttpServlet {
             String sql= "select idLocalidad, nombreLocalidad from localidad where codigoPostal='"+request.getParameter("codigoPostal")+"';";
             ResultSet rs = s.consulta(sql);
             while(rs.next())
-            {
+            { 
               out.println("<option value=\""+rs.getInt("idLocalidad")+"\">"+rs.getString("nombreLocalidad")+"</option>");
             }
             
