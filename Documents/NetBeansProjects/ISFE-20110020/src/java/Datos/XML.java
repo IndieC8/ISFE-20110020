@@ -364,7 +364,7 @@ public class XML extends Formato{
         return bytesXML;
     }
     /**
-     *   
+     * 
      * @param xml
      * @param nombre
      * @return
@@ -380,7 +380,7 @@ public class XML extends Formato{
         return archivo;
     }
     /**
-     *    
+     * 
      * @param xml
      * @param response
      * @param request
