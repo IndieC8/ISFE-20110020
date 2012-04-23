@@ -13,7 +13,6 @@ import java.util.Date;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.codec.binary.Base64;
-import org.apache.fop.apps.FOPException;
 import org.jdom.Content;
 import org.jdom.Document;
 import org.jdom.Element;
@@ -136,6 +135,9 @@ public class XML extends Formato{
                 .replaceAll(">", "&gt;")
                 .replaceAll("'", "&apos;");
     }
+    /**
+     * Clase anidada encargada de generar el espacio de nombres del cfdi del xml
+     */
     public class CFDI{
         private Document docXML;
         private ArrayList<Concepto> conceptos;
@@ -147,6 +149,10 @@ public class XML extends Formato{
         private Namespace cfdi=Namespace.getNamespace("cfdi", "http://www.sat.gob.mx/cfd/3");
         private Namespace xsi=Namespace.getNamespace("xsi", "http://www.w3.org/2001/XMLSchema-instance");
         private String Esquema="http://www.sat.gob.mx/cfd/3 http://www.sat.gob.mx/sitio_internet/cfd/3/cfdv3.xsd";
+        /**
+         * Constructtor del CFDI
+         * @param f factura electrónica
+         */
         public CFDI(Factura f){
             docXML=new Document();
             factura=f;
@@ -155,6 +161,10 @@ public class XML extends Formato{
             conceptos=f.getConceptos();
             expedidoEn=f.getExpedidoEn();
         }
+        /**
+         * Se encarga de generar el espcacio de nombre del cfdi
+         * @return espacio de nombres cfdi con los datos.
+         */
         public Document generarCFDI(){
             Element comprobante=new Element("Comprobante",cfdi);
             comprobante.addNamespaceDeclaration(xsi);
@@ -177,6 +187,10 @@ public class XML extends Formato{
                     .addContent(generarComplemento());
             return docXML;
         }
+        /**
+         * Genera el elemento del xml con los datos del emisor (usuario) del cfdi
+         * @return elemento del emisor
+         */
         public Element generarEmisor(){
             Element Emisor=new Element("Emisor",cfdi);
             Emisor.setAttribute("rfc", emisor.getRFC());
@@ -185,6 +199,10 @@ public class XML extends Formato{
             Emisor.addContent(generarExpedidoEn());
             return Emisor;
         }
+        /**
+         * Genera el elemento del xml con los datos del receptor (cliente) del cfdi
+         * @return elemento del receptor
+         */
         public Element generarReceptor(){
             Element Receptor=new Element("Receptor",cfdi);
             Receptor.setAttribute("rfc", receptor.getRFC());
@@ -192,23 +210,47 @@ public class XML extends Formato{
             Receptor.addContent(generarDomicilioReceptor());
             return Receptor;
         }
+        /**
+         * Genera el elemento del xml con los datos de los impuestos del cfdi
+         * @return elemento con los impuestos
+         */
         public Element generarImpuestos(){
             Element Impuestos=new Element("Impuestos",cfdi);
             Impuestos.addContent(generarTraslados());
             return Impuestos;
         }
+        /**
+         * Genera el complemento del xml del cfdi
+         * @return elemento con el complemento
+         */
         public Element generarComplemento(){
             Element Complemento=new Element("Complemento",cfdi);
             return Complemento;
         }
+        /**
+         * Genera un xml con todos los datos ya previamente establecidos pero 
+         * agregando el sello de la firma digital del emisor (usuario)
+         * @param sello de la firma digital
+         * @return xml sellado
+         */
         public Document agregarSello(String sello){
             docXML.getRootElement().setAttribute("sello",sello);
             return docXML;
         }
+        /**
+         * Genera un nuevo xml con los datos del xml generado pero agregando el 
+         * timbre fiscal digital al mismo.
+         * @param timbre espacio de nombre con los datos del timbre fiscal digital
+         * @return xml con el timbre fiscal digital.
+         */
         public Document agregarTimbre(Content timbre) {
 		docXML.getRootElement().getChild("Complemento", cfdi).addContent(timbre);
 		return docXML;
 	}
+        /**
+         * Genera el elemento delxml con el domicilio fiscal del emisor dentro del cfdi
+         * @return elemento del domicilio fiscal del emisor
+         */
         public Element generarDomicilioFiscalEmisor(){
             Direccion direccion=emisor.getDireccion();
             Element domicilioFiscal=new Element("Domicilio",cfdi);
@@ -229,6 +271,10 @@ public class XML extends Formato{
             domicilioFiscal.setAttribute("codigoPostal", XML.codificarCadena(direccion.getCodigoPostal()));
             return domicilioFiscal;
         }
+        /**
+         * Genera el elemento del xml con los datos del lugar de expedición dentro del cfdi
+         * @return elemeto del lugar de expedición.
+         */
         public Element generarExpedidoEn(){
             Element ExpedidoEn=new Element("ExpedidoEn",cfdi);
             ExpedidoEn.setAttribute("calle", XML.codificarCadena(expedidoEn.getCalle()));
@@ -248,6 +294,11 @@ public class XML extends Formato{
             ExpedidoEn.setAttribute("codigoPostal", XML.codificarCadena(expedidoEn.getCodigoPostal()));
             return ExpedidoEn;
         }
+        /**
+         * Genera el elemento con los datos del domicilio de receptor dentro del
+         * espacio de nombre del cfdi
+         * @return elemento con el domicilio fiscal del receptor
+         */
         public Element generarDomicilioReceptor(){
             Direccion direccion=receptor.getDireccion();
             Element domicilio=new Element("Domicilio",cfdi);
@@ -268,6 +319,10 @@ public class XML extends Formato{
             domicilio.setAttribute("codigoPostal", XML.codificarCadena(direccion.getCodigoPostal()));
             return domicilio;
         }
+        /**
+         * Genera el elemeto con los datos de los conceptos dentro del cfdi
+         * @return elemento con los conceptos
+         */
         public Element generarConceptos(){
             Element Conceptos=new Element("Conceptos",cfdi);
             for(int i=0; i<conceptos.size();i++){
@@ -275,6 +330,11 @@ public class XML extends Formato{
             }
             return Conceptos;
         }
+        /**
+         * Genera el elemento de cada concepto del cfdi
+         * @param concepto de la factura
+         * @return elemeto con el concepto
+         */
         public Element generarConcepto(Concepto concepto){
             Element C=new Element("Concepto",cfdi)
                     .setAttribute("cantidad", concepto.getCantidad()+"");
@@ -287,6 +347,11 @@ public class XML extends Formato{
             C.setAttribute("importe", XML.codificarNumero(concepto.getImporte())+"");
             return C;
         }
+        /**
+         * Genera el elemento del xml dentro del cfdi con la información de los 
+         * traslados de la factura
+         * @return elemento con los traslados
+         */
         public Element generarTraslados(){
             Element Traslados=new Element("Traslados",cfdi);
             Element Traslado=new Element("Traslado",cfdi);
@@ -316,6 +381,14 @@ public class XML extends Formato{
             elementTFD.setAttribute("schemaLocation",Esquema,xsi).setAttribute("version",version);
             timbre.setRootElement(elementTFD);
         }
+        /**
+         * Genera el xml con los datos del xml generado anteriormente pero 
+         * agregando el sello del CFD, del SAT, el no del certificado y el UUID
+         * @param selloCFD del PAC
+         * @param noCertificadoSAT del PAC
+         * @param UUID del PAC
+         * @return xml timbrado
+         */
         public Document agregarTimbre(String selloCFD,String noCertificadoSAT,long UUID){
             timbre.getRootElement()
                     .setAttribute("selloCFD",selloCFD)
@@ -324,18 +397,27 @@ public class XML extends Formato{
                     .setAttribute("noCertificadoSAT", noCertificadoSAT);
             return timbre;
         }
+        /**
+         * Genera el elemento con el sello del PAC (autorizado por el SAT)
+         * @param selloSAT del PAC 
+         * @return elemento con el sello
+         */
         public Element agregarSello(String selloSAT){
             return timbre.getRootElement().setAttribute("selloSAT",selloSAT);
         }
+        /**
+         * Obtiene el timbre fiscal digital del xml
+         * @return timbre del xml
+         */
         public Content obtenerTimbre(){
             return timbre.getRootElement().detach();
         }
     }
     /**
-     *
-     * @param xml
-     * @param nombre
-     * @return
+     * Método encargado de convertir el xml a bytes
+     * @param xml XML de la factura electrónica
+     * @param nombre  nombre de la factura electrónica
+     * @return arreglos de bytes  de la factura electrónica
      */
     public static byte[] convertirXMLaBytes(Document xml,String nombre){
         byte[] bytesXML=null;
@@ -362,10 +444,10 @@ public class XML extends Formato{
         return bytesXML;
     }
     /**
-     *
-     * @param xml
-     * @param nombre
-     * @return
+     * Método encargado de generar el archivo xml 
+     * @param xml arreglo de bytes del xml
+     * @param nombre del archivo a generar
+     * @return archivo xml generado
      * @throws IOException
      * @throws FileNotFoundException
      * @throws Exception
@@ -378,10 +460,10 @@ public class XML extends Formato{
         return archivo;
     }
     /**
-     *
-     * @param xml
-     * @param response
-     * @param request
+     * Método encargado de visualizar el xml dentro de un JSP o Servlet
+     * @param xml archivo xml de la factura electrónica
+     * @param response salida de datos
+     * @param request entrada de datos
      * @throws IOException
      * @throws FileNotFoundException
      * @throws Exception

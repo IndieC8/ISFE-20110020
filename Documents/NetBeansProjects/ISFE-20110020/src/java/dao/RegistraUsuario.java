@@ -4,22 +4,18 @@
  */
 package dao;
 
-import Datos.Direccion;
-import Datos.Usuario;
 import Integracion.ConexionSAT.CSD;
 import Negocios.ObtenerFiel.Fiel;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.sql.SQLException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
- *
+ * Clase que hereda de un Servlet encargada de registrar a los solicitantes que
+ * quieran hacer uso del servicio de ISFE
  * @author kawatoto
  */
 public class RegistraUsuario extends HttpServlet {

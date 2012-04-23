@@ -16,7 +16,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
- *
+ * Clase que hereda de un Servlet que se encarga de obtener el municipio del contribuyente
  * @author kawatoto
  */
 public class ObtenerMunicipio extends HttpServlet {

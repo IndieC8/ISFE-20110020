@@ -5,8 +5,8 @@
 package Datos;
 
 /**
- * Clase que representa el concepto de pago que se generará y que estará
- * dentro de la factura a generar
+ * Clase que representa al concepto (articulo) de la factura electrónica de 
+ * acuerdo a la version 3 que establece el SAT
  * @author Raul Hernandez
  */
 public class Concepto {
@@ -21,6 +21,18 @@ public class Concepto {
      */
     public Concepto(){
     }
+    /**
+     * Constructor del concepto que recibe como parametros a los datos 
+     * obligatorios de acuerdo a la versión 3 de la factura eletrónica como lo 
+     * establece el SAT.
+     * @param cantidad del concepto.
+     * @param unidad especificando como se mide el concepto (kg., g., etc.)
+     * @param descripcion del concepto.
+     * @param valorUnitario un articulo del concepto.
+     * @param importe se calcula multiplicando el Valor Unitario por la cantidad 
+     * del concepto.
+     */
+    @SuppressWarnings("OverridableMethodCallInConstructor")
     public Concepto(double cantidad, String unidad, String descripcion, double valorUnitario, double importe){
         this.setCantidad(cantidad);
         this.setUnidad(unidad);
@@ -28,6 +40,18 @@ public class Concepto {
         this.setValorUnitario(valorUnitario);
         this.setImporte(importe);
     }
+    /**
+     * Constructor del concepto que recibe como parametros a los datos 
+     * obligatorios y opcionales de acuerdo a la version 3 de la factura 
+     * electrónica como lo estable el SAT
+     * @param cantidad
+     * @param unidad
+     * @param noIdentificacion
+     * @param descripcion
+     * @param valorUnitario
+     * @param importe 
+     */
+    @SuppressWarnings("OverridableMethodCallInConstructor")
     public Concepto(double cantidad, String unidad,String noIdentificacion, String descripcion, double valorUnitario, double importe){
         this.setCantidad(cantidad);
         this.setUnidad(unidad);

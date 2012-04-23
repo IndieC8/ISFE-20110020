@@ -7,8 +7,9 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
 /**
- * Clase que representa a la entidad factura que se genera en base a los datos 
- * ingresados por el Usuario
+ * Clase que representa a la factura electrónica con todos los datos necesarios 
+ * incluyendo el emsisor (Usuario), receptor (Cliente), Concepto y el lugar en 
+ * donde se emitirá la factura.
  * @author Raul Hernandez
  */
 public class Factura {
@@ -224,38 +225,72 @@ public class Factura {
     public void setFiel(Fiel fiel){
         this.fiel=fiel;
     }
+    /**
+     * Obtiene la forma de pago de la factura electrónica
+     * @return Forma de pago de la factura electrónica
+     */
     public String getFormaDePago(){
         return this.formaDePago;
     }
+    /**
+     * Ingresa la forma de pago de la factura electrónica
+     * @param formaDePago de la factura electrónica
+     */
     public void setFormaDePago(String formaDePago){
         this.formaDePago=formaDePago;
     }
+    /**
+     * Obtiene el método de pago de la factura electrónica
+     * @return método de pago de la factura electrónica
+     */
     public String getMetodoDePago(){
         return this.metodoDePago;
     }
+    /**
+     * Ingresa el método de pago de la factura electrónica
+     * @param metodoDePago de la factura electrónica
+     */
     public void setMetodoDePago(String metodoDePago){
         this.metodoDePago=metodoDePago;
     }
+    /**
+     * Obtiene el tipo de comprobante de la factura electrónica
+     * @return tipo de comprobante de la factura electrónica
+     */
     public String getTipoDeComprobante(){
         return this.tipoDeComprobante;
     }
+    /**
+     * Ingresa el tipo de comprobante de la factura electrónica
+     * @param tipoDeComprobante de la factura electrónica
+     */
     public void setTipoDeComprobante(String tipoDeComprobante){
         this.tipoDeComprobante=tipoDeComprobante;
     }
+    /**
+     * Método que genera el IVA en base al subtotal de la factura electrónica y
+     * el 16% como el IVA
+     */
     public void generarIVA(){
-        this.IVA=this.SubTotal*0.15;
+        this.IVA=this.SubTotal*0.16;
     }
+    /**
+     * Método encargado de generar el subtotal de la factura electrónica en base
+     * a la lista de los conceptos sumando los importes de los mismos.
+     */
     public void generarSubtotal(){
         Iterator i=this.conceptos.iterator();
         while(i.hasNext()){
-            double c=0;
-            double vU=0;
+            double importe=0;
             Concepto concepto=(Concepto)i.next();
-            c=concepto.getCantidad();
-            vU=concepto.getImporte();
-            this.SubTotal+=(c*vU);
+            importe=concepto.getImporte();
+            this.SubTotal+=importe;
         }
     }
+    /**
+     * Método encargado de generar el total de la factura electrónica sumando el
+     * IVA y el subtotal.
+     */
     public void generarTotal(){
         this.Total=this.SubTotal+this.IVA;
     }

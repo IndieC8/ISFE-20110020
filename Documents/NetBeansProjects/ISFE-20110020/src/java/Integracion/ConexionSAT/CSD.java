@@ -5,7 +5,8 @@
 package Integracion.ConexionSAT;
 
 /**
- *
+ * Clase que representa al CSD (Certificado de Sello Digital) de los 
+ * contribuyentes y del ISFE
  * @author Raul Hernandez
  */
 public class CSD {
@@ -53,12 +54,5 @@ public class CSD {
      */
     public void setArchivoCSD(byte[] archivoCSD){
         this.archivoCSD=archivoCSD;
-    }
-    public static void agregarCSD(CSD csd){
-    }
-    public static void cambiarCSD(CSD csd){
-    }
-    public static CSD consultarCSD(String IdUsuario){
-        return new CSD();
     }
 }

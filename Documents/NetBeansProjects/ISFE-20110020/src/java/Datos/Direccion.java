@@ -1,7 +1,9 @@
 package Datos;
 
 /**
- * Clase que representa la dirección del cliente
+ * Clase que representa la dirección del contribuyente necesario para la 
+ * generación de la factura electrónica de acuerdo a los lineamentos que 
+ * establece el SHCP y el SAT
  * @author Raul Hernandez
  */
 public class Direccion {
@@ -22,16 +24,17 @@ public class Direccion {
     /**
      * Constructor sobrecargado para ingresar todos los datos de la direccion 
      * del Contribuyente ya sea persona física o moral
-     * @param Calle
-     * @param NoInterior
-     * @param NoExterior
-     * @param Colonia
-     * @param Localidad
-     * @param Municipio
-     * @param Referencia
-     * @param Estado
-     * @param CodigoPostal 
+     * @param Calle del Contribuyente
+     * @param NoInterior del Contribuyente
+     * @param NoExterior del Contribuyente
+     * @param Colonia del Contribuyente
+     * @param Localidad del Contribuyente
+     * @param Municipio del Contribuyente
+     * @param Referencia del Contribuyente
+     * @param Estado del Contribuyente
+     * @param CodigoPostal del Contribuyente
      */
+    @SuppressWarnings("OverridableMethodCallInConstructor")
     public Direccion(String Calle, String NoInterior, String NoExterior, String Colonia, String Localidad, String Municipio,String Referencia,String Estado,String CodigoPostal){
         this.setCalle(Calle);
         this.setNoInterior(NoInterior);

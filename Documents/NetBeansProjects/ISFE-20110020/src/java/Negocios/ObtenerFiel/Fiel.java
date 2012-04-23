@@ -56,11 +56,4 @@ public class Fiel {
     public void setPassword(String Password){
         this.Password=Password;
     }
-    public static void agregarFiel(Fiel fiel){
-    }
-    public static void cambiarFiel(Fiel fiel){
-    }
-    public static Fiel consultarFiel(String IdUsuario){
-        return new Fiel();
-    }
 }

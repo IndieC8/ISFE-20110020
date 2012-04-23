@@ -14,7 +14,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
- *
+ * Clase que hereda de un Servlet que registra a los solicitantes
  * @author lupe
  */
 public class Registrar extends HttpServlet {

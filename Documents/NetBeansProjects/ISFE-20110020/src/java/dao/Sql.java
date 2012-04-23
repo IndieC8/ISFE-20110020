@@ -4,12 +4,12 @@
  */
 package dao;
 
-import Datos.Usuario;
 import java.sql.*;
 
 
 /**
- *
+ * Clase que se encarga del manejo de la base de datos de ISFE 
+ * (consultas,inserciones, eliminaciones, etc) 
  * @author kawatoto
  */
 public class Sql {
@@ -19,7 +19,11 @@ public class Sql {
     private String url = "jdbc:mysql://localhost/isfe";
     private String usuario = "isfe";
     private String password = "isfe";
-    
+    /**
+     * Método que se encarga de conectarse a la base de datos de ISFE
+     * @throws InstantiationException
+     * @throws IllegalAccessException 
+     */
     public void conectar() throws InstantiationException, IllegalAccessException {        
         try {
             Class.forName(driver).newInstance();
@@ -28,7 +32,9 @@ public class Sql {
         } catch (ClassNotFoundException ex) {
         }
     }
-    
+    /**
+     * Método de encargado de cerrar la conexión con la base de datos de ISFE
+     */
     public void cerrarConexion() {
         try {
             conn.close();
@@ -36,9 +42,13 @@ public class Sql {
         } catch (SQLException e) {
         }
     }
-
-    /*
-     * Ejecucion de SELECT
+    /**
+     * Método encargado de realizar una consulta a la base de datos de ISFE
+     * @param sql consulta a la base de datos
+     * @return resultado de la consulta realizada
+     * @throws InstantiationException
+     * @throws IllegalAccessException
+     * @throws SQLException 
      */
     public ResultSet consulta(String sql) throws InstantiationException, IllegalAccessException, SQLException {
         this.conectar();
@@ -46,9 +56,10 @@ public class Sql {
         ResultSet rs = st.executeQuery(sql);
         return rs;
     }
-
-    /*
-     * Ejecuta Insert, Delete y Update. Retorna null si todo bien, caso
+    /**
+     * Método que ejecuta Insert, Delete y Update a la base de datos de ISFE
+     * @param sql actualización a la base de datos
+     * @return mensaje de la actualización. Retorna null si todo bien, caso
      * contrario, el mensaje de error
      */
     public String ejecuta(String sql) {
@@ -68,6 +79,4 @@ public class Sql {
         }
         return mensaje;
     }
-    
-    
 }

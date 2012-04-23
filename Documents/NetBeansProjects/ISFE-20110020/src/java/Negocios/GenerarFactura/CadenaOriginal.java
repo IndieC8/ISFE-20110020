@@ -9,7 +9,7 @@ import org.jdom.transform.XSLTransformException;
 import org.jdom.transform.XSLTransformer;
 
 /**
- *
+ * Clase encargada de generar la cadena original de la factura electrónica 
  * @author Raul Hernandez
  */
 public class CadenaOriginal {

@@ -8,7 +8,9 @@ import Integracion.ConexionSAT.CSD;
 import Negocios.ObtenerFiel.Fiel;
 
 /**
- *
+ * Clase que representa al ISFE como PAC (Proveedor Autorizado de certificación)
+ * para poder sellar la factura electrónica mediante el uso de nuestra FIEL y 
+ * CSD.
  * @author Raul Hernandez
  */
 public class ISFE {

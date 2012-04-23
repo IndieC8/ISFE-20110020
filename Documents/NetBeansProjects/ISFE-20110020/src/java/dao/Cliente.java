@@ -17,7 +17,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
- *
+ * Clase que repesenta a la entidad cliente que hereda de un servlet
  * @author lupe
  */
 public class Cliente extends HttpServlet {

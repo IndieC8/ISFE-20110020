@@ -17,7 +17,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 /**
- *
+ * Clase que hereda de un Servlet que se encarga de manejar los ingreso al ISFE
  * @author lupe
  */
 public class Ingreso extends HttpServlet {

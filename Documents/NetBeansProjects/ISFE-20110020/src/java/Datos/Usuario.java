@@ -114,6 +114,28 @@ public class Usuario extends Contribuyente{
     public void setFiel(Fiel fiel){
         this.fiel=fiel;
     }
+    /**
+     * Método encargado de inicializar los datos del usuario.
+     * @param TipoPersona del usuario.
+     * @param RFC del usuario.
+     * @param Nombre del usuario.
+     * @param ApPaterno del usuario.
+     * @param ApMaterno del usuario.
+     * @param Razon del usuario.
+     * @param Correo del usuario.
+     * @param calle del usuario.
+     * @param interior del usuario.
+     * @param exterior del usuario.
+     * @param colonia del usuario.
+     * @param localidad del usuario.
+     * @param municipio del usuario.
+     * @param referencia del usuario.
+     * @param estado del usuario.
+     * @param codigoPostal del usuario.
+     * @param password del usuario.
+     * @param curp del usuario.
+     * @param telefono del usuario.
+     */
     public void inicializarDatos (boolean TipoPersona,String RFC, String Nombre, String ApPaterno, String ApMaterno,String Razon, String Correo,String calle, String interior, String exterior, String colonia, String localidad, String municipio,String referencia, String estado, String codigoPostal, String password, String curp, String telefono){
         super.inicializar(TipoPersona, RFC, Nombre, ApPaterno, ApMaterno, Razon, Correo, calle, interior, exterior, colonia, localidad, municipio, referencia, estado, codigoPostal);
         this.setCurp(curp);
