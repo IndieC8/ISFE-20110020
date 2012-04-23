@@ -16,15 +16,7 @@
             <script type="text/javascript" src="js/jquery-1.7.1.min.js"></script>
             <script type="text/javascript" src="js/jquery-ui-1.8.17.custom.min.js"></script>
             <script type="text/javascript" src="js/jquery.MultiFile.js"></script>
-            <script src="js/ui/jquery.ui.core.js"></script>
-            <script src="js/ui/jquery.ui.widget.js"></script>
-            <script src="js/ui/jquery.ui.mouse.js"></script>
-            <script src="js/ui/jquery.ui.button.js"></script>
-            <script src="js/ui/jquery.ui.draggable.js"></script>
-            <script src="js/ui/jquery.ui.position.js"></script>
-            <script src="js/ui/jquery.ui.resizable.js"></script>
-            <script src="js/ui/jquery.ui.dialog.js"></script>
-            <script src="js/ui/jquery.effects.core.js"></script>
+            <script type="text/javascript" src="js/jquery.menu.js"></script>
             <!--Este script es para la validacion de los formularios-->
             <script src="js/jquery.validate.js"></script>
             <script src="js/jquery.maskedinput.js"></script>
@@ -71,29 +63,11 @@
                 
                 
 			$(function(){
-
-				// Accordion
-				$("#accordion").accordion({ header: "h3" });
 	
 				// Tabs
 				$('#tabs').tabs();
 			
-				// Slider
-				$('#slider').slider({
-					range: true,
-					values: [17, 67]
-				});
 				
-				// Progressbar
-				$("#progressbar").progressbar({
-					value: 20 
-				});
-				
-				//hover states on the static widgets
-				$('#dialog_link, ul#icons li').hover(
-					function() { $(this).addClass('ui-state-hover'); }, 
-					function() { $(this).removeClass('ui-state-hover'); }
-				);
 				
 			});
             
@@ -247,7 +221,7 @@
             <!-- Comienza Menu --> 
             <div class="menu">
 		<ul>
-                    <li><a href=""><img src="images/icons/valida_ico.png" alt=""/>¿C&oacute;mo usar ISFE?</a></li>
+                    <li><a href="Uso.jsp"><img src="images/icons/valida_ico.png" alt=""/>¿C&oacute;mo usar ISFE?</a></li>
                     <li><a href="contacto.jsp"><img src="images/icons/contacto_ico.png" alt=""/>Contacto</a></li>
                     <li><a href="registro.jsp"><img src="images/icons/registro_ico.png" alt=""/> Registro</a></li>
                     <li><a href="index.jsp"><img src="images/icons/ingreso_ico.png" alt=""/> Ingreso</a></li>
@@ -368,7 +342,7 @@
                                 </table>
                             </form>
                         </div>
-                    <div id="tabs-2" style="display: none">
+                    <div id="tabs-2" style="display:none" >
                         <label> Selecciona los archivos de FIEL y CSD a subir </label>
                             <br><br>
                             <table width="60%" >
@@ -405,11 +379,7 @@
                                  </form>
                             </table>
                             <script type="text/javascript">
-                                function LimpiarError(){
-                                    $("#ErrorArchivoREQ").text("");
-                                    $("#ErrorArchivoCER").text("");
-                                }
-                                
+                                                                                         
                                 $(function(){
                                     $("#archivoREQ").MultiFile({
                                           accept:'req', max:1, STRING: {
