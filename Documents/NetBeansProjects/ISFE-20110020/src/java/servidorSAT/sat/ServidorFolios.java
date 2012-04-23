@@ -8,10 +8,12 @@ import servidorSAT.manejoFolios.ConexionManejoDeFolios;
 /**
  * Clase que lanza el hilo encargado del servidor simulado de la solicitud de folios del SAT
  * @author Trabajo Terminal 20110020 Implementación del Servicio de Facturación Electrónica acorde a la reforma de enero de 2011
- *
  */
 public class ServidorFolios extends Thread
 {
+    /**
+     * Método que corre el hilo encargado de la solicitud de folios
+     */
     @Override
     public void run()
     {

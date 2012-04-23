@@ -23,20 +23,20 @@ public class EnvioMail
     String mailReceptor = null;
     String asunto = null;
     String cuerpo = null;
-
-        /**
-         *
-         * @param mailReceptor parametro encargado de ser el mail del receptor
-         * en este caso del usuario de ISFE
-         * @param asunto parametro encrgado de mostrar al receptor del mail el
-         * asunto del mensaje
-         * @param cuerpo es el cuerpo del mensaje al destinatario del mail
-         * @param xml es el archivo adjunto, concretamente la factura electronica
-         * que se enviara al usuario
-         * @throws MessagingException excepcion que maneja algun problema al
-         * realizar el envio del correo
-         */
-        public EnvioMail(String mailReceptor, String asunto, String cuerpo,File xml) throws MessagingException {
+    /**
+     * Método encargado de realizar el envió del correo electrónico al Usuario 
+     * con la factura eletrónica generada en formato xml
+     * @param mailReceptor parametro encargado de ser el mail del receptor
+     * en este caso del usuario de ISFE
+     * @param asunto parametro encrgado de mostrar al receptor del mail el
+     * asunto del mensaje
+     * @param cuerpo es el cuerpo del mensaje al destinatario del mail
+     * @param xml es el archivo adjunto, concretamente la factura electronica
+     * que se enviara al usuario
+     * @throws MessagingException excepcion que maneja algun problema al
+     * realizar el envio del correo
+     */
+    public EnvioMail(String mailReceptor, String asunto, String cuerpo,File xml) throws MessagingException {
         this.mailReceptor = mailReceptor;
         this.asunto = asunto;
         this.cuerpo = cuerpo;
@@ -85,10 +85,17 @@ public class EnvioMail
             Transport.send(msg);
         } catch (Exception mex) {
         }
-
     }
-
+    /**
+     * Clase encargada de la autentificación del SMTP para el envió de correos 
+     * en ISFE
+     */
     private class autentificadorSMTP extends javax.mail.Authenticator {
+        /**
+         * Método encargado de la autentificación para el envió y recepción para
+         * el uso de SMTP para envió de correos electrónicos
+         * @return 
+         */
         @Override
         public PasswordAuthentication getPasswordAuthentication() {
             return new PasswordAuthentication(correo, contraseña);

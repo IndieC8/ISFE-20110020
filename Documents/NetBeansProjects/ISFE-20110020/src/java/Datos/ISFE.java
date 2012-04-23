@@ -23,6 +23,7 @@ public class ISFE {
      * @param csd del ISFE
      * @param UUID a usar para la factura electrónica
      */
+    @SuppressWarnings("OverridableMethodCallInConstructor")
     public ISFE(Fiel fiel,CSD csd,String UUID){
         this.setFiel(fiel);
         this.setCSD(csd);

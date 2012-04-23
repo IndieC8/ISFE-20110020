@@ -29,6 +29,7 @@ public class Usuario extends Contribuyente{
      * @param csd del usuario
      * @param fiel del usuario
      */
+    @SuppressWarnings("OverridableMethodCallInConstructor")
     public Usuario(boolean TipoPersona,String RFC, String Nombre, String ApPaterno, String ApMaterno,String Correo, Direccion direccion, String password, String curp, String telefono, CSD csd,Fiel fiel){
         this.setTipoPersona(TipoPersona);
         this.setNombre(Nombre);
@@ -50,6 +51,7 @@ public class Usuario extends Contribuyente{
      * @param csd del usuario
      * @param fiel del usuario
      */
+    @SuppressWarnings("OverridableMethodCallInConstructor")
     public Usuario(Contribuyente contribuyente, String password, CSD csd, Fiel fiel){
         this.setRFC(contribuyente.getRFC());
         this.setCorreo(contribuyente.getCorreo());

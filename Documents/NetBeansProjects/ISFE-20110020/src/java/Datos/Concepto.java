@@ -112,15 +112,31 @@ public class Concepto {
     public void setImporte(double importe){
         this.importe=importe;
     }
+    /**
+     * Obtiene la unidad en que se mide el concepto
+     * @return unidad del concepto
+     */
     public String getUnidad(){
         return this.unidad;
     }
+    /**
+     * Ingresa la unidad con la que se mide le concepto
+     * @param unidad del concepto
+     */
     public void setUnidad(String unidad){
         this.unidad=unidad;
     }
+    /**
+     * Obtiene el número de identificación del concepto
+     * @return número de identificación del concepto
+     */
     public String getNoIdentificacion(){
         return this.noIdentificacion;
     }
+    /**
+     * Ingresa el número de identificación del concepto
+     * @param noIdentificacion del concepto
+     */
     public void setNoIdentifiacion(String noIdentificacion){
         this.noIdentificacion=noIdentificacion;
     }

@@ -44,8 +44,9 @@ public class Cifrado {
      * @param LlavePrivadaCifrada obtenida de la FIEL del Usuario
      * @param Password obtenida para el descifrado de la llave
      * @return LLave Privada de la FIEL descifrada
-     * @throws IOException 
-     * @throws SecurityException 
+     * @throws IOException si hay errores de entrada y/o salida de datos
+     * @throws SecurityException si hay errores en el cifrado/descifrado de la 
+     * llave privada
      */
     private static byte[] descifrarLlavePrivada(byte[] LlavePrivadaCifrada,String Password) throws IOException,SecurityException{
         ASN1InputStream ais=new ASN1InputStream(new ByteArrayInputStream(LlavePrivadaCifrada));
@@ -90,8 +91,9 @@ public class Cifrado {
      * @param LlavePrivadaCifrada de la FIEL
      * @param Password de la llave privada
      * @return Llave privada descifrada de la FIEL
-     * @throws IOException
-     * @throws SecurityException 
+     * @throws IOException si hay errores de entrada y/o salida de datos
+     * @throws SecurityException si hay errores de cifrado/descifrado de la llave
+     * privada
      */
     public static PrivateKey getLlavePrivada(byte[] LlavePrivadaCifrada,String Password) throws IOException,SecurityException, NoSuchProviderException{
         try{
@@ -131,7 +133,7 @@ public class Cifrado {
      * @param LlavePrivada descifrada de la FIEL
      * @param datos con los que se generará la firma
      * @return firma o sello del CFDI que se genere
-     * @throws SecurityException 
+     * @throws SecurityException si hay errores de cifrado/descifrado de la firma
      */
     public static String firmar(PrivateKey LlavePrivada,byte[] datos) throws SecurityException{
         try{
@@ -250,8 +252,8 @@ public class Cifrado {
      * para el proceso de la facturación electrónica
      * @param Certificado csd del contribuyente
      * @return csd en formato estandarizado para el manejo de certificados en java
-     * @throws CertificateException
-     * @throws IOException 
+     * @throws CertificateException si hay errores con la lectura del certificado
+     * @throws IOException si hay errores de entrada y/o salida de datos
      */
     public static X509Certificate obtenerCertificado(byte[] Certificado) throws CertificateException,IOException{
         CertificateFactory factory = CertificateFactory.getInstance("X.509");
@@ -265,8 +267,8 @@ public class Cifrado {
      * @param Certificado csd del contribuyente
      * @return Número del certificado en un String para su uso en la facturación
      * electrónica
-     * @throws CertificateException
-     * @throws IOException 
+     * @throws CertificateException si hay errores con la lectura del certificado
+     * @throws IOException si hay errores de entrada y/o salida de datos 
      */
     public static String obtenerNumeroCertificado(byte[] Certificado) throws CertificateException,IOException{
         CertificateFactory factory = CertificateFactory.getInstance("X.509");
