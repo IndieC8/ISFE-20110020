@@ -10,7 +10,7 @@ import java.util.Iterator;
  * Clase que representa a la factura electrónica con todos los datos necesarios 
  * incluyendo el emsisor (Usuario), receptor (Cliente), Concepto y el lugar en 
  * donde se emitirá la factura.
- * @author Raul Hernandez
+ * @author Trabajo Terminal 20110020 Implementación del Servicio de Facturación Electrónica acorde a la reforma de enero de 2011
  */
 public class Factura {
     private Date Fecha=null;

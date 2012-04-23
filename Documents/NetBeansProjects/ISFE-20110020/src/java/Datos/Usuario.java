@@ -5,7 +5,7 @@ import Negocios.ObtenerFiel.Fiel;
 
 /**
  * Clase que representa al usuario que esta registrado o que se va ha registrar
- * @author Raul Hernandez
+ * @author Trabajo Terminal 20110020 Implementación del Servicio de Facturación Electrónica acorde a la reforma de enero de 2011
  */
 public class Usuario extends Contribuyente{
     private String password=null;

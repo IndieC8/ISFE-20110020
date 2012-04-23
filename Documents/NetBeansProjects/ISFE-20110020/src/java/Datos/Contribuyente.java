@@ -9,7 +9,7 @@ import java.util.logging.Logger;
 /**
  * Clase padre que representa los datos básicos que tienen las entidades 
  * clientes y usuarios como Contribuyentes registrados en el SAT.
- * @author Raul Hernandez
+ * @author Trabajo Terminal 20110020 Implementación del Servicio de Facturación Electrónica acorde a la reforma de enero de 2011
  */
 public class Contribuyente {
     private boolean TipoPersona;

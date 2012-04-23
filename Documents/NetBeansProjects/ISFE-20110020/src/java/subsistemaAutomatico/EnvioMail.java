@@ -1,9 +1,6 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package subsistemaAutomatico;
 
+import java.io.File;
 import java.util.Properties;
 import javax.activation.DataHandler;
 import javax.mail.*;
@@ -11,11 +8,11 @@ import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
-import org.jdom.Document;
 
 /**
- *
- * @author kawatoto
+ * Clase que se encarga del envio de las facturas en su formato XML
+ * al usuario
+ * @author Trabajo Terminal 20110020 Implementación del Servicio de Facturación Electrónica acorde a la reforma de enero de 2011
  */
 public class EnvioMail
 {
@@ -27,7 +24,19 @@ public class EnvioMail
     String asunto = null;
     String cuerpo = null;
 
-    public EnvioMail(String mailReceptor, String asunto, String cuerpo, Document xml) throws MessagingException {
+        /**
+         *
+         * @param mailReceptor parametro encargado de ser el mail del receptor
+         * en este caso del usuario de ISFE
+         * @param asunto parametro encrgado de mostrar al receptor del mail el
+         * asunto del mensaje
+         * @param cuerpo es el cuerpo del mensaje al destinatario del mail
+         * @param xml es el archivo adjunto, concretamente la factura electronica
+         * que se enviara al usuario
+         * @throws MessagingException excepcion que maneja algun problema al
+         * realizar el envio del correo
+         */
+        public EnvioMail(String mailReceptor, String asunto, String cuerpo,File xml) throws MessagingException {
         this.mailReceptor = mailReceptor;
         this.asunto = asunto;
         this.cuerpo = cuerpo;
@@ -85,13 +94,4 @@ public class EnvioMail
             return new PasswordAuthentication(correo, contraseña);
         }
     }
-
-    /**
-     * @param args
-     */
-    public static void main(String[] args) throws MessagingException {
-        // TODO Auto-generated method stub
-        EnvioMail EnviadorMail = new EnvioMail("kawatoto.j33@gmail.com","Prueba del Envio de Correo de ISFE", "Hola lupita esta es una prueba del envio de correo desde Java para el TT, es la primera prueba en la segunda tratare de enviarlo con una adjunto. Saludos :D",null);
-    }
-
 }

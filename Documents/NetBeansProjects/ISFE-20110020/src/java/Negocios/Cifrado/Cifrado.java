@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package Negocios.Cifrado;
 
 import java.io.ByteArrayInputStream;
@@ -34,8 +30,9 @@ import org.bouncycastle.crypto.params.ParametersWithIV;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 
 /**
- *
- * @author Raul Hernandez
+ * Clase que se encarga de la funcionalidad del cifrado/descifrado de la FIEL y
+ * el CSD durante el proceso de facturación electrónica de ISFE
+ * @author Trabajo Terminal 20110020 Implementación del Servicio de Facturación Electrónica acorde a la reforma de enero de 2011
  */
 public class Cifrado {
     static{
@@ -234,7 +231,6 @@ public class Cifrado {
          return decodificarHex(datos.toCharArray());
     }
     /**
-     * 
      * Método encargado de decodificar a Hexadecimal un arreglo de 
      * caracteres
      * @param datos a decodificar de Hexadecimal
@@ -250,9 +246,10 @@ public class Cifrado {
         return d;
     }
     /**
-     * 
-     * @param Certificado
-     * @return
+     * Método encargado de obtener el certificado a party de un arreglo de bytes
+     * para el proceso de la facturación electrónica
+     * @param Certificado csd del contribuyente
+     * @return csd en formato estandarizado para el manejo de certificados en java
      * @throws CertificateException
      * @throws IOException 
      */
@@ -263,9 +260,11 @@ public class Cifrado {
         return cer;
     }
     /**
-     * 
-     * @param Certificado
-     * @return
+     * Método encargado de obtener el número de certificado del CSD del 
+     * contribuyente
+     * @param Certificado csd del contribuyente
+     * @return Número del certificado en un String para su uso en la facturación
+     * electrónica
      * @throws CertificateException
      * @throws IOException 
      */

@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package dao;
 
 import java.sql.*;
@@ -10,7 +6,7 @@ import java.sql.*;
 /**
  * Clase que se encarga del manejo de la base de datos de ISFE 
  * (consultas,inserciones, eliminaciones, etc) 
- * @author kawatoto
+ * @author Trabajo Terminal 20110020 Implementación del Servicio de Facturación Electrónica acorde a la reforma de enero de 2011
  */
 public class Sql {
 
@@ -21,8 +17,8 @@ public class Sql {
     private String password = "isfe";
     /**
      * Método que se encarga de conectarse a la base de datos de ISFE
-     * @throws InstantiationException
-     * @throws IllegalAccessException 
+     * @throws InstantiationException si hay errores para crear una instancia
+     * @throws IllegalAccessException si hay errores de acceso
      */
     public void conectar() throws InstantiationException, IllegalAccessException {        
         try {
@@ -46,9 +42,9 @@ public class Sql {
      * Método encargado de realizar una consulta a la base de datos de ISFE
      * @param sql consulta a la base de datos
      * @return resultado de la consulta realizada
-     * @throws InstantiationException
-     * @throws IllegalAccessException
-     * @throws SQLException 
+     * @throws InstantiationException si hay errores de instancia
+     * @throws IllegalAccessException si hay errores de acceso
+     * @throws SQLException Si hay errores de consulta de SQL
      */
     public ResultSet consulta(String sql) throws InstantiationException, IllegalAccessException, SQLException {
         this.conectar();

@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package dao;
 
 import java.io.IOException;
@@ -17,20 +13,17 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 /**
- * Clase que hereda de un Servlet que se encarga de manejar los ingreso al ISFE
- * @author lupe
+ * Servlet que se encarga de manejar los ingreso al ISFE por parte de los usuarios y solicitantes
+ * @author Trabajo Terminal 20110020 Implementación del Servicio de Facturación Electrónica acorde a la reforma de enero de 2011
  */
 public class Ingreso extends HttpServlet {
-
     /**
-     * Processes requests for both HTTP
-     * <code>GET</code> and
-     * <code>POST</code> methods.
-     *
+     * Método encargado de dar acceso al usuario siempre y cuando este 
+     * registrado; en caso contrario redirecciona a la página de inicio
      * @param request servlet request
      * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
+     * @throws ServletException si ocurren errores del Servlet
+     * @throws IOException Si ocurren errores de entrada y/o salida de datos
      */
     Sql sql = new Sql();
     
@@ -43,41 +36,25 @@ public class Ingreso extends HttpServlet {
             String aux[] = rfc.split("-");
             rfc = aux[0]+aux[1]+aux[2];
             String pwd = request.getParameter("passwordLogin");    
-            
-            //out.println("ENTRANDDOOOO");
             int idUsuario = 0;
             String nombre = "";
-            
             ResultSet rs = sql.consulta("SELECT idUsuario,rfc FROM usuario WHERE rfc='"+rfc+"' AND contrasena = '"+pwd+"'");
-            
             while(rs.next()){
                     idUsuario = rs.getInt("idUsuario");        
                     nombre = rs.getString("rfc");
             }
-                
             String auxRFC[] =  nombre.split("");
             nombre = auxRFC[1]+auxRFC[2]+auxRFC[3]+auxRFC[4]+"-"+auxRFC[5]+auxRFC[6]+auxRFC[7]+auxRFC[8]+auxRFC[9]+auxRFC[10]+"-"+auxRFC[11]+auxRFC[12]+auxRFC[13];
-            
-            
-            
-            //out.println(idUsuario);
             if(idUsuario == 0){
                 out.println("No estas dado de alta");
-            }else{
-            
+            }else{            
                 //creamos nuestra sesion
                 HttpSession session = request.getSession(true);
-
                 //Obtenemos los obejtos a guardar en session
-                
                 session.setAttribute("contribuyente", nombre);
-                
                 //pagina a donde se enviara si se encuentra el usuario autenticado
                 response.sendRedirect("index-user.jsp");
-                
-                
             }
-
         } catch (InstantiationException ex) {
             Logger.getLogger(Ingreso.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {

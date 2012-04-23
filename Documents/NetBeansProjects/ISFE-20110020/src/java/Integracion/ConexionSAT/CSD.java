@@ -1,13 +1,9 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package Integracion.ConexionSAT;
 
 /**
  * Clase que representa al CSD (Certificado de Sello Digital) de los 
  * contribuyentes y del ISFE
- * @author Raul Hernandez
+ * @author Trabajo Terminal 20110020 Implementación del Servicio de Facturación Electrónica acorde a la reforma de enero de 2011
  */
 public class CSD {
     private String noCertificado; //No. del Certificado del CSD

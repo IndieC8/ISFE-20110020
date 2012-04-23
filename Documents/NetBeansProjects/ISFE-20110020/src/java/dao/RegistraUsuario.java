@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package dao;
 
 import Integracion.ConexionSAT.CSD;
@@ -14,12 +10,19 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
- * Clase que hereda de un Servlet encargada de registrar a los solicitantes que
- * quieran hacer uso del servicio de ISFE
- * @author kawatoto
+ * Servlet encargada de registrar a los solicitantes que quieran hacer uso del 
+ * servicio de ISFE
+ * @author Trabajo Terminal 20110020 Implementación del Servicio de Facturación Electrónica acorde a la reforma de enero de 2011
  */
 public class RegistraUsuario extends HttpServlet {
-
+    /**
+     * Método encargado de registrar al usuario dentro de ISFE validando si está
+     * o no en ISFE
+     * @param request servlet request
+     * @param response servlet response
+     * @throws ServletException si ocurren errores del Servlet
+     * @throws IOException Si ocurren errores de entrada y/o salida de datos
+     */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException{
         
@@ -56,12 +59,6 @@ public class RegistraUsuario extends HttpServlet {
         
         CSD csd=null;
         Fiel fiel=null;
-        
-       // Direccion direccion= new Direccion(calle,noInterior,noExterior,colonia,codigoPostal,municipio,estado,referencia);
-       // Usuario usuario = new Usuario(tipoPersonaValor,rfc,nombre,apPaterno,apMaterno,correo,direccion,password,curp,telefono,csd,fiel);
- 
-//        System.out.println("Codigo Postal de Clase Usuario: "+usuario.getDireccion().getCodigoPostal());
-        
         response.setContentType("text/html;charset=UTF-8");
         PrintWriter out = response.getWriter();
         
@@ -70,17 +67,6 @@ public class RegistraUsuario extends HttpServlet {
         try 
         {
             out.println("Haciendo COnsulta");
-           /*     try {
-                    sql.registrarUsuarioFisico(usuario);
-                } catch (InstantiationException ex) {
-                    Logger.getLogger(RegistraUsuario.class.getName()).log(Level.SEVERE, null, ex);
-                } catch (IllegalAccessException ex) {
-                    Logger.getLogger(RegistraUsuario.class.getName()).log(Level.SEVERE, null, ex);
-                } catch (SQLException ex) {
-                    Logger.getLogger(RegistraUsuario.class.getName()).log(Level.SEVERE, null, ex);
-                }
-
-                System.out.println("Esto aun no lo he implantado :P"); */
         } 
         finally 
         {            

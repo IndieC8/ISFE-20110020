@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package dao;
 
 import Datos.Contribuyente;
@@ -14,20 +10,18 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
- * Clase que hereda de un Servlet que registra a los solicitantes
- * @author lupe
+ * Servlet que registra a los solicitantes a la base de datos de ISFE
+ * @author Trabajo Terminal 20110020 Implementación del Servicio de Facturación Electrónica acorde a la reforma de enero de 2011
  */
 public class Registrar extends HttpServlet {
 
     /**
-     * Processes requests for both HTTP
-     * <code>GET</code> and
-     * <code>POST</code> methods.
-     *
+     * Método encargado de registrar al solicitante siempre y cuando este no 
+     * este registrado
      * @param request servlet request
      * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
+     * @throws ServletException si ocurren errores del Servlet
+     * @throws IOException Si ocurren errores de entrada y/o salida de datos
      */
       Contribuyente c;
       Usuario u;
@@ -77,8 +71,7 @@ public class Registrar extends HttpServlet {
                 out.println("<p>Municipio: "+municipio+"</p>");
                 out.println("<p>E-mail: "+mail+"</p>");
                 out.println("<p>Referencia: "+referencia+"</p>");
-                out.println("<p>Password: "+password+"</p>");
-                
+                out.println("<p>Password: "+password+"</p>");                
                 
             }else if("Fisica".equals(request.getParameter("usuario"))){
                 String nombre = request.getParameter("nombre");
@@ -100,9 +93,7 @@ public class Registrar extends HttpServlet {
                 String localidad = request.getParameter("localidad");
 
                 u = new Usuario();
-
                 u.inicializarDatos(false,rfc,nombre,paterno,materno,null,mail,calle,interior,exterior,colonia,localidad,municipio,referencia,estado,codigoPostal,password,curp,tel);
-                out.println("Objeto Creado fisica");
             }
         } finally {            
             out.close();

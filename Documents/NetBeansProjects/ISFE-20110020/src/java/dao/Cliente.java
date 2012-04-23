@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package dao;
 
 import Datos.Contribuyente;
@@ -17,23 +13,19 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
- * Clase que repesenta a la entidad cliente que hereda de un servlet
- * @author lupe
+ * Servlet que se encarga de manejar y procesar la información para crear del cliente como
+ * receptor de las facturas electrónicas
+ * @author Trabajo Terminal 20110020 Implementación del Servicio de Facturación Electrónica acorde a la reforma de enero de 2011
  */
 public class Cliente extends HttpServlet {
-
+    Sql sql;
     /**
-     * Processes requests for both HTTP
-     * <code>GET</code> and
-     * <code>POST</code> methods.
-     *
+     * Método encargado de registrar al cliente de nuestro usuario a la base de datos en caso de no existir
      * @param request servlet request
      * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
+     * @throws ServletException si ocurren errores del Servlet
+     * @throws IOException Si ocurren errores de entrada y/o salida de datos
      */
-    Sql sql;
-
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
@@ -49,10 +41,8 @@ public class Cliente extends HttpServlet {
             if ("baja".equals(request.getParameter("Cliente"))){
                  String RFC = request.getParameter("rfc");
                  String sentencia = "SELECT idCliente, tipoPersona, nombreCliente, APaternoCliente, AMaternoCliente, razonCliente FROM cliente WHERE rfc = '"+ RFC +"'";
-                
                  String []resultado = c.ValidarRFC(sentencia);
                  out.println(resultado[0]+"/"+resultado[1]);
-                
             }else if ("validar".equals(request.getParameter("Cliente"))) {
                 String RFC = request.getParameter("rfc");
                 String sentencia = "SELECT idCliente FROM cliente WHERE rfc = '"+RFC+"'";
@@ -62,7 +52,6 @@ public class Cliente extends HttpServlet {
                 if (c.ValidarRFC(sentencia,"idCliente") != 0) {
                     out.println("El RFC ya se dio de alta");
                 }
-
             } else if ("modificar".equals(request.getParameter("Cliente"))) {
                 /*
                  * Creamos el formulario de modificación del cliente

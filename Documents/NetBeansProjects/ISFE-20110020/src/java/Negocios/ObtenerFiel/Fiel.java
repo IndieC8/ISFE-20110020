@@ -1,12 +1,8 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package Negocios.ObtenerFiel;
 
 /**
  * Clase que representa a la Firma Electrónica Avanzada FIEL
- * @author Raul Hernandez
+ * @author Trabajo Terminal 20110020 Implementación del Servicio de Facturación Electrónica acorde a la reforma de enero de 2011
  */
 public class Fiel {
     private byte[] archivoFiel; //Archivo binario de la FIEL

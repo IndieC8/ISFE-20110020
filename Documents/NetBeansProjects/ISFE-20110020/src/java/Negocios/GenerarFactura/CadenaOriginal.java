@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package Negocios.GenerarFactura;
 
 import org.jdom.Document;
@@ -10,7 +6,7 @@ import org.jdom.transform.XSLTransformer;
 
 /**
  * Clase encargada de generar la cadena original de la factura electrónica 
- * @author Raul Hernandez
+ * @author Trabajo Terminal 20110020 Implementación del Servicio de Facturación Electrónica acorde a la reforma de enero de 2011
  */
 public class CadenaOriginal {
     /**

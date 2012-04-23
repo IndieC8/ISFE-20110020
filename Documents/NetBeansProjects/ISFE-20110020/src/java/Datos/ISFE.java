@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package Datos;
 
 import Integracion.ConexionSAT.CSD;
@@ -11,7 +7,7 @@ import Negocios.ObtenerFiel.Fiel;
  * Clase que representa al ISFE como PAC (Proveedor Autorizado de certificación)
  * para poder sellar la factura electrónica mediante el uso de nuestra FIEL y 
  * CSD.
- * @author Raul Hernandez
+ * @author Trabajo Terminal 20110020 Implementación del Servicio de Facturación Electrónica acorde a la reforma de enero de 2011
  */
 public class ISFE {
     private Fiel fiel=null; //Fiel del ISFE como PAC

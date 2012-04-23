@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package dao;
 
 import java.io.IOException;
@@ -16,8 +12,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
- * Clase que hereda de un Servlet encargado de obtener la localidad del contribuyente
- * @author kawatoto
+ * Servlet que se encarga de manejar la obtención de la localidad del 
+ * contribuyente en la base de datos.
+ * @author Trabajo Terminal 20110020 Implementación del Servicio de Facturación Electrónica acorde a la reforma de enero de 2011
  */
 public class ObtenerLocalidad extends HttpServlet {
 

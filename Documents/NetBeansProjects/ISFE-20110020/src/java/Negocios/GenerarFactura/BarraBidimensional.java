@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package Negocios.GenerarFactura;
 
 import com.google.zxing.BarcodeFormat;
@@ -14,7 +10,7 @@ import javax.imageio.ImageIO;
 /**
  * Clase que genera la barra dimensional cuando se genera el PDF de la factura
  * eletrónica
- * @author Raul Hernandez
+ * @author Trabajo Terminal 20110020 Implementación del Servicio de Facturación Electrónica acorde a la reforma de enero de 2011
  */
 public class BarraBidimensional {
     private static final String FORMATO_IMAGEN="gif";//Formato de la imagen

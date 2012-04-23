@@ -22,7 +22,7 @@ import org.jdom.output.XMLOutputter;
 
 /**
  * Clase que representa y genera el formato XML para la factura electrónica
- * @author Raul Hernandez
+ * @author Trabajo Terminal 20110020 Implementación del Servicio de Facturación Electrónica acorde a la reforma de enero de 2011
  */
 public class XML extends Formato{
     /**

@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package dao;
 
 import java.io.IOException;
@@ -16,20 +12,19 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
- * Clase que hereda de un Servlet encargado de obtener el estado del contribuyente
- * @author kawatoto
+ * Servlet que se encarga de manejar la obtención del estado del contribuyente 
+ * en la base de datos.
+ * @author Trabajo Terminal 20110020 Implementación del Servicio de Facturación Electrónica acorde a la reforma de enero de 2011
  */
 public class ObtenerEstado extends HttpServlet {
 
     /**
-     * Processes requests for both HTTP
-     * <code>GET</code> and
-     * <code>POST</code> methods.
-     *
+     * Método encargado de obtener el estado de la dirección física del 
+     * contribuyente a la base de datos
      * @param request servlet request
      * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
+     * @throws ServletException si ocurren errores del Servlet
+     * @throws IOException Si ocurren errores de entrada y/o salida de datos
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {

@@ -16,7 +16,7 @@ import org.apache.fop.pdf.PDFEncryptionParams;
 
 /**
  * Clase que representa y genera el Formato PDF para la factura electrónica
- * @author Raul Hernandez
+ * @author Trabajo Terminal 20110020 Implementación del Servicio de Facturación Electrónica acorde a la reforma de enero de 2011
  */
 public class PDF extends Formato{
     static {
