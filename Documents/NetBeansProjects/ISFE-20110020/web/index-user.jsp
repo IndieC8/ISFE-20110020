@@ -5,6 +5,21 @@
 --%>
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%
+    String contribuyente = "";
+    int id = 0 ;
+    HttpSession sesionOk = request.getSession();
+    if (sesionOk.getAttribute("contribuyente") == null) {
+        %>
+        <jsp:forward page="index.jsp">
+            <jsp:param name="error" value="Es obligatorio identificarse"></jsp:param>
+        </jsp:forward>
+        <%
+    } else {
+        contribuyente = (String) sesionOk.getAttribute("contribuyente");//Recoge la session
+        id = (Integer) sesionOk.getAttribute("identificador");//Recoge la session
+        out.println(id);
+ %>
 <!DOCTYPE html>
 <html>
 	<head>
@@ -108,3 +123,6 @@
     </center>
     </body>
 </html>
+<%
+    }
+%>

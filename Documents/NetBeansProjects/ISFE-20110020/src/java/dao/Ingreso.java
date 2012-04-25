@@ -13,56 +13,63 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 /**
- * Servlet que se encarga de manejar los ingreso al ISFE por parte de los usuarios y solicitantes
- * @author Trabajo Terminal 20110020 Implementación del Servicio de Facturación Electrónica acorde a la reforma de enero de 2011
+ * Servlet que se encarga de manejar los ingreso al ISFE por parte de los
+ * usuarios y solicitantes
+ *
+ * @author Trabajo Terminal 20110020 Implementación del Servicio de Facturación
+ * Electrónica acorde a la reforma de enero de 2011
  */
 public class Ingreso extends HttpServlet {
+
     /**
-     * Método encargado de dar acceso al usuario siempre y cuando este 
+     * Método encargado de dar acceso al usuario siempre y cuando este
      * registrado; en caso contrario redirecciona a la página de inicio
+     *
      * @param request servlet request
      * @param response servlet response
      * @throws ServletException si ocurren errores del Servlet
      * @throws IOException Si ocurren errores de entrada y/o salida de datos
      */
-    Sql sql = new Sql();
-    
+    int idUsuario = 0;
+
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         PrintWriter out = response.getWriter();
-        try {
-            String rfc = request.getParameter("RFCLogin").toUpperCase();
-            String aux[] = rfc.split("-");
-            rfc = aux[0]+aux[1]+aux[2];
-            String pwd = request.getParameter("passwordLogin");    
-            int idUsuario = 0;
-            String nombre = "";
-            ResultSet rs = sql.consulta("SELECT idUsuario,rfc FROM usuario WHERE rfc='"+rfc+"' AND contrasena = '"+pwd+"'");
-            while(rs.next()){
-                    idUsuario = rs.getInt("idUsuario");        
-                    nombre = rs.getString("rfc");
+
+        if ("consulta".equals(request.getParameter("Login"))) {
+            try {
+                String rfc = request.getParameter("RFCLogin");
+                String pwd = request.getParameter("passwordLogin");
+
+                Sql sql = new Sql();
+                ResultSet rs = sql.consulta("SELECT idUsuario FROM usuario WHERE rfc='" + rfc + "' AND contrasena = '" + pwd + "'");
+                while (rs.next()) {
+                    idUsuario = rs.getInt("idUsuario");
+                    out.println(rs.getInt("idUsuario"));
+                }
+
+
+            } catch (InstantiationException ex) {
+                Logger.getLogger(Ingreso.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (IllegalAccessException ex) {
+                Logger.getLogger(Ingreso.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (SQLException ex) {
+                Logger.getLogger(Ingreso.class.getName()).log(Level.SEVERE, null, ex);
+            } finally {
+                out.close();
             }
-            String auxRFC[] =  nombre.split("");
-            nombre = auxRFC[1]+auxRFC[2]+auxRFC[3]+auxRFC[4]+"-"+auxRFC[5]+auxRFC[6]+auxRFC[7]+auxRFC[8]+auxRFC[9]+auxRFC[10]+"-"+auxRFC[11]+auxRFC[12]+auxRFC[13];
-            if(idUsuario == 0){
-                out.println("No estas dado de alta");
-            }else{            
-                //creamos nuestra sesion
-                HttpSession session = request.getSession(true);
-                //Obtenemos los obejtos a guardar en session
-                session.setAttribute("contribuyente", nombre);
-                //pagina a donde se enviara si se encuentra el usuario autenticado
-                response.sendRedirect("index-user.jsp");
-            }
-        } catch (InstantiationException ex) {
-            Logger.getLogger(Ingreso.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            Logger.getLogger(Ingreso.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (SQLException ex) {
-            Logger.getLogger(Ingreso.class.getName()).log(Level.SEVERE, null, ex);
-        } finally {            
-            out.close();
+
+        } else {
+            String nombre = request.getParameter("RFCLogin").toUpperCase();
+            Integer iD = new Integer(idUsuario);
+            //creamos nuestra sesion
+            HttpSession session = request.getSession(true);
+            //Obtenemos los obejtos a guardar en session
+            session.setAttribute("contribuyente", nombre);
+            session.setAttribute("identificador", iD);
+            //pagina a donde se enviara si se encuentra el usuario autenticado
+            response.sendRedirect("index-user.jsp");
         }
     }
 

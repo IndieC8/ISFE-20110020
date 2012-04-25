@@ -9,6 +9,20 @@
          import="java.util.*"%>
 
 <!DOCTYPE html>
+<%
+    String contribuyente = "";
+    int id = 0 ;
+    HttpSession sesionOk = request.getSession();
+    if (sesionOk.getAttribute("contribuyente") == null) {
+        %>
+        <jsp:forward page="index.jsp">
+            <jsp:param name="error" value="Es obligatorio identificarse"></jsp:param>
+        </jsp:forward>
+        <%
+    } else {
+        contribuyente = (String) sesionOk.getAttribute("contribuyente");//Recoge la session
+        id = (Integer) sesionOk.getAttribute("identificador");//Recoge la session
+%>
 <html>
 	<head>
             <title>ISFE - Inicio</title>
@@ -44,7 +58,7 @@
                         <li><a href="Usar.jsp"><img src="images/icons/valida_ico.png" alt=""/>¿C&oacute;mo usar ISFE?</a></li>
                         <li><a href="perfil.jsp" id="current"><img src="images/icons/perfil_ico.png" alt=""/> Perfil</a>
                             <ul>
-                                <<!-- <li><a href="perfil/consultarPerfil.jsp">Consultar Perfil</a></li>-->
+                                <!-- <li><a href="perfil/consultarPerfil.jsp">Consultar Perfil</a></li>-->
                                 <li><a href="perfil/modificarPerfil.jsp">Modificar Perfil</a></li>
                                 <li><a href="perfil/administrarFIELyCSD.jsp">Administrar FIEL y CSD</a></li>
                                 <li><a href="perfil/administrarClientes.jsp">Administrar Clientes</a></li>
@@ -128,3 +142,6 @@
     </center>
     </body>
 </html>
+<%
+    }
+%>
