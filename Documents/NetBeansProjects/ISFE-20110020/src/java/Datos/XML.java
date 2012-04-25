@@ -35,13 +35,12 @@ public class XML extends Formato{
      * @param f factura con todos los datos necesarios para crear el XML
      * @param cadenaOriginal generada a partir de la Factura
      * @param cadenaTimbre generada previamente
-     * @param isfe pac que certificará la factura
+     * @param isfe
      * @return el xml de la factura electrónica
-     * @throws SecurityException si hay errores en el cifrado de las llaves privadas
-     * @throws UnsupportedEncodingException si hay errores de codificación
-     * @throws IOException si hay errores de entrada y/o salida de datos
-     * @throws NoSuchProviderException si hay errores con el proveedor de los 
-     * métodos de cifrado/descifrado
+     * @throws SecurityException
+     * @throws UnsupportedEncodingException
+     * @throws IOException
+     * @throws NoSuchProviderException
      */
     public Document generarXML(Factura f,ISFE isfe)throws SecurityException, UnsupportedEncodingException,IOException, NoSuchProviderException{
         /**
@@ -465,9 +464,9 @@ public class XML extends Formato{
      * @param xml archivo xml de la factura electrónica
      * @param response salida de datos
      * @param request entrada de datos
-     * @throws IOException si hay errores de entrada y/o salida de datos
-     * @throws FileNotFoundException si hay errores al encontrar un archivo
-     * @throws Exception si hay errores generales
+     * @throws IOException
+     * @throws FileNotFoundException
+     * @throws Exception
      */
     public static void visualizarXML(File xml,HttpServletResponse response,HttpServletRequest request)throws IOException, FileNotFoundException, Exception{
         response.setContentType("application/octet-stream");

@@ -17,10 +17,8 @@ public class BarraBidimensional {
     private static final String RUTA_IMAGEN="QR.gif";//Ruta
     private static final int ancho = 500; //Ancho de la imagen
     private static final int alto = 500;//Alto de la imagen
-    /**
-     * Constructor vacío
-     */
-    public BarraBidimensional(){        
+    public BarraBidimensional(){
+        
     }
     /**
      * Genera la barra dimensional (QR) de la factura cuando se genera el PDF
