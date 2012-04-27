@@ -64,7 +64,8 @@
                         <li><a href="factura.jsp"><img src="images/icons/factura_ico.png" alt=""/> Factura</a>
                             <ul>
                                 <li><a href="factura/generarFacturaElectronica.jsp">Generar Factura Electr&oacute;nica</a></li>
-                                <li><a href="factura/generarFacturaImprimible.jsp">Generar Factura Imprimible</a></li>
+                                <li><a href="factura/generarFacturaImprimible.jsp">Generar Factura para Imprimir</a></li>
+                                <li><a href="">Estado de la Factura</a></li>
                             </ul>
                         </li>                       
                         <li><a href="cerrar.jsp" id="cerrarSesion"><img src="images/icons/ingreso_ico.png"/> Cerrar Sesión</a>

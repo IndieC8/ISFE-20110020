@@ -1,7 +1,7 @@
 <%-- 
     Document   : Generar Factura Imprimible
     Created on : 23/01/2012, 03:09:10 PM
-    Author     : kawatoto
+    Author     : Trabajo Terminal 20110020 Implementación del Servicio de Facturación Electrónica acorde a la reforma de enero de 2011
 --%>
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
@@ -26,84 +26,18 @@
             <link rel="stylesheet" type="text/css" href="../estilo/style.css" />
             <script type="text/javascript" src="../js/jquery-1.7.1.min.js"></script>
             <script type="text/javascript" src="../js/jquery-ui-1.8.17.custom.min.js"></script>
-            <script src="../js/jquery.fileUploader.js" type="text/javascript"></script>
-            <script src="../js/ui/jquery.ui.core.js"></script>
-            <script src="../js/ui/jquery.ui.widget.js"></script>
-            <script src="../js/ui/jquery.ui.mouse.js"></script>
-            <script src="../js/ui/jquery.ui.button.js"></script>
-            <script src="../js/ui/jquery.ui.draggable.js"></script>
-            <script src="../js/ui/jquery.ui.position.js"></script>
-            <script src="../js/ui/jquery.ui.resizable.js"></script>
-            <script src="../js/ui/jquery.ui.dialog.js"></script>
-            <script src="../js/ui/jquery.effects.core.js"></script>
-            <script src="../js/jquery.maskedinput.js"></script> <!--Mascara para el RFC -->
+          
             
             <script type="text/javascript">
                 
-                jQuery(function(){
-                    $("#RFCLogin").mask("aaa*-999999-aaa*");
-                });
-			$(function(){
+             $(function(){
 
-				// Accordion
-				$("#accordion").accordion({ header: "h3" });
-	
 				// Tabs
 				$('#tabs').tabs();
-	
 
-				// Dialog			
-				$('#dialog').dialog({
-					autoOpen: false,
-					width: 600,
-					buttons: {
-						"Ok": function() { 
-							$(this).dialog("close"); 
-						}, 
-						"Cancel": function() { 
-							$(this).dialog("close"); 
-						} 
-					}
-				});
-				
-				// Dialog Link
-				$('#dialog_link').click(function(){
-					$('#dialog').dialog('open');
-					return false;
-				});
-
-				// Datepicker
-				$('#datepicker').datepicker({
-					inline: true
-				});
-				
-				// Slider
-				$('#slider').slider({
-					range: true,
-					values: [17, 67]
-				});
-				
-				// Progressbar
-				$("#progressbar").progressbar({
-					value: 20 
-				});
-				
-				//hover states on the static widgets
-				$('#dialog_link, ul#icons li').hover(
-					function() { $(this).addClass('ui-state-hover'); }, 
-					function() { $(this).removeClass('ui-state-hover'); }
-				);
 				
 			});
 		</script>
-            
-            <script>
-                    $(function() {
-                        $( "input:submit, a, button", ".demo" ).button();
-                        $( "a", ".demo" ).click(function() { return false; });
-                    });
-                
-	</script>
 	</head>
 	<body>
         <center>
@@ -129,7 +63,7 @@
                         <li><a href="../factura.jsp"><img src="../images/icons/factura_ico.png" alt=""/> Factura</a>
                             <ul>
                                 <li><a href="../factura/generarFacturaElectronica.jsp">Generar Factura Electr&oacute;nica</a></li>
-                                <li><a href="../factura/generarFacturaImprimible.jsp">Generar Factura Imprimible</a></li>
+                                <li><a href="../factura/generarFacturaImprimible.jsp">Generar Factura para Imprimir</a></li>
                             </ul>
                         </li>                       
                         <li><a id="cerrarSesion"><img src="../images/icons/ingreso_ico.png" alt=""/> Cerrar Sesión</a></li>
@@ -137,23 +71,32 @@
                 </div>
 		<!-- Termina Menu -->
                 <br><br>
-		<div class="titulo_pagina">Generar Factura Imprimible</div>
+		<div class="titulo_pagina">Generar Factura para Imprimir</div>
 		<center>
                 <!--Comienza el formulario-->	
 		<div id="tabs">
 			<ul>
-                            <li><a href="#tabs-1">Datos de Usuario</a></li>
-                            <li><a href="#tabs-2">FIEL y CSD</a></li>
-                            <li><a href="#tabs-3">Registrar Solicitante</a></li>
+                            <li><a href="#tabs-1">Selección de Factura</a></li>
+                            <li><a href="#tabs-2">Generación de la Factura</a></li>
 			</ul>
 			<div id="tabs-1">
-                            
+                            <form id="buscarFacturasAdministrar">
+                                <font color="red">Ingrese la fecha de Elaboración de la Factura</font><br>
+                                    <table border="0">
+                                        <tr>
+                                            <td>Fecha de Elaboración: </td>
+                                            <td>
+                                                <input type="text" readonly="readonly" id="fechaElaboracion" width="20"/>
+                                                <label id="ErrorFechaElaboracion"></label>
+                                            </td>
+                                            <td><img title="Calendario" src="../images/calendar_date.png" style="cursor: pointer" onclick="Calendario(this,fechaElaboracion)" /></td>
+                                        </tr>
+                                    </table>
+
+                            </form>
                         </div>
 			<div id="tabs-2">
                       
-                        </div>
-			<div id="tabs-3">
-                        
                         </div>
 		</div>
                 <br><br>

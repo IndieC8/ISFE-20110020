@@ -31,6 +31,17 @@
         <script type="text/javascript">
             $(document).ready(function(){
                 $("#descripcionFactura").validate();
+                
+                var id= $("#idUsuarioFactura").val();
+                
+                $.ajax({
+                    type: "POST",
+                    url: "../Factura",
+                    data: "idUsuario="+ id,
+                    success: function(data){
+                        $("#UsuariosClienteFactura").html(data);
+                    }
+                });
 
             });
 
@@ -152,8 +163,11 @@
                 var strHtml5 = "<td class=\"TablaTitulo\"> $ " + iva + "<input type=\"hidden\" id=\"tbDetalleIVA_" + oId + "\" value=\" " + iva + "\"/></td>";
                 var strHtml6 = "<td class=\"TablaTitulo\"> $ " + Total + "<input type=\"hidden\" id=\"tbDetalleTotal_" + oId + "\" value=\" " + Total + "\"/></td>";
                
-                var strHtml7 = '<td class=\"TablaTitulo\"><img src=\"../images/formularios/delete.png\" width=\"16\" height=\"16\" alt=\"Eliminar\" style=\"cursor:pointer\" "/>';
-                strHtml7 += '<input type="hidden" id="hdnIdCampos_' + oId +'" name="hdnIdCampos[]" value="' + oId + '" /></td>';
+                var strHtml7 = '<td class=\"TablaTitulo\"><img src=\"../images/formularios/delete.png\" width=\"16\" height=\"16\" alt=\"Eliminar\" style=\"cursor:pointer\" onclick=\"eliminarFila('+ oId +')\" />';
+                strHtml7 += '<input type="hidden" id="hdnIdCampos_' + oId +'" name="hdnIdCampos[]" value="' + oId + '" />';
+                strHtml7 += '<input type="hidden" id="tbDetalleDescripcion_'+ oId + '" value = "'+ descripcion + '"/>';
+                strHtml7 += '<input type="hidden" id="tbDetalleUnidad_'+ oId + '" value = "'+ unidad + '"/>';
+                strHtml7 += '<input type="hidden" id="tbDetalleDescuento_'+ oId + '" value = "'+ descuento + '"/></td>';
                 
                 var strHtmlTr = "<tr id='rowDetalle_" + oId + "'></tr>";
                 var strHtmlFinal = strHtml1 + strHtml2 +strHtml3 + strHtml4 + strHtml5 + strHtml6 + strHtml7;
@@ -163,6 +177,16 @@
                 $("#rowDetalle_" + oId).html(strHtmlFinal); 
 
             }
+            
+            /*
+             * Eliminar Productos que no deseo
+             **/
+            function eliminarFila(oId){
+                $("#rowDetalle_" + oId).remove();	
+                return false;
+            }
+
+            
 
 
 
@@ -176,7 +200,7 @@
                         agregarFila();
                         borrarProducto();
                         $("#mensajeConfirmacion").text("Producto Agregado");
-                        //$("#confirmacion").show();
+                        $("#confirmacion").show();
 
                     }
                 }
@@ -191,6 +215,7 @@
             </div>
             <div class="contenido_principal">
                 <!-- Comienza Menu -->
+                <input type="hidden" id="idUsuarioFactura" value="<% out.println(id); %>"/>
                 <div class="menu">
                     <ul>
                         <li><a href="../index-user.jsp" ><img src="../images/icons/home.png" alt="" height="20"/> Home</a></li>
@@ -207,10 +232,11 @@
                         <li><a href="../factura.jsp"><img src="../images/icons/factura_ico.png" alt=""/> Factura</a>
                             <ul>
                                 <li><a href="../factura/generarFacturaElectronica.jsp">Generar Factura Electr&oacute;nica</a></li>
-                                <li><a href="../factura/generarFacturaImprimible.jsp">Generar Factura Imprimible</a></li>
+                                <li><a href="../factura/generarFacturaImprimible.jsp">Generar Factura para Imprimir</a></li>
+                                <li><a href="">Estado de la Factura</a></li>
                             </ul>
                         </li>
-                        <li><a id="cerrarSesion"><img src="../images/icons/ingreso_ico.png" alt=""/> Cerrar Sesión</a></li>
+                        <li><a href="../cerrar.jsp" id="cerrarSesion"><img src="../images/icons/ingreso_ico.png" alt=""/> Cerrar Sesión</a></li>
                     </ul>
                 </div>
                 <!-- Termina Menu -->
@@ -293,14 +319,14 @@
                         <div id="tabs-2">
                             <br/>
                             <br/>
-                            <input type="hidden" id="num_campos" name="num_campos" value="0" />
+                            <!--<input type="text" id="num_campos" name="num_campos" value="0" /> -->
                             <input type="hidden" id="cant_campos" name="cant_campos" value="0" />
                             <table id="TablaProductosFacturas">
                                 <thead>
                                     <tr>
                                         <th class="TablaTitulo">Cantidad</th>
                                         <th class="TablaTitulo">Producto</th>
-                                        <th class="TablaTitulo">Valor Unitario</th>
+                                        <th class="TablaTitulo">Unitario</th>
                                         <th class="TablaTitulo">SubTotal</th>
                                         <th class="TablaTitulo">IVA</th>
                                         <th class="TablaTitulo">Total</th>
@@ -310,8 +336,14 @@
                                 <tbody id="tbDetalleProducto">
                                 </tbody>
                             </table>
-                            <br/>
-                            <div id="confirmacion" style="display: none" align="right"><input type="submit" width="50" value="Confirmar Factura" class="ui-button ui-widget ui-state-default ui-corner-all" role="button" aria-disabled="false"/> </div>
+                            <br/><br/>
+                            <div id="confirmacion">
+                                Cliente Asociado a la Factura: <select id="UsuariosClienteFactura"></select>
+                                <br/><br/><br/>
+                                <div align="right">
+                                <input  type="submit" width="50" value="Confirmar Factura" class="ui-button ui-widget ui-state-default ui-corner-all" role="button" aria-disabled="false"/> 
+                                </div>
+                            </div>
                         </div>
                         <div id="tabs-3">
                             <iframe src="https://www.consulta.sat.gob.mx/SICOFI_WEB/ModuloECFD_Plus/ValidadorComprobantes/Validador.asp" width="770" height="930" frameborder="0"> </iframe>

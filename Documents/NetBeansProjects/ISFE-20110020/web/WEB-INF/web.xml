@@ -40,6 +40,10 @@
         <servlet-name>Cerrar</servlet-name>
         <servlet-class>dao.Cerrar</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>Factura</servlet-name>
+        <servlet-class>dao.Factura</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>ObtenerEstado</servlet-name>
         <url-pattern>/ObtenerEstado</url-pattern>
@@ -79,6 +83,10 @@
     <servlet-mapping>
         <servlet-name>Cerrar</servlet-name>
         <url-pattern>/Cerrar</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>Factura</servlet-name>
+        <url-pattern>/Factura</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>
