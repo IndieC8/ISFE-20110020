@@ -104,7 +104,7 @@ public class ReportesMensuales
             bw.write(elementoReporte[j]+"\n");
         }
         bw.close();
-        EnvioMail mail = new EnvioMail("kawatoto.j33@gmail.com","Reporte Mensual","Archivo del Reporte Mensual del SAT", reporteMensual ,nombreArchivo);
+        EnvioMail mail = new EnvioMail("ra_silence@hotmail.com","Reporte Mensual","Archivo del Reporte Mensual del SAT", reporteMensual ,nombreArchivo);
         reporteMensual.delete();
         return true;
     }

@@ -58,7 +58,7 @@ public class EnvioMail
             MimeBodyPart texto = new MimeBodyPart();
             texto.setText(this.cuerpo);
 
-            // Se compone el adjunto con la imagen
+            // Se compone el adjunto
             MimeBodyPart adjunto = new MimeBodyPart();
             adjunto.setDataHandler(new DataHandler(new FileDataSource(archivo)));
             adjunto.setFileName(nameArchivo);
@@ -86,6 +86,7 @@ public class EnvioMail
         }
         catch (Exception e)
         {
+            e.printStackTrace();
         }
     }
     /**

@@ -11,7 +11,7 @@ public class SolicitarFolios
 {
 	private Connection conn;
 	private String driver="com.mysql.jdbc.Driver";
-	private String url="jdbc:mysql://148.204.57.222/foliosSAT";
+	private String url="jdbc:mysql://localhost/foliosSAT";
 	private String usuario="isfe";
 	private String password="isfe";
 
