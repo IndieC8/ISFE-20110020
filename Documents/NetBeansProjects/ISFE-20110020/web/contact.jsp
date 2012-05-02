@@ -11,7 +11,7 @@
 
 <%
     String contribuyente = "";
-
+    int id = 0 ;
     HttpSession sesionOk = request.getSession();
     if (sesionOk.getAttribute("contribuyente") == null) {
         %>
@@ -21,6 +21,7 @@
         <%
     } else {
         contribuyente = (String) sesionOk.getAttribute("contribuyente");//Recoge la session
+        id = (Integer) sesionOk.getAttribute("identificador");//Recoge la session
 %>
 
 <html>

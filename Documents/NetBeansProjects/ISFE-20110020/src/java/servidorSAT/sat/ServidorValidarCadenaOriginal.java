@@ -13,9 +13,6 @@ import servidorSAT.validarCadenaOriginal.ConexionCadenaOriginal;
  */
 public class ServidorValidarCadenaOriginal extends Thread
 {
-    /**
-     * Método que corre el hilo que se encarga de validar la cadena original
-     */
     @Override
     public void run()
     {

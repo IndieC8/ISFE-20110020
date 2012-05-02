@@ -5,6 +5,21 @@
 --%>
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%
+    String contribuyente = "";
+    int id = 0 ;
+    HttpSession sesionOk = request.getSession();
+    if (sesionOk.getAttribute("contribuyente") == null) {
+        %>
+        <jsp:forward page="index.jsp">
+            <jsp:param name="error" value="Es obligatorio identificarse"></jsp:param>
+        </jsp:forward>
+        <%
+    } else {
+        contribuyente = (String) sesionOk.getAttribute("contribuyente");//Recoge la session
+        id = (Integer) sesionOk.getAttribute("identificador");//Recoge la session
+        out.println(id);
+ %>
 <!DOCTYPE html>
 <html>
 	<head>
@@ -49,7 +64,8 @@
                         <li><a href="factura.jsp"><img src="images/icons/factura_ico.png" alt=""/> Factura</a>
                             <ul>
                                 <li><a href="factura/generarFacturaElectronica.jsp">Generar Factura Electr&oacute;nica</a></li>
-                                <li><a href="factura/generarFacturaImprimible.jsp">Generar Factura Imprimible</a></li>
+                                <li><a href="factura/generarFacturaImprimible.jsp">Generar Factura para Imprimir</a></li>
+                                <li><a href="">Estado de la Factura</a></li>
                             </ul>
                         </li>                       
                         <li><a href="cerrar.jsp" id="cerrarSesion"><img src="images/icons/ingreso_ico.png"/> Cerrar Sesión</a>
@@ -108,3 +124,6 @@
     </center>
     </body>
 </html>
+<%
+    }
+%>

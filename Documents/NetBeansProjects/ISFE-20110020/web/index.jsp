@@ -12,22 +12,11 @@
 <html>
 	<head>
             <title>ISFE - Inicio</title>
-            <link rel="stylesheet" type="text/css" href="estilo/style.css" />
+            <link rel="stylesheet" type="text/css" href="/ISFE-20110020/estilo/style.css" />
             <script type="text/javascript" src="js/jquery-1.7.1.min.js"></script>
             <script type="text/javascript" src="js/jquery-ui-1.8.17.custom.min.js"></script>
-            <script src="js/jquery.fileUploader.js" type="text/javascript"></script>
-            <script src="js/ui/jquery.ui.core.js"></script>
-            <script src="js/ui/jquery.ui.widget.js"></script>
-            <script src="js/ui/jquery.ui.mouse.js"></script>
-            <script src="js/ui/jquery.ui.button.js"></script>
-            <script src="js/ui/jquery.ui.draggable.js"></script>
-            <script src="js/ui/jquery.ui.position.js"></script>
-            <script src="js/ui/jquery.ui.resizable.js"></script>
-            <script src="js/ui/jquery.ui.dialog.js"></script>
-            <script src="js/ui/jquery.effects.core.js"></script>
-            <script src="js/jquery.maskedinput.js"></script>
-            <script src="js/jquery.maskedinput.js"></script>
-            <script src="js/jquery.menu.js"></script>
+            <script src="/ISFE-20110020/js/jquery.maskedinput.js"></script>
+            <script src="/ISFE-20110020/js/jquery.menu.js"></script>
             
             <script type="text/javascript">
 			$(function(){
@@ -52,6 +41,7 @@
                     
                     /*Validar login*/
                     function Sesion(){
+                        $("#errorUsuarioNoEncontrado").text("");
                         $("#errorLoginPWD").text("");
                         $("#errorLoginRFC").text("");
                         
@@ -71,23 +61,37 @@
                             $("#passwordLogin").val("");
                         }
                         
-                        return false;
+                        $.ajax({
+                            type: "POST",
+                            url: "Ingreso",
+                            data: "Login=consulta&RFCLogin="+rfc+"&passwordLogin="+pwd,
+                            success: function(data){
+                                if(data == ""){
+                                    $("#errorUsuarioNoEncontrado").text("Usuario no dado del Alta");
+                                    $("#RFCLogin").val("");
+                                    $("#RFCLogin").focus();
+                                    $("#passwordLogin").val("");
+                                }else{
+                                    document.fLogin.submit();
+                                }
+                            }
+                        });
                         
                     }
           </script>  
 	<center>
             <div class="principal">
             <div class="header">
-                <div class="logo"><a href="index.jsp" ><img src="images/logo1.png" alt="ISFE" height="164"/></a></div>
+                <div class="logo"><a href="/ISFE-20110020/index.jsp" ><img src="/ISFE-20110020/images/logo1.png" alt="ISFE" height="164"/></a></div>
             </div>
 		<div class="contenido_principal">
 		<!-- Comienza Menu -->              
                 <div class="menu">
 		<ul>
-                    <li><a href="Uso.jsp"><img src="images/icons/valida_ico.png" alt=""/>¿C&oacute;mo usar ISFE?</a></li>
-                       <li><a href="contacto.jsp"><img src="images/icons/contacto_ico.png" alt=""/>Contacto</a></li>
-                       <li><a href="registro.jsp"><img src="images/icons/registro_ico.png" alt=""/> Registro</a></li>
-                       <li><a href="index.jps"><img src="images/icons/ingreso_ico.png" alt=""/> Ingreso</a></li>
+                    <li><a href="/ISFE-20110020/Uso.jsp"><img src="/ISFE-20110020/images/icons/valida_ico.png" alt=""/>¿C&oacute;mo usar ISFE?</a></li>
+                       <li><a href="/ISFE-20110020/contacto.jsp"><img src="/ISFE-20110020/images/icons/contacto_ico.png" alt=""/>Contacto</a></li>
+                       <li><a href="/ISFE-20110020/registro.jsp"><img src="/ISFE-20110020/images/icons/registro_ico.png" alt=""/> Registro</a></li>
+                       <li><a href="/ISFE-20110020/index.jsp"><img src="/ISFE-20110020/images/icons/ingreso_ico.png" alt=""/> Ingreso</a></li>
 		</ul>
                 </div>
 		<!-- Termina Menu -->
@@ -97,9 +101,9 @@
                     <table border="0">
                         <tbody>
                             <tr class="trLogin">
-                                <td rowspan="2" class="tdLogin"><iframe src="slider.html" height="295" width="620" frameborder="0"></iframe></td>
+                                <td rowspan="2" class="tdLogin"><iframe src="/ISFE-20110020/slider.html" height="295" width="620" frameborder="0"></iframe></td>
                                 <td class="tdLogin">
-                                    <form action="Ingreso" method="post">
+                                    <form action="Ingreso" name="fLogin" method="post">
                                         <table border="0">
                                             <tbody>
                                                 <tr class="trLogin">
@@ -112,12 +116,15 @@
                                                 </tr>
                                                 <tr class="trLogin">
                                                     <td class="tdLogin">
-                                                        <input type="password" name="passwordLogin" id="passwordLogin"  class="text ui-widget-content ui-corner-all" onblur="Sesion()" />
+                                                        <input type="password" name="passwordLogin" id="passwordLogin"  class="text ui-widget-content ui-corner-all" />
                                                         <label id="errorLoginPWD"></label>
                                                     </td>
                                                 </tr>
                                                 <tr>
-                                                    <td class="tdLogin"><input type="submit"  value="Iniciar Sesi&oacute;n" class="ui-button ui-widget ui-state-default ui-corner-all"><input type="reset" value="Cancelar" class="ui-button ui-widget ui-state-default ui-corner-all"></td>
+                                                    <td class="tdLogin">
+                                                        <label id="errorUsuarioNoEncontrado"></label>
+                                                        <input type="button" onclick="Sesion()"  value="Iniciar Sesi&oacute;n" class="ui-button ui-widget ui-state-default ui-corner-all"><input type="reset" value="Cancelar" class="ui-button ui-widget ui-state-default ui-corner-all">
+                                                    </td>
                                                 </tr>
                                             </tbody>
                                         </table>                                        
@@ -127,7 +134,7 @@
                             <tr class="trLogin">
                                 <td class="tdLogin">
                                     <h2>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;¿Eres nuevo en ISFE?</h2>
-                                    <h3><a class="estiloLink" href="registro.jsp">&nbsp;&nbsp;&nbsp;&nbsp;Reg&iacute;strate haciendo click aqui</a></h3>
+                                    <h3><a class="estiloLink" href="/ISFE-20110020/registro.jsp">&nbsp;&nbsp;&nbsp;&nbsp;Reg&iacute;strate haciendo click aqui</a></h3>
                                 </td>
                             </tr>
                         </tbody>
@@ -140,8 +147,8 @@
                 Derechos reservados ISFE <br>
                 HTML5 | CSS 2.0 | JavaScript | Apache Tomcat | J2EE 
                 <br>
-                <a href="http://twitter.com/" ><img src="images/twitter.png" alt="http://twitter.com" width="25" height="25"></a>
-                <a href="http://www.facebook.com/" ><img src="images/Facebook.png" alt="http://www.facebook.com" width="25" height="25"></a>
+                <a href="http://twitter.com/" ><img src="/ISFE-20110020/images/twitter.png" alt="http://twitter.com" width="25" height="25"></a>
+                <a href="http://www.facebook.com/" ><img src="/ISFE-20110020/images/Facebook.png" alt="http://www.facebook.com" width="25" height="25"></a>
                 <br>
                 Este sitio se visualiza mejor con Google Chrome
             </div>

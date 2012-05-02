@@ -43,6 +43,7 @@
                     <li><a href="Uso.jsp"><img src="images/icons/valida_ico.png" alt=""/>¿C&oacute;mo usar ISFE?</a></li>
                        <li><a href="contacto.jsp"><img src="images/icons/contacto_ico.png" alt=""/>Contacto</a></li>
                        <li><a href="registro.jsp"><img src="images/icons/registro_ico.png" alt=""/> Registro</a></li>
+                       <li><a href="/ISFE-20110020/index.jsp"><img src="/ISFE-20110020/images/icons/ingreso_ico.png" alt=""/> Ingreso</a></li>
 		</ul>
                 </div>
 		<!-- Termina Menu -->

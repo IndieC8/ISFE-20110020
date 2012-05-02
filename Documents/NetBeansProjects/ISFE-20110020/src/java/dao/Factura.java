@@ -1,3 +1,7 @@
+/*
+ * To change this template, choose Tools | Templates
+ * and open the template in the editor.
+ */
 package dao;
 
 import java.io.IOException;
@@ -12,11 +16,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
- * Servlet que se encarga de manejar la obtención de la localidad del 
- * contribuyente en la base de datos.
- * @author Trabajo Terminal 20110020 Implementación del Servicio de Facturación Electrónica acorde a la reforma de enero de 2011
+ *
+ * @author lupe
  */
-public class ObtenerLocalidad extends HttpServlet {
+public class Factura extends HttpServlet {
 
     /**
      * Processes requests for both HTTP
@@ -30,25 +33,36 @@ public class ObtenerLocalidad extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-         try 
-        {
-            response.setContentType("text/html;charset=UTF-8");
-            PrintWriter out = response.getWriter();
+        response.setContentType("text/html;charset=UTF-8");
+        PrintWriter out = response.getWriter();
+        
+        try {
+            
             Sql s = new Sql();
-            String sql= "select idLocalidad, nombreLocalidad from localidad where codigoPostal='"+request.getParameter("codigoPostal")+"';";
-            ResultSet rs = s.consulta(sql);
-            while(rs.next())
-            { 
-              out.println("<option value=\""+rs.getInt("idLocalidad")+"\">"+rs.getString("nombreLocalidad")+"</option>");
+            String sql = "select idCliente, tipoPersona,nombreCliente,APaternoCliente,AMaternoCliente,razonCliente from cliente where idUsuario= " + request.getParameter("idUsuario") + ";";
+            ResultSet rs;
+            rs = s.consulta(sql);
+            
+            while (rs.next()) {
+                if(rs.getBoolean("tipoPersona") == false){
+                    out.println("<option value=\"" + rs.getInt("idCliente") + "\">" + rs.getString("nombreCliente") + " "+ rs.getString("APaternoCliente") + " "+ rs.getString("AMaternoCliente") + "</option>");
+                }else{
+                    out.println("<option value=\"" + rs.getInt("idCliente") + "\">" + rs.getString("razonCliente") + "</option>");
+                }
+                
             }
             
-        }       catch (InstantiationException ex) {
-                Logger.getLogger(ObtenerEstado.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (IllegalAccessException ex) {
-                Logger.getLogger(ObtenerEstado.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (SQLException ex) {
-                Logger.getLogger(ObtenerEstado.class.getName()).log(Level.SEVERE, null, ex);
-            }
+            
+        } catch (InstantiationException ex) {
+            Logger.getLogger(Factura.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IllegalAccessException ex) {
+            Logger.getLogger(Factura.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException ex) {
+            out.println(ex);
+            Logger.getLogger(Factura.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            out.close();
+        }
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">

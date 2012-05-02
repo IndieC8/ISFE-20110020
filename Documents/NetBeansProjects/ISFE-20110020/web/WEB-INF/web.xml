@@ -40,6 +40,14 @@
         <servlet-name>Cerrar</servlet-name>
         <servlet-class>dao.Cerrar</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>Factura</servlet-name>
+        <servlet-class>dao.Factura</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>Administrador</servlet-name>
+        <servlet-class>dao.Administrador</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>ObtenerEstado</servlet-name>
         <url-pattern>/ObtenerEstado</url-pattern>
@@ -80,9 +88,21 @@
         <servlet-name>Cerrar</servlet-name>
         <url-pattern>/Cerrar</url-pattern>
     </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>Factura</servlet-name>
+        <url-pattern>/Factura</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>Administrador</servlet-name>
+        <url-pattern>/Administrador</url-pattern>
+    </servlet-mapping>
     <session-config>
         <session-timeout>
             30
         </session-timeout>
     </session-config>
+    <error-page>
+        <error-code>404</error-code>
+        <location>/error/error-404.jsp</location>
+    </error-page>
 </web-app>

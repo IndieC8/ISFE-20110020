@@ -1,10 +1,23 @@
 <%--
     Document   : Generar Factura Electronica
     Created on : 23/01/2012, 03:09:10 PM
-    Author     : kawatoto
+    Author     : Trabajo Terminal 20110020 Implementación del Servicio de Facturación Electrónica acorde a la reforma de enero de 2011
 --%>
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%
+    String contribuyente = "";
+    int id = 0;
+    HttpSession sesionOk = request.getSession();
+    if (sesionOk.getAttribute("contribuyente") == null) {
+%>
+<jsp:forward page="/index.jsp">
+    <jsp:param name="error" value="Es obligatorio identificarse"></jsp:param>
+</jsp:forward>
+<%        } else {
+    contribuyente = (String) sesionOk.getAttribute("contribuyente");//Recoge la session
+    id = (Integer) sesionOk.getAttribute("identificador");//Recoge la session
+%>
 <!DOCTYPE html>
 <html>
     <head>
@@ -18,6 +31,17 @@
         <script type="text/javascript">
             $(document).ready(function(){
                 $("#descripcionFactura").validate();
+                
+                var id= $("#idUsuarioFactura").val();
+                
+                $.ajax({
+                    type: "POST",
+                    url: "../Factura",
+                    data: "idUsuario="+ id,
+                    success: function(data){
+                        $("#UsuariosClienteFactura").html(data);
+                    }
+                });
 
             });
 
@@ -57,20 +81,38 @@
             function ValidarSuma(){
 
                 var cantidad = $("#cantidadFactura").val();
-                var valor = $("#valorUnitario").val();
+                var descuento = $("#descuentoFactura").val();
+                
+                                                          
                 if(cantidad == "0"){
                     $("#errorCantidadFactura").text("Indica la cantidad del producto");
-                }if(valor != ""){
-                    var Total = valor * cantidad;
-                    addComas(Total,document.getElementById("importeTotal"));
-                    addComas(valor,document.getElementById("valorUnitario"));
-
                 }
+                
+                if(Importe != ""){
+                    var Total = Importe * cantidad;
+                    descuento = descuento / 100;
+                    descuento = Total * descuento;
+                    Total = Total - descuento;
+                    var iva =  Total * .16;
+                    var granTotal = Total + iva;
+                    addComas(Total,document.getElementById("importeTotal"));
+                    addComas(Importe,document.getElementById("valorUnitario"));
+                    addComas(iva,document.getElementById("IVATotal"));
+                    addComas(granTotal,document.getElementById("GranTotal"));
+                
+                }
+                
             }
 
+            var Importe = 0;
+            
             function OnlyNumber(value,elemnt){
                 if( isNaN(value) ){
                     elemnt.value = "";
+                }
+                
+                if(elemnt.id == "valorUnitario"){
+                    Importe = value;
                 }
             }
 
@@ -79,6 +121,7 @@
                     $("#errorUnidadProducto").text("");
                 }else{
                     $("#errorCantidadFactura").text("");
+                    $("#mensajeConfirmacion").text("");
                     ValidarSuma();
                 }
             }
@@ -86,12 +129,14 @@
             function borrarProducto(){
                 $("#cantidadFactura").val("0");
                 $("#nombreProducto").val("");
-                $("#numIdentificacion").val("");
                 $("#descripcionProducto").val("");
                 $("#unidadProducto").val("0");
                 $("#valorUnitario").val("");
                 $("#importeTotal").val("");
-                
+                $("#IVATotal").val("");
+                $("#GranTotal").val("");
+                $("#descuentoFactura").val("0");
+                Importe = 0;
                 return false;
             }
 
@@ -101,28 +146,47 @@
 
                 var cantidad = $("#cantidadFactura").val();
                 var nombre = $("#nombreProducto").val().toUpperCase();
+                var descripcion = $("#descripcionProducto").val();
                 var unidad = $("#unidadProducto").val();
                 var unitario = $("#valorUnitario").val();
+                var descuento = $("#descuentoFactura").val();
+                descuento = descuento / 100;
                 var importe = $("#importeTotal").val();
+                var iva = $("#IVATotal").val();
+                var Total = $("#GranTotal").val();
 
                 
                 var strHtml1 = "<td class=\"TablaTitulo\">" + cantidad + "<input type=\"hidden\" id=\"tbDetalleCantidad_" + oId + "\" value=\" " + cantidad + "\"/></td>";
                 var strHtml2 = "<td class=\"TablaTitulo\">" + nombre + "<input type=\"hidden\" id=\"tbDetalleNombre_" + oId + "\" value=\" " + nombre + "\"/></td>";
-                var strHtml3 = "<td class=\"TablaTitulo\">" + unidad + "<input type=\"hidden\" id=\"tbDetalleUnidad_" + oId + "\" value=\" " + unidad + "\"/></td>";
-                var strHtml4 = "<td class=\"TablaTitulo\"> $ " + unitario + "<input type=\"hidden\" id=\"tbDetalleUnitario_" + oId + "\" value=\" " + unitario + "\"/></td>";
-                var strHtml5 = "<td class=\"TablaTitulo\"> $ " + importe + "<input type=\"hidden\" id=\"tbDetalleImporte_" + oId + "\" value=\" " + importe + "\"/></td>";
-                
-                var strHtml6 = '<td class=\"TablaTitulo\"><img src=\"../images/formularios/delete.png\" width=\"16\" height=\"16\" alt=\"Eliminar\" style=\"cursor:pointer\" "/>';
-                strHtml6 += '<input type="hidden" id="hdnIdCampos_' + oId +'" name="hdnIdCampos[]" value="' + oId + '" /></td>';
+                var strHtml3 = "<td class=\"TablaTitulo\"> $ " + unitario + "<input type=\"hidden\" id=\"tbDetalleUnitario_" + oId + "\" value=\" " + unitario + "\"/></td>";
+                var strHtml4 = "<td class=\"TablaTitulo\"> $ " + importe + "<input type=\"hidden\" id=\"tbDetalleImporte_" + oId + "\" value=\" " + importe + "\"/></td>";
+                var strHtml5 = "<td class=\"TablaTitulo\"> $ " + iva + "<input type=\"hidden\" id=\"tbDetalleIVA_" + oId + "\" value=\" " + iva + "\"/></td>";
+                var strHtml6 = "<td class=\"TablaTitulo\"> $ " + Total + "<input type=\"hidden\" id=\"tbDetalleTotal_" + oId + "\" value=\" " + Total + "\"/></td>";
+               
+                var strHtml7 = '<td class=\"TablaTitulo\"><img src=\"../images/formularios/delete.png\" width=\"16\" height=\"16\" alt=\"Eliminar\" style=\"cursor:pointer\" onclick=\"eliminarFila('+ oId +')\" />';
+                strHtml7 += '<input type="hidden" id="hdnIdCampos_' + oId +'" name="hdnIdCampos[]" value="' + oId + '" />';
+                strHtml7 += '<input type="hidden" id="tbDetalleDescripcion_'+ oId + '" value = "'+ descripcion + '"/>';
+                strHtml7 += '<input type="hidden" id="tbDetalleUnidad_'+ oId + '" value = "'+ unidad + '"/>';
+                strHtml7 += '<input type="hidden" id="tbDetalleDescuento_'+ oId + '" value = "'+ descuento + '"/></td>';
                 
                 var strHtmlTr = "<tr id='rowDetalle_" + oId + "'></tr>";
-                var strHtmlFinal = strHtml1 + strHtml2 +strHtml3 + strHtml4 + strHtml5 + strHtml6;
+                var strHtmlFinal = strHtml1 + strHtml2 +strHtml3 + strHtml4 + strHtml5 + strHtml6 + strHtml7;
                 
                 $("#tbDetalleProducto").append(strHtmlTr);
                 
                 $("#rowDetalle_" + oId).html(strHtmlFinal); 
 
             }
+            
+            /*
+             * Eliminar Productos que no deseo
+             **/
+            function eliminarFila(oId){
+                $("#rowDetalle_" + oId).remove();	
+                return false;
+            }
+
+            
 
 
 
@@ -136,7 +200,7 @@
                         agregarFila();
                         borrarProducto();
                         $("#mensajeConfirmacion").text("Producto Agregado");
-                        //$("#confirmacion").show();
+                        $("#confirmacion").show();
 
                     }
                 }
@@ -151,6 +215,7 @@
             </div>
             <div class="contenido_principal">
                 <!-- Comienza Menu -->
+                <input type="hidden" id="idUsuarioFactura" value="<% out.println(id); %>"/>
                 <div class="menu">
                     <ul>
                         <li><a href="../index-user.jsp" ><img src="../images/icons/home.png" alt="" height="20"/> Home</a></li>
@@ -158,7 +223,7 @@
                         <li><a href="../Usar.jsp"><img src="../images/icons/valida_ico.png" alt=""/>¿C&oacute;mo usar ISFE?</a></li>
                         <li><a href="../perfil.jsp" id="current"><img src="../images/icons/perfil_ico.png" alt=""/> Perfil</a>
                             <ul>
-                              <!--  <li><a href="../perfil/consultarPerfil.jsp">Consultar Perfil</a></li> -->
+                                <!--  <li><a href="../perfil/consultarPerfil.jsp">Consultar Perfil</a></li> -->
                                 <li><a href="../perfil/modificarPerfil.jsp">Modificar Perfil</a></li>
                                 <li><a href="../perfil/administrarFIELyCSD.jsp">Administrar FIEL y CSD</a></li>
                                 <li><a href="../perfil/administrarClientes.jsp">Administrar Clientes</a></li>
@@ -167,10 +232,11 @@
                         <li><a href="../factura.jsp"><img src="../images/icons/factura_ico.png" alt=""/> Factura</a>
                             <ul>
                                 <li><a href="../factura/generarFacturaElectronica.jsp">Generar Factura Electr&oacute;nica</a></li>
-                                <li><a href="../factura/generarFacturaImprimible.jsp">Generar Factura Imprimible</a></li>
+                                <li><a href="../factura/generarFacturaImprimible.jsp">Generar Factura para Imprimir</a></li>
+                                <li><a href="">Estado de la Factura</a></li>
                             </ul>
                         </li>
-                        <li><a id="cerrarSesion"><img src="../images/icons/ingreso_ico.png" alt=""/> Cerrar Sesión</a></li>
+                        <li><a href="../cerrar.jsp" id="cerrarSesion"><img src="../images/icons/ingreso_ico.png" alt=""/> Cerrar Sesión</a></li>
                     </ul>
                 </div>
                 <!-- Termina Menu -->
@@ -193,19 +259,15 @@
                                             <input type="number" min="1" value="0" onchange="BorrarError(this.id);"  id="cantidadFactura" />
                                             <label id="errorCantidadFactura"></label>
                                         </td>
-                                        <td>
+                                        <td colspan="2">
                                             Nombre Producto:<br>
-                                            <input type="text" class="required" minlength="5" id="nombreProducto" style="text-transform:uppercase" maxlength="100" />
-                                        </td>
-                                        <td>
-                                            N° Identificacion del Producto<br>
-                                            <input type="text" id="numIdentificacion" style="text-transform:uppercase" maxlength="30" />
+                                            <input type="text" size="45" class="required" minlength="5" id="nombreProducto" style="text-transform:uppercase" maxlength="100" />
                                         </td>
                                     </tr>
                                     <tr>
                                         <td colspan="3">
                                             Descripcion:<br>
-                                            <textarea id="descripcionProducto" name="descripcion" class="required" minlength="7" rows="5" cols="50" style="text-transform:uppercase" maxlength="255">
+                                            <textarea id="descripcionProducto" name="descripcion" class="required" minlength="7" rows="3" cols="69" style="text-transform:uppercase" maxlength="140">
                                             </textarea>
                                         </td>
                                     </tr>
@@ -224,11 +286,25 @@
                                         </td>
                                         <td>
                                             Valor Unitario:<br>
-                                            $<input type="text" id="valorUnitario" class="required" name="valorUnitario" maxlength="20" onblur="ValidarSuma()" onkeypress="OnlyNumber(this.value,this)"/>
+                                            $<input type="text" id="valorUnitario" class="required" name="valorUnitario" maxlength="20" onblur="ValidarSuma()" onkeyup="OnlyNumber(this.value,this)"/>
                                         </td>
                                         <td>
-                                            Importe:<br>
+                                            Descuento:<br>
+                                            %<input type="text" id="descuentoFactura" value="0" name="descuento" maxlength="2" onblur="ValidarSuma()" onkeypress="OnlyNumber(this.value,this)"/>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            SubTotal:<br>
                                             $<input type="text" id="importeTotal" name="importe" class="required" maxlength="20" readonly="readonly"/>
+                                        </td>
+                                        <td>
+                                            IVA:<br>
+                                            $<input type="text" id="IVATotal" name="IVA" class="required" maxlength="20" readonly="readonly"/>
+                                        </td>
+                                        <td>
+                                            Total:<br>
+                                            $<input type="text" id="GranTotal" name="importe" class="required" maxlength="20" readonly="readonly"/>
                                         </td>
                                     </tr>
                                 </table>
@@ -243,24 +319,31 @@
                         <div id="tabs-2">
                             <br/>
                             <br/>
-                            <input type="hidden" id="num_campos" name="num_campos" value="0" />
+                            <!--<input type="text" id="num_campos" name="num_campos" value="0" /> -->
                             <input type="hidden" id="cant_campos" name="cant_campos" value="0" />
                             <table id="TablaProductosFacturas">
                                 <thead>
                                     <tr>
                                         <th class="TablaTitulo">Cantidad</th>
                                         <th class="TablaTitulo">Producto</th>
-                                        <th class="TablaTitulo">Unidad</th>
-                                        <th class="TablaTitulo">Valor Unitario</th>
-                                        <th class="TablaTitulo">Importe</th>
+                                        <th class="TablaTitulo">Unitario</th>
+                                        <th class="TablaTitulo">SubTotal</th>
+                                        <th class="TablaTitulo">IVA</th>
+                                        <th class="TablaTitulo">Total</th>
                                         <th></th>
                                     </tr>
                                 </thead>
                                 <tbody id="tbDetalleProducto">
                                 </tbody>
                             </table>
-                            <br/>
-                            <div id="confirmacion" style="display: none" align="right"><input type="submit" width="50" value="Confirmar Factura" class="ui-button ui-widget ui-state-default ui-corner-all" role="button" aria-disabled="false"/> </div>
+                            <br/><br/>
+                            <div id="confirmacion">
+                                Cliente Asociado a la Factura: <select id="UsuariosClienteFactura"></select>
+                                <br/><br/><br/>
+                                <div align="right">
+                                <input  type="submit" width="50" value="Confirmar Factura" class="ui-button ui-widget ui-state-default ui-corner-all" role="button" aria-disabled="false"/> 
+                                </div>
+                            </div>
                         </div>
                         <div id="tabs-3">
                             <iframe src="https://www.consulta.sat.gob.mx/SICOFI_WEB/ModuloECFD_Plus/ValidadorComprobantes/Validador.asp" width="770" height="930" frameborder="0"> </iframe>
@@ -283,3 +366,6 @@
     </center>
 </body>
 </html>
+<%
+    }
+%>

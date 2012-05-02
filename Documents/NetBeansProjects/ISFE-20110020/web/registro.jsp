@@ -10,101 +10,134 @@
 
 <!DOCTYPE html>
 <html>
-	<head>
-            <title> ISFE - Registro </title>
-            <link rel="stylesheet" type="text/css" href="estilo/style.css" />
-            <script type="text/javascript" src="js/jquery-1.7.1.min.js"></script>
-            <script type="text/javascript" src="js/jquery-ui-1.8.17.custom.min.js"></script>
-            <script type="text/javascript" src="js/jquery.MultiFile.js"></script>
-            <script type="text/javascript" src="js/jquery.menu.js"></script>
-            <!--Este script es para la validacion de los formularios-->
-            <script src="js/jquery.validate.js"></script>
-            <script src="js/jquery.maskedinput.js"></script>
-            
-            
-            <script type="text/javascript">
-                $(document).ready(function(){
+    <head>
+        <title> ISFE - Registro </title>
+        <link rel="stylesheet" type="text/css" href="estilo/style.css" />
+        <script type="text/javascript" src="js/jquery-1.7.1.min.js"></script>
+        <script type="text/javascript" src="js/jquery-ui-1.8.17.custom.min.js"></script>
+        <script type="text/javascript" src="js/jquery.MultiFile.js"></script>
+        <script type="text/javascript" src="js/jquery.menu.js"></script>
+        <!--Este script es para la validacion de los formularios-->
+        <script src="js/jquery.validate.js"></script>
+        <script src="js/jquery.maskedinput.js"></script>
+        <script src="js/ui/jquery.ui.dialog.js"></script>
+
+
+        <script type="text/javascript">
+            var FIEL, CSD;
+            $(document).ready(function(){
                                        
-                    $("#formulario_registro").validate({
-                        rules: {
-                            passwordUsuario:{
-                                required: true,
-                                minlength: 5
-                            },
-                            rePasswordUsuario: {
-                                required: true,
-                                minlength: 5,
-                                equalTo: "#passwordUsuario"
-                            }
-                            
+                $("#formulario_registro").validate({
+                    rules: {
+                        passwordUsuario:{
+                            required: true,
+                            minlength: 5
                         },
-                        messages:{
-                            passwordUsuario:{
-                                required: "Ingresa una contaseña de acceso",
-                                minlength: "Ingresa más de 5 caracteres"
-                            },
-                            rePasswordUsuario: {
-                                required: "Confirma tu contraseña de acceso",
-                                minlength: "Ingresa más de 5 caracteres",
-                                equalTo: "Las contraseñas deben ser iguales"
-                            }
-                            
+                        rePasswordUsuario: {
+                            required: true,
+                            minlength: 5,
+                            equalTo: "#passwordUsuario"
                         }
-                    });
+                            
+                    },
+                    messages:{
+                        passwordUsuario:{
+                            required: "Ingresa una contaseña de acceso",
+                            minlength: "Ingresa más de 5 caracteres"
+                        },
+                        rePasswordUsuario: {
+                            required: "Confirma tu contraseña de acceso",
+                            minlength: "Ingresa más de 5 caracteres",
+                            equalTo: "Las contraseñas deben ser iguales"
+                        }
+                            
+                    }
                 });
+            });
+                
+            $(function() {
+                // a workaround for a flaw in the demo system (http://dev.jqueryui.com/ticket/4375), ignore!
+                $( "#dialog:ui-dialog" ).dialog( "destroy" );
+		
+                
+		$("#dialogPrivadaUsuario").dialog({
+                    autoOpen: false,
+                    height: 280,
+                    width: 350,
+                    modal: true,
+                    buttons: {
+                        "Aceptar": function() {
+                            alert("ACEPTANDO");
+                            $( this ).dialog("close");
+                                        
+                        },
+                        Cancel: function() {
+                            $( this ).dialog( "close" );
+                        }
+                    },
+                    close: function() {
+                        allFields.val( "" ).removeClass( "ui-state-error" );
+                    }
+                });
+                    
+            });
                 
                 
-                jQuery(function(){
-                    $("#UsuarioRFC").mask("aaa*-999999-aaa*");
-                    $("#RFCLogin").mask("aaa*-999999-aaa*");
-                    $("#CURPUsuario").mask("aaa*999999aaaaa*99");
-                });
+            jQuery(function(){
+                $("#UsuarioRFC").mask("aaa*-999999-aaa*");
+                $("#RFCLogin").mask("aaa*-999999-aaa*");
+                $("#CURPUsuario").mask("aaa*999999aaaaa*99");
+            });
                     
                 
                 
-			$(function(){
+            $(function(){
 	
-				// Tabs
-				$('#tabs').tabs();
+                // Tabs
+                $('#tabs').tabs();
 			
 				
 				
-			});
+            });
             
 	
             /*Permite ingresar solo números*/
             function OnlyNumber(value,elemnt){
-                        if( isNaN(value) ){
-                            elemnt.value = "";
-                        }
+                if( isNaN(value) ){
+                    elemnt.value = "";
+                }
             }
             
             var contribuyente;
             /*Evalua la opción si es Persona Fisica o moral*/
             function Contribuyente(value){
-             contribuyten = "";
-             $("#RazonUser").hide();
-             $("#NombreUser").hide();
-             $("#PaternoUser").hide();
-             $("#MaternoUser").hide();
-             $("#CURPUser").hide();
-             $("#NombreUsuario").val("");
-             $("#APaternoUsuario").val("");
-             $("#AMaternoUsuario").val("");
-             $("#CURPUsuario").val("");
-             $("#RazonUsuario").val("");
+                contribuyten = "";
+                $("#RazonUser").hide();
+                $("#NombreUser").hide();
+                $("#PaternoUser").hide();
+                $("#MaternoUser").hide();
+                $("#CURPUser").hide();
+                $("#NombreUsuario").val("");
+                $("#APaternoUsuario").val("");
+                $("#AMaternoUsuario").val("");
+                $("#CURPUsuario").val("");
+                $("#RazonUsuario").val("");
                  
-             if(value == "Moral"){
-                 $("#RazonUser").show();
-                 contribuyente = "Moral";
-             }else{
-                 $("#NombreUser").show();
-                 $("#PaternoUser").show();
-                 $("#MaternoUser").show();
-                 $("#CURPUser").show();
-                 contribuyente = "Fisica";
-             }
-         }
+                if(value == "Moral"){
+                    $("#RazonUser").show();
+                    contribuyente = "Moral";
+                }else{
+                    $("#NombreUser").show();
+                    $("#PaternoUser").show();
+                    $("#MaternoUser").show();
+                    $("#CURPUser").show();
+                    contribuyente = "Fisica";
+                }
+            }
+            
+            function SubirCSD(){
+                $("#dialogPrivadaUsuario").dialog("open");
+            }
          
             function obtenerEstado(){
                 var codigoPostal=$("#codigoPostal").val();
@@ -210,39 +243,54 @@
                 }
             });
         </script>
-        
-	</head>
-        	<center>
-            <div class="principal">
+
+    </head>
+    <!--Aqui va el dialogo de Modificar Password-->
+    <div id="dialogPrivadaUsuario" title="ISFE- Registro de Usuario">
+        <p class="validateTips">
+            <img src="images/key.png" />
+            &nbsp;
+            Ingresa tu clave privada para válidar tu Certificado
+        </p>
+        <form>
+            <fieldset>  
+                Contraseña: &nbsp; &nbsp;
+                <input type="password" id="clavePrivadaUsuario" />
+            </fieldset>
+        </form>
+    </div>
+    <!--Aqui termina el dialogo de Modificar Password-->
+    <center>
+        <div class="principal">
             <div class="header">
                 <div class="logo"><a href="index.jsp" ><img src="images/logo1.png" alt="ISFE" height="164"/></a></div>
             </div>
             <div class="contenido_principal">
-            <!-- Comienza Menu --> 
-            <div class="menu">
-		<ul>
-                    <li><a href="Uso.jsp"><img src="images/icons/valida_ico.png" alt=""/>¿C&oacute;mo usar ISFE?</a></li>
-                    <li><a href="contacto.jsp"><img src="images/icons/contacto_ico.png" alt=""/>Contacto</a></li>
-                    <li><a href="registro.jsp"><img src="images/icons/registro_ico.png" alt=""/> Registro</a></li>
-                    <li><a href="index.jsp"><img src="images/icons/ingreso_ico.png" alt=""/> Ingreso</a></li>
-		</ul>
+                <!-- Comienza Menu --> 
+                <div class="menu">
+                    <ul>
+                        <li><a href="Uso.jsp"><img src="images/icons/valida_ico.png" alt=""/>¿C&oacute;mo usar ISFE?</a></li>
+                        <li><a href="contacto.jsp"><img src="images/icons/contacto_ico.png" alt=""/>Contacto</a></li>
+                        <li><a href="registro.jsp"><img src="images/icons/registro_ico.png" alt=""/> Registro</a></li>
+                        <li><a href="index.jsp"><img src="images/icons/ingreso_ico.png" alt=""/> Ingreso</a></li>
+                    </ul>
                 </div>
-		<!-- Termina Menu -->  
+                <!-- Termina Menu -->  
                 <br><br>
-        <div class="titulo_pagina">Registro</div>
-		<center>
-                <!--Comienza el formulario-->	
-                
-		<div id="tabs">
-			<ul>
+                <div class="titulo_pagina">Registro</div>
+                <center>
+                    <!--Comienza el formulario-->	
+
+                    <div id="tabs">
+                        <ul>
                             <li><a href="#tabs-1">Datos de Usuario</a></li>
                             <li><a id="FIELCSDUsuario" href="#tabs-2">FIEL y CSD</a></li>
                             <li><a href="#tabs-3">Registrar Solicitante</a></li>
-			</ul>
-			<div id="tabs-1">
+                        </ul>
+                        <div id="tabs-1">
                             <font color="red">Los campos marcados con (*) son obligatorios</font><br><br>
                             <form action="" id="formulario_registro" method="post">
-                                
+
                                 <table border="0">
                                     <tbody>
                                         <tr>
@@ -269,7 +317,7 @@
                                         <tr style="display:none" id="RazonUser">
                                             <td>Razón Social:</td>
                                             <td><input type="text" maxlength="180" id="RazonUsuario"  name="razonsocial" class="required" size="25" style="text-transform:uppercase" /></td>
-                                            
+
                                         </tr>
                                         <tr>
                                             <td>RFC*:</td>
@@ -307,7 +355,7 @@
                                             <td>Delegaci&oacute;n/Municipio:</td>
                                             <td>
                                                 <select id="municipio" name="municipio" >
-                                                    
+
                                                 </select>
                                             </td>
                                         </tr>
@@ -315,7 +363,7 @@
                                             <td>Colonia/Localidad</td>
                                             <td>
                                                 <select id="localidad" name="localidad" >
-                                                    
+
                                                 </select>
                                             </td>
                                         </tr>
@@ -342,21 +390,21 @@
                                 </table>
                             </form>
                         </div>
-                    <div id="tabs-2" style="display:none" >
-                        <label> Selecciona los archivos de FIEL y CSD a subir </label>
+                        <div id="tabs-2">
+                            <label> Selecciona los archivos de FIEL y CSD a subir </label>
                             <br><br>
                             <table width="60%" >
                                 <form method="post" enctype="multipart/form-data" id="subirFIEL">
-                                <tr>
-                                    <td width="30%">
-                                        <input type="file" id="archivoREQ" onclick="LimpiarError()" />
-                                        <label id="ErrorArchivoREQ"></label>     
-                                    </td>
-                                    
-                                    <td>
-                                        <input type="button" value="&nbsp; &nbsp; Subir FIEL &nbsp; &nbsp;" name="subirFIEL" class="ui-button ui-widget ui-state-default ui-corner-all" role="button" aria-disabled="false"/>
-                                    </td>
-                                </tr>     
+                                    <tr>
+                                        <td width="30%">
+                                            <input type="file" id="archivoREQ" onclick="LimpiarError()" />
+                                            <label id="ErrorArchivoREQ"></label>     
+                                        </td>
+
+                                        <td>
+                                            <input type="button" value="&nbsp; &nbsp; Subir FIEL &nbsp; &nbsp;" name="subirFIEL" class="ui-button ui-widget ui-state-default ui-corner-all" role="button" aria-disabled="false"/>
+                                        </td>
+                                    </tr>     
                                 </form>
                             </table>
                             <br>
@@ -364,25 +412,25 @@
                             <br>
                             <br>
                             <table width="60%">
-                               <form method="post" enctype="multipart/form-data" id="subirCSD">
-                                   <tr>
-                                       <td width="30%">
-                                           <input type="file" id="archivoCER" onclick="LimpiarError()">
-                                           <label id="ErrorArchivoCER"></label>
-                                       </td>
-                                       
-                                       <td>
-                                           <input type="button" value=" &nbsp; &nbsp; Subir CSD &nbsp; &nbsp;" name="subirCSD" class="ui-button ui-widget ui-state-default ui-corner-all" role="button" aria-disabled="false"/>
-                                       </td>
-                                       
-                                   </tr>
-                                 </form>
+                                <form method="post" enctype="multipart/form-data" id="subirCSD">
+                                    <tr>
+                                        <td width="30%">
+                                            <input type="file" id="archivoCER" onclick="LimpiarError()">
+                                            <label id="ErrorArchivoCER"></label>
+                                        </td>
+
+                                        <td>
+                                            <input type="button" value=" &nbsp; &nbsp; Subir CSD &nbsp; &nbsp;" name="subirCSD" class="ui-button ui-widget ui-state-default ui-corner-all" onclick="SubirCSD()" role="button" aria-disabled="false"/>
+                                        </td>
+
+                                    </tr>
+                                </form>
                             </table>
                             <script type="text/javascript">
                                                                                          
                                 $(function(){
                                     $("#archivoREQ").MultiFile({
-                                          accept:'req', max:1, STRING: {
+                                        accept:'req', max:1, STRING: {
                                             remove:'X',
                                             selected:'Selecionado: $file',
                                             denied:'REQ/Archivo de extención $ext invalido!',
@@ -392,7 +440,7 @@
                                     });
                                     
                                     $("#archivoCER").MultiFile({
-                                         accept:'cer', max:1, STRING: {
+                                        accept:'cer', max:1, STRING: {
                                             remove:'X',
                                             selected:'Selecionado: $file',
                                             denied:'CER/Archivo de extención $ext invalido!',
@@ -404,7 +452,7 @@
                                 
                             </script>
                         </div>
-			<div id="tabs-3" style="display:none">
+                        <div id="tabs-3" style="display:none">
                             <font color="red">Favor de Verificar sus datos antes de completar el registro</font>
                             <form>
                                 <div id="formularioVerificacion" style="display:none"></div>
@@ -413,11 +461,11 @@
                                 <input type="button" value="Regresar" name="regresar" class="ui-button ui-widget ui-state-default ui-corner-all" role="button" aria-disabled="false"/>
                             </form>
                         </div>
-		</div>
-                <br><br>
+                    </div>
+                    <br><br>
                 </center>
             </div>
-                <div class="footer">
+            <div class="footer">
                 <br><br>
                 Derechos reservados ISFE <br>
                 HTML5 | CSS 2.0 | JavaScript | Apache Tomcat | J2EE 
@@ -429,5 +477,5 @@
             </div>
         </div>
     </center>
-    </body>
+</body>
 </html>

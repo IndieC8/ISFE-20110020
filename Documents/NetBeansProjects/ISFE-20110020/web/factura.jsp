@@ -5,6 +5,20 @@
 --%>
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%
+    String contribuyente = "";
+    int id = 0 ;
+    HttpSession sesionOk = request.getSession();
+    if (sesionOk.getAttribute("contribuyente") == null) {
+        %>
+        <jsp:forward page="index.jsp">
+            <jsp:param name="error" value="Es obligatorio identificarse"></jsp:param>
+        </jsp:forward>
+        <%
+    } else {
+        contribuyente = (String) sesionOk.getAttribute("contribuyente");//Recoge la session
+        id = (Integer) sesionOk.getAttribute("identificador");//Recoge la session
+ %>
 <!DOCTYPE html>
 <html>
 	<head>
@@ -70,6 +84,7 @@
                             <ul>
                                 <li><a href="factura/generarFacturaElectronica.jsp">Generar Factura Electr&oacute;nica</a></li>
                                 <li><a href="factura/generarFacturaImprimible.jsp">Generar Factura Imprimible</a></li>
+                                <li><a href="">Estado de la Factura</a></li>
                             </ul>
                         </li>                       
                         <li><a href="cerrar.jsp" id="cerrarSesion"><img src="images/icons/ingreso_ico.png"/> Cerrar Sesión</a>
@@ -88,7 +103,7 @@
 			<div id="tabs-1">
                            <table border="0">
                               <tbody>
-                                 <tr>
+                                  <tr>
                                     <td><a href="factura/generarFacturaElectronica.jsp"><img src="images/formularios/generar_factura_electronica.png"/></a></td>
                                     <td>Generar Factura Electr&oacute;nica</td>
                                  </tr>
@@ -96,6 +111,10 @@
                                     <td><a href="factura/generarFacturaImprimible.jsp"><img src="images/formularios/generar_factura_imprimible.png"/></a></td>
                                     <td>Generar Factura Imprimible</td>
                                  </tr>
+                                 <tr>
+                                      <td><a href=""><img width="64" src="images/formularios/estado_factura.png"/></a></td>
+                                      <td>Estado de la Factura</td>
+                                  </tr>
                               </tbody>
                            </table>
                         </div>
@@ -117,3 +136,6 @@
     </center>
     </body>
 </html>
+<%
+    }
+%>

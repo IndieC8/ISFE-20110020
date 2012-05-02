@@ -57,12 +57,12 @@ public class SAT{
 	try
 	{
             int puertoServicio=8091;
-            Socket socket = new Socket("http://148.204.57.222", puertoServicio);
+            Socket socket = new Socket("localhost", puertoServicio);
             DataInputStream entrada = new DataInputStream(socket.getInputStream());
             DataOutputStream salida = new DataOutputStream(socket.getOutputStream());
             //aqui ira el envio de informacion para la solicitud de Folios
             salida.writeInt(numFolios);
-            while(i<=numFolios)
+            while(i<numFolios)
             {
 		arrayFolios[i]=entrada.readInt();
 		if(almacenaFolios.almacenarBloqueFolios(arrayFolios[i])==true)
