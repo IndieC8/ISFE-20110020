@@ -17,7 +17,7 @@ public class Folio {
     private boolean usado;
     private Connection conn;
     private String driver="com.mysql.jdbc.Driver";
-    private String url="jdbc:mysql://localhost/isfe";
+    private String url="jdbc:mysql://148.204.57.222/isfe";
     private String usuario="isfe";
     private String password="isfe";
     /**

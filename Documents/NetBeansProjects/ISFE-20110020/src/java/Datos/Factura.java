@@ -270,6 +270,7 @@ public class Factura {
     /**
      * Método que genera el IVA en base al subtotal de la factura electrónica y
      * el 16% como el IVA
+     * @deprecated El IVA se obtiene directamente del JSP
      */
     public void generarIVA(){
         this.IVA=this.SubTotal*0.16;
@@ -277,6 +278,7 @@ public class Factura {
     /**
      * Método encargado de generar el subtotal de la factura electrónica en base
      * a la lista de los conceptos sumando los importes de los mismos.
+     * @deprecated El Subtotal se obtiene directamente del JSP
      */
     public void generarSubtotal(){
         Iterator i=this.conceptos.iterator();
@@ -290,8 +292,18 @@ public class Factura {
     /**
      * Método encargado de generar el total de la factura electrónica sumando el
      * IVA y el subtotal.
+     * @deprecated El Total se obtiene directamente del JSP
      */
     public void generarTotal(){
+        this.generarSubtotal();
+        this.generarIVA();
         this.Total=this.SubTotal+this.IVA;
+    }
+    /**
+     * 
+     * @return Tasa de la factura generada
+     */
+    public double getTasa() {
+        return 0.16 * 100;
     }
 }

@@ -1,5 +1,6 @@
 package Datos;
 
+import Integracion.ConexionSAT.SAT;
 import Negocios.Cifrado.Cifrado;
 import Negocios.GenerarFactura.CadenaOriginal;
 import java.io.*;
@@ -42,52 +43,35 @@ public class XML extends Formato{
      * @throws IOException
      * @throws NoSuchProviderException
      */
-    public Document generarXML(Factura f,ISFE isfe)throws SecurityException, UnsupportedEncodingException,IOException, NoSuchProviderException{
-        /**
-         * Se crea la estructura del XML correspondiente con el espacio de
-         * nombre cfdi (CertificadoFiscalDigitalporInternet) con los datos
-         * contenidos en la factura
-         */
+    public Document generarXML(Factura f,ISFE isfe)throws SecurityException, UnsupportedEncodingException,IOException, NoSuchProviderException, Exception{
+        Document xml=null;
         CFDI cfdi=new CFDI(f);
-        Document xml=cfdi.generarCFDI();
-        /**
-         * Se crea la cadena original en base al xlst proporcionado por el SAT
-         */
-        String cadenaOriginal=CadenaOriginal.generarCadenaOriginal("cadOriginalCFDI_3.xslt",xml);
-        /**
-         * Se obtiene la llave privada de la FIEL del usuario (emisor) que esta
-         * cifrada con el algoritmo RSA
-         */
-        PrivateKey llaveFIEL=Cifrado.getLlavePrivada(f.getFiel().getArchivoFiel(), f.getFiel().getPassword());
-        /**
-         * Se crea el sello del CFDI con la llave privada y la cadena original
-         * de la factura electrónica y se agrega al xml
-         */
-        String sello=Cifrado.firmar(llaveFIEL, cadenaOriginal.getBytes("UTF-8"));
-        Cifrado.eliminarLlavePrivada(llaveFIEL);
-        cfdi.agregarSello(sello);
-        /**
-         * Se crea la extructura del XML que corresponde al espacio de nombres
-         * tfd (TimbreFiscalDigital)
-         */
-        Timbre timbre=new Timbre();
-        /**
-         * Se crea la cadena del Timbre en base al xlst proporcionado por el SAT
-         */
-        String cadenaTimbre=CadenaOriginal.generarCadenaOriginal("cadOriginalTFD_1.xslt",timbre.agregarTimbre(sello,isfe.getCSD().getNoCertificado(),f.getFolio().getUUID()));
-        /**
-         * Se obtiene la llave del ISFE como PAC para certificar la factura
-         */
-        PrivateKey llaveISFE=Cifrado.getLlavePrivada(isfe.getFiel().getArchivoFiel(), isfe.getFiel().getPassword());
-        /**
-         * Se crea el Sello del SAT con la llave privada del ISFE (PAC) y la
-         * cadena del timbre fiscal y se agrega al timbre
-         */
-        String selloSAT=Cifrado.firmar(llaveISFE, cadenaTimbre.getBytes("UTF-8"));
-        Cifrado.eliminarLlavePrivada(llaveISFE);
-        timbre.agregarSello(selloSAT);
-        xml=cfdi.agregarTimbre(timbre.obtenerTimbre());
+        xml=crearXML(f,cfdi);
+        xml=timbrarCFDI(f,cfdi,isfe);
         return xml;
+    }
+    private Document crearXML(Factura factura,CFDI cfdi) throws SecurityException, UnsupportedEncodingException, NoSuchProviderException, IOException, Exception{
+        String cadOriginal = CadenaOriginal.generarCadenaOriginal("cadOriginalCFDI_3.xslt",cfdi.generarCFDI());
+        System.out.println(cadOriginal);
+        SAT sat=new SAT();
+        //System.out.println(sat.ValidarCadenaOriginal(cadOriginal));
+        //System.out.println(cadOriginal);
+        //BarraBidimensional.generarBarraDimensional(cadOriginal, "PRUEBA");
+        PrivateKey LlavePrivada;
+        LlavePrivada=Cifrado.getLlavePrivada(factura.getEmisor().getFiel().getArchivoFiel(), factura.getEmisor().getFiel().getPassword());
+        String sello = Cifrado.firmar(LlavePrivada, cadOriginal.getBytes("UTF-8"));
+        factura.setCadenaCSD(sello);
+        return cfdi.agregarSello(sello);
+    }
+    private Document timbrarCFDI(Factura factura,CFDI cfdi,ISFE isfe) throws SecurityException, UnsupportedEncodingException, NoSuchProviderException, IOException, Exception{
+        Timbre timbre=new Timbre();
+        String cadTimbre = CadenaOriginal.generarCadenaOriginal("cadOriginalTFD_1.xslt", timbre.agregarTimbre(factura, isfe));
+        //System.out.println(cadTimbre);
+        PrivateKey key;
+        key = Cifrado.getLlavePrivada(isfe.getFiel().getArchivoFiel(), isfe.getFiel().getPassword());
+        String sello = Cifrado.firmar(key, cadTimbre.getBytes("UTF-8"));
+	timbre.agregarSello(sello);
+	return cfdi.agregarTimbre(timbre.obtenerTimbre());
     }
     /**
     * Método encargado de formatear la Fecha recibida a formato
@@ -135,284 +119,7 @@ public class XML extends Formato{
                 .replaceAll(">", "&gt;")
                 .replaceAll("'", "&apos;");
     }
-    /**
-     * Clase anidada encargada de generar el espacio de nombres del cfdi del xml
-     */
-    public class CFDI{
-        private Document docXML;
-        private ArrayList<Concepto> conceptos;
-        private Usuario emisor;
-        private Contribuyente receptor;
-        private Factura factura;
-        private Direccion expedidoEn;
-        private String version="3.0";
-        private Namespace cfdi=Namespace.getNamespace("cfdi", "http://www.sat.gob.mx/cfd/3");
-        private Namespace xsi=Namespace.getNamespace("xsi", "http://www.w3.org/2001/XMLSchema-instance");
-        private String Esquema="http://www.sat.gob.mx/cfd/3 http://www.sat.gob.mx/sitio_internet/cfd/3/cfdv3.xsd";
-        /**
-         * Constructtor del CFDI
-         * @param f factura electrónica
-         */
-        public CFDI(Factura f){
-            docXML=new Document();
-            factura=f;
-            emisor=f.getEmisor();
-            receptor=f.getReceptor();
-            conceptos=f.getConceptos();
-            expedidoEn=f.getExpedidoEn();
-        }
-        /**
-         * Se encarga de generar el espcacio de nombre del cfdi
-         * @return espacio de nombres cfdi con los datos.
-         */
-        public Document generarCFDI(){
-            Element comprobante=new Element("Comprobante",cfdi);
-            comprobante.addNamespaceDeclaration(xsi);
-            comprobante.setAttribute("schemaLocation", Esquema, xsi).setAttribute("version",version);
-            if(factura.getFolio()!=null && factura.getFolio().getUsado()==false)
-                comprobante.setAttribute("folio", Long.toString(factura.getFolio().getNoFolio()));
-            comprobante.setAttribute("fecha", XML.formatearFecha(factura.getFecha()))
-                    .setAttribute("sello","selloCFD")
-                    .setAttribute("formaDePago", factura.getFormaDePago())
-                    .setAttribute("noCertificado", emisor.getCSD().getNoCertificado())
-                    .setAttribute("certificado",XML.codificarBase64(emisor.getCSD().getArchivoCSD()))
-                    .setAttribute("subTotal", XML.codificarNumero(factura.getSubTotal())+"")
-                    .setAttribute("total", XML.codificarNumero(factura.getTotal())+"")
-                    .setAttribute("metodoDepago", factura.getMetodoDePago())
-                    .setAttribute("tipoDeComprobante", factura.getTipoDeComprobante())
-                    .addContent(generarEmisor())
-                    .addContent(generarReceptor())
-                    .addContent(generarConceptos())
-                    .addContent(generarImpuestos())
-                    .addContent(generarComplemento());
-            return docXML;
-        }
-        /**
-         * Genera el elemento del xml con los datos del emisor (usuario) del cfdi
-         * @return elemento del emisor
-         */
-        public Element generarEmisor(){
-            Element Emisor=new Element("Emisor",cfdi);
-            Emisor.setAttribute("rfc", emisor.getRFC());
-            Emisor.setAttribute("nombre", XML.codificarCadena(emisor.getNombre()));
-            Emisor.addContent(generarDomicilioFiscalEmisor());
-            Emisor.addContent(generarExpedidoEn());
-            return Emisor;
-        }
-        /**
-         * Genera el elemento del xml con los datos del receptor (cliente) del cfdi
-         * @return elemento del receptor
-         */
-        public Element generarReceptor(){
-            Element Receptor=new Element("Receptor",cfdi);
-            Receptor.setAttribute("rfc", receptor.getRFC());
-            Receptor.setAttribute("nombre", XML.codificarCadena(receptor.getNombre()));
-            Receptor.addContent(generarDomicilioReceptor());
-            return Receptor;
-        }
-        /**
-         * Genera el elemento del xml con los datos de los impuestos del cfdi
-         * @return elemento con los impuestos
-         */
-        public Element generarImpuestos(){
-            Element Impuestos=new Element("Impuestos",cfdi);
-            Impuestos.addContent(generarTraslados());
-            return Impuestos;
-        }
-        /**
-         * Genera el complemento del xml del cfdi
-         * @return elemento con el complemento
-         */
-        public Element generarComplemento(){
-            Element Complemento=new Element("Complemento",cfdi);
-            return Complemento;
-        }
-        /**
-         * Genera un xml con todos los datos ya previamente establecidos pero 
-         * agregando el sello de la firma digital del emisor (usuario)
-         * @param sello de la firma digital
-         * @return xml sellado
-         */
-        public Document agregarSello(String sello){
-            docXML.getRootElement().setAttribute("sello",sello);
-            return docXML;
-        }
-        /**
-         * Genera un nuevo xml con los datos del xml generado pero agregando el 
-         * timbre fiscal digital al mismo.
-         * @param timbre espacio de nombre con los datos del timbre fiscal digital
-         * @return xml con el timbre fiscal digital.
-         */
-        public Document agregarTimbre(Content timbre) {
-		docXML.getRootElement().getChild("Complemento", cfdi).addContent(timbre);
-		return docXML;
-	}
-        /**
-         * Genera el elemento delxml con el domicilio fiscal del emisor dentro del cfdi
-         * @return elemento del domicilio fiscal del emisor
-         */
-        public Element generarDomicilioFiscalEmisor(){
-            Direccion direccion=emisor.getDireccion();
-            Element domicilioFiscal=new Element("Domicilio",cfdi);
-            domicilioFiscal.setAttribute("calle", XML.codificarCadena(direccion.getCalle()));
-            if(direccion.getNoExterior()!=null)
-                domicilioFiscal.setAttribute("noExterior", XML.codificarCadena(direccion.getNoExterior()));
-            if(direccion.getNoInterior()!=null)
-                domicilioFiscal.setAttribute("noInterior", XML.codificarCadena(direccion.getNoInterior()));
-            if(direccion.getColonia()!=null)
-                domicilioFiscal.setAttribute("colonia", XML.codificarCadena(direccion.getColonia()));
-            if(direccion.getLocalidad()!=null)
-                domicilioFiscal.setAttribute("localidad", XML.codificarCadena(direccion.getLocalidad()));
-            if(direccion.getReferencia()!=null)
-                domicilioFiscal.setAttribute("referencia", XML.codificarCadena(direccion.getReferencia()));
-            domicilioFiscal.setAttribute("municipio", XML.codificarCadena(direccion.getMunicipio()));
-            domicilioFiscal.setAttribute("estado", XML.codificarCadena(direccion.getEstado()));
-            domicilioFiscal.setAttribute("pais", XML.codificarCadena("México"));
-            domicilioFiscal.setAttribute("codigoPostal", XML.codificarCadena(direccion.getCodigoPostal()));
-            return domicilioFiscal;
-        }
-        /**
-         * Genera el elemento del xml con los datos del lugar de expedición dentro del cfdi
-         * @return elemeto del lugar de expedición.
-         */
-        public Element generarExpedidoEn(){
-            Element ExpedidoEn=new Element("ExpedidoEn",cfdi);
-            ExpedidoEn.setAttribute("calle", XML.codificarCadena(expedidoEn.getCalle()));
-            if(expedidoEn.getNoExterior()!=null)
-                ExpedidoEn.setAttribute("noExterior", XML.codificarCadena(expedidoEn.getNoExterior()));
-            if(expedidoEn.getNoInterior()!=null)
-                ExpedidoEn.setAttribute("noInterior", XML.codificarCadena(expedidoEn.getNoInterior()));
-            if(expedidoEn.getColonia()!=null)
-                ExpedidoEn.setAttribute("colonia", XML.codificarCadena(expedidoEn.getColonia()));
-            if(expedidoEn.getLocalidad()!=null)
-                ExpedidoEn.setAttribute("localidad", XML.codificarCadena(expedidoEn.getLocalidad()));
-            if(expedidoEn.getReferencia()!=null)
-                ExpedidoEn.setAttribute("referencia", XML.codificarCadena(expedidoEn.getReferencia()));
-            ExpedidoEn.setAttribute("municipio", XML.codificarCadena(expedidoEn.getMunicipio()));
-            ExpedidoEn.setAttribute("estado", XML.codificarCadena(expedidoEn.getEstado()));
-            ExpedidoEn.setAttribute("pais", XML.codificarCadena("México"));
-            ExpedidoEn.setAttribute("codigoPostal", XML.codificarCadena(expedidoEn.getCodigoPostal()));
-            return ExpedidoEn;
-        }
-        /**
-         * Genera el elemento con los datos del domicilio de receptor dentro del
-         * espacio de nombre del cfdi
-         * @return elemento con el domicilio fiscal del receptor
-         */
-        public Element generarDomicilioReceptor(){
-            Direccion direccion=receptor.getDireccion();
-            Element domicilio=new Element("Domicilio",cfdi);
-            domicilio.setAttribute("calle", XML.codificarCadena(direccion.getCalle()));
-            if(direccion.getNoExterior()!=null)
-                domicilio.setAttribute("noExterior", XML.codificarCadena(direccion.getNoExterior()));
-            if(direccion.getNoInterior()!=null)
-                domicilio.setAttribute("noInterior", XML.codificarCadena(direccion.getNoInterior()));
-            if(direccion.getColonia()!=null)
-                domicilio.setAttribute("colonia", XML.codificarCadena(direccion.getColonia()));
-            if(direccion.getLocalidad()!=null)
-                domicilio.setAttribute("localidad", XML.codificarCadena(direccion.getLocalidad()));
-            if(direccion.getReferencia()!=null)
-                domicilio.setAttribute("referencia", XML.codificarCadena(direccion.getReferencia()));
-            domicilio.setAttribute("municipio", XML.codificarCadena(direccion.getMunicipio()));
-            domicilio.setAttribute("estado", XML.codificarCadena(direccion.getEstado()));
-            domicilio.setAttribute("pais", XML.codificarCadena("México"));
-            domicilio.setAttribute("codigoPostal", XML.codificarCadena(direccion.getCodigoPostal()));
-            return domicilio;
-        }
-        /**
-         * Genera el elemeto con los datos de los conceptos dentro del cfdi
-         * @return elemento con los conceptos
-         */
-        public Element generarConceptos(){
-            Element Conceptos=new Element("Conceptos",cfdi);
-            for(int i=0; i<conceptos.size();i++){
-                Conceptos.addContent(generarConcepto(conceptos.get(i)));
-            }
-            return Conceptos;
-        }
-        /**
-         * Genera el elemento de cada concepto del cfdi
-         * @param concepto de la factura
-         * @return elemeto con el concepto
-         */
-        public Element generarConcepto(Concepto concepto){
-            Element C=new Element("Concepto",cfdi)
-                    .setAttribute("cantidad", concepto.getCantidad()+"");
-            if(concepto.getUnidad()!=null)
-                C.setAttribute("unidad", XML.codificarCadena(concepto.getUnidad()));
-            if(concepto.getNoIdentificacion()!=null)
-                C.setAttribute("noIdentificacion", XML.codificarCadena(concepto.getNoIdentificacion()));
-            C.setAttribute("descripcion", XML.codificarCadena(concepto.getDescripcion()));
-            C.setAttribute("valorUnitario", XML.codificarNumero(concepto.getValorUnitario())+"");
-            C.setAttribute("importe", XML.codificarNumero(concepto.getImporte())+"");
-            return C;
-        }
-        /**
-         * Genera el elemento del xml dentro del cfdi con la información de los 
-         * traslados de la factura
-         * @return elemento con los traslados
-         */
-        public Element generarTraslados(){
-            Element Traslados=new Element("Traslados",cfdi);
-            Element Traslado=new Element("Traslado",cfdi);
-            Traslado.setAttribute("tasa", XML.codificarNumero(0.16)+"");
-            Traslado.setAttribute("importe", factura.getImporteTasa()+"");
-            Traslado.setAttribute("impuesto", "IVA");
-            Traslados.addContent(Traslado);
-            return Traslados;
-        }
-    }
-    /**
-     * Clase que se encarga de generar el timbrado del CFDI
-     */
-    public class Timbre{
-        private Document timbre;
-        private String version="1.0";
-        Namespace xsi=Namespace.getNamespace("xsi","http://www.w3.org/2001/XMLSchema-instance");
-        Namespace tfd=Namespace.getNamespace("tfd", "http://www.sat.gob.mx/TimbreFiscalDigital");
-        private String Esquema="http://www.sat.gob.mx/TimbreFiscalDigital TimbreFiscalDigital.xsd";
-        /**
-        * Constructor vacío
-        */
-        public Timbre(){
-            timbre=new Document();
-            Element elementTFD=new Element("TimbreFiscalDigital",tfd);
-            elementTFD.addNamespaceDeclaration(tfd);
-            elementTFD.setAttribute("schemaLocation",Esquema,xsi).setAttribute("version",version);
-            timbre.setRootElement(elementTFD);
-        }
-        /**
-         * Genera el xml con los datos del xml generado anteriormente pero 
-         * agregando el sello del CFD, del SAT, el no del certificado y el UUID
-         * @param selloCFD del PAC
-         * @param noCertificadoSAT del PAC
-         * @param UUID del PAC
-         * @return xml timbrado
-         */
-        public Document agregarTimbre(String selloCFD,String noCertificadoSAT,long UUID){
-            timbre.getRootElement()
-                    .setAttribute("selloCFD",selloCFD)
-                    .setAttribute("FechaTimbrado", formatearFecha(new Date()))
-                    .setAttribute("UUID", Long.toString(UUID))
-                    .setAttribute("noCertificadoSAT", noCertificadoSAT);
-            return timbre;
-        }
-        /**
-         * Genera el elemento con el sello del PAC (autorizado por el SAT)
-         * @param selloSAT del PAC 
-         * @return elemento con el sello
-         */
-        public Element agregarSello(String selloSAT){
-            return timbre.getRootElement().setAttribute("selloSAT",selloSAT);
-        }
-        /**
-         * Obtiene el timbre fiscal digital del xml
-         * @return timbre del xml
-         */
-        public Content obtenerTimbre(){
-            return timbre.getRootElement().detach();
-        }
-    }
+    
     /**
      * Método encargado de convertir el xml a bytes
      * @param xml XML de la factura electrónica

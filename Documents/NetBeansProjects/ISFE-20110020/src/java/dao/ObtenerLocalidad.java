@@ -25,8 +25,8 @@ public class ObtenerLocalidad extends HttpServlet {
      *
      * @param request servlet request
      * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
+     * @throws ServletException is hay errores con el servlet
+     * @throws IOException si hay errores de entrada y/o salida de datos
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
