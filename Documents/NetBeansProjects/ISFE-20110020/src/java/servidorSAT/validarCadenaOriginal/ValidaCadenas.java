@@ -92,7 +92,7 @@ public class ValidaCadenas
 	String totalImpuestosTrasladados="[a-zA-Z_0-9]+";
 	//termian los campos de la cadena original
 
-	public String regex="\\|\\|"+version+"\\|"+folio+"\\|"+fecha+"\\|"+numAprobacion+"\\|"+anioAprobacion+"\\|"+tipoComprobante+"\\|"+formaPago+"\\|"+subtotal+"\\|"+descuento+"\\|"+total+"\\|"+rfcEmisor+"\\|"+nombreEmisor+"\\|"+calleEmisor+"\\|"+municipioEmisor+"\\|"+estadoEmisor+"\\|"+paisEmisor+"\\|"+paisComprobante+"\\|"+rfcReceptor+"\\|"+nombreReceptor+"\\|"+calleReceptor+"\\|"+municipioReceptor+"\\|"+estadoReceptor+"\\|"+paisReceptor+"\\|"+concepto+"\\|\\|";
+	public String regex="\\|\\|"+version+"\\|"+folio+"\\|"+fecha+"\\|"+tipoComprobante+"\\|"+formaPago+"\\|"+subtotal+"\\|"+descuento+"\\|"+total+"\\|"+rfcEmisor+"\\|"+nombreEmisor+"\\|"+calleEmisor+"\\|"+municipioEmisor+"\\|"+estadoEmisor+"\\|"+paisEmisor+"\\|"+paisComprobante+"\\|"+rfcReceptor+"\\|"+nombreReceptor+"\\|"+calleReceptor+"\\|"+municipioReceptor+"\\|"+estadoReceptor+"\\|"+paisReceptor+"\\|"+concepto+"\\|\\|";
 
 	Pattern patron = Pattern.compile(regex);
 	Matcher match;

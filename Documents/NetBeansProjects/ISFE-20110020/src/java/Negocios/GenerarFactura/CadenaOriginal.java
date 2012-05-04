@@ -17,6 +17,7 @@ public class CadenaOriginal {
      */
     public static String generarCadenaOriginal(String xslt, Document xml) {
         try {
+            System.setProperty("javax.xml.transform.TransformerFactory","net.sf.saxon.TransformerFactoryImpl");   
             XSLTransformer transformer;
             transformer = new XSLTransformer(xslt);
             return transformer.transform(xml).getRootElement().getText();

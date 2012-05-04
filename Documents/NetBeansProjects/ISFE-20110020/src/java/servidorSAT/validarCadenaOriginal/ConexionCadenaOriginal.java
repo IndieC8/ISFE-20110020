@@ -22,6 +22,7 @@ public class ConexionCadenaOriginal
 	 * Constructor de la clase que realiza la conexion con el cliente
 	 * @param socketCliente parametro que se refiere al socket con el que se realizara la conexion
 	 */
+    @SuppressWarnings("OverridableMethodCallInConstructor")
 	public ConexionCadenaOriginal(Socket socketCliente)
 	{
 		try

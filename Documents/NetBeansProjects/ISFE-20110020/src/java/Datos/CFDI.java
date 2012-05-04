@@ -12,7 +12,8 @@ import org.jdom.Element;
 import org.jdom.Namespace;
 
 /**
- * Clase anidada encargada de generar el espacio de nombres del cfdi del xml
+ * Clase encargada de generar el espacio de nombres del cfdi del xml
+ * @author Trabajo Terminal 20110020 Implementación del Servicio de Facturación Electrónica acorde a la reforma de enero de 2011
  */
 public class CFDI{
     private Document xml;
@@ -79,33 +80,104 @@ public class CFDI{
         Element emisorXML = new Element("Emisor", cfdi);
         emisorXML.setAttribute("rfc", emisor.getRFC());
         emisorXML.setAttribute("nombre", XML.codificarCadena(emisor.getNombre()));
-        emisorXML.addContent(obtenerDireccionFiscal());
-        emisorXML.addContent(generarExpedidoEn());
+        //DOMICILIO DEL EMISOR
+        Element domicilioFiscal = new Element("DomicilioFiscal", cfdi);
+        domicilioFiscal.setAttribute("calle", XML.codificarCadena(emisor.getDireccion().getCalle()));
+        if (emisor.getDireccion().getNoExterior() != null) {
+		domicilioFiscal.setAttribute("noExterior", XML.codificarCadena(emisor.getDireccion().getNoExterior()));
+	}
+	if (emisor.getDireccion().getNoInterior() != null) {
+		domicilioFiscal.setAttribute("noInterior", XML.codificarCadena(emisor.getDireccion().getNoInterior()));
+	}
+	if (emisor.getDireccion().getColonia() != null) {
+		domicilioFiscal.setAttribute("colonia", XML.codificarCadena(emisor.getDireccion().getColonia()));
+	}
+	if (emisor.getDireccion().getLocalidad() != null) {
+		domicilioFiscal.setAttribute("localidad", XML.codificarCadena(emisor.getDireccion().getLocalidad()));
+	}
+	if (emisor.getDireccion().getReferencia() != null) {
+		domicilioFiscal.setAttribute("referencia", XML.codificarCadena(emisor.getDireccion().getReferencia()));
+	}
+	domicilioFiscal.setAttribute("municipio", XML.codificarCadena(emisor.getDireccion().getMunicipio()));
+	domicilioFiscal.setAttribute("estado", XML.codificarCadena(emisor.getDireccion().getEstado()));
+	domicilioFiscal.setAttribute("pais", XML.codificarCadena("MÉXICO"));
+	domicilioFiscal.setAttribute("codigoPostal", emisor.getDireccion().getCodigoPostal());
+        emisorXML.addContent(domicilioFiscal);
+        //DOMICILIO DEL LUGAR DE EXPEDICION
+        Element expedidoEn = new Element("ExpedidoEn", cfdi);
+        expedidoEn.setAttribute("calle", XML.codificarCadena(factura.getExpedidoEn().getCalle()));
+        if (factura.getExpedidoEn().getNoExterior() != null) {
+		expedidoEn.setAttribute("noExterior", XML.codificarCadena(factura.getExpedidoEn().getNoExterior()));
+	}
+	if (factura.getExpedidoEn().getNoInterior() != null) {
+		expedidoEn.setAttribute("noInterior", XML.codificarCadena(factura.getExpedidoEn().getNoInterior()));
+	}
+	if (factura.getExpedidoEn().getColonia() != null) {
+		expedidoEn.setAttribute("colonia", XML.codificarCadena(factura.getExpedidoEn().getColonia()));
+	}
+	if (factura.getExpedidoEn().getLocalidad() != null) {
+		expedidoEn.setAttribute("localidad", XML.codificarCadena(factura.getExpedidoEn().getLocalidad()));
+	}
+	if (factura.getExpedidoEn().getReferencia() != null) {
+		expedidoEn.setAttribute("referencia", XML.codificarCadena(factura.getExpedidoEn().getReferencia()));
+	}
+	expedidoEn.setAttribute("municipio", XML.codificarCadena(factura.getExpedidoEn().getMunicipio()));
+	expedidoEn.setAttribute("estado", XML.codificarCadena(factura.getExpedidoEn().getEstado()));
+	expedidoEn.setAttribute("pais", XML.codificarCadena("MÉXICO"));
+	expedidoEn.setAttribute("codigoPostal", factura.getExpedidoEn().getCodigoPostal());
+        emisorXML.addContent(expedidoEn);
         return emisorXML;
     }
     /**
      * Genera el elemento del xml con los datos del receptor (cliente) del cfdi
      * @return elemento del receptor
      */
-        public Element generarReceptor(){
-            Element receptorXML = new Element("Receptor", cfdi);
-            receptorXML.setAttribute("rfc", receptor.getRFC());
-            receptorXML.setAttribute("nombre", XML.codificarCadena(receptor.getNombre()));
-            receptorXML.addContent(generarDomicilio());
-            return receptorXML;
+    public Element generarReceptor(){
+        Element receptorXML = new Element("Receptor", cfdi);
+        receptorXML.setAttribute("rfc", receptor.getRFC());
+        receptorXML.setAttribute("nombre", XML.codificarCadena(receptor.getNombre()));
+        //DOMICILIO DEL RECEPTOR
+        Element domicilio = new Element("Domicilio", cfdi);
+        domicilio.setAttribute("calle", XML.codificarCadena(receptor.getDireccion().getCalle()));
+        if (receptor.getDireccion().getNoExterior() != null) {
+		domicilio.setAttribute("noExterior", XML.codificarCadena(receptor.getDireccion().getNoExterior()));
         }
-        private Element generarDomicilio() {
-            Element domicilio = new Element("Domicilio", cfdi);
-            generarDireccionFiscal(domicilio, receptor.getDireccion());
-            return domicilio;
+        if (receptor.getDireccion().getNoInterior() != null) {
+		domicilio.setAttribute("noInterior", XML.codificarCadena(receptor.getDireccion().getNoInterior()));
+        }
+        if (receptor.getDireccion().getColonia() != null) {
+		domicilio.setAttribute("colonia", XML.codificarCadena(receptor.getDireccion().getColonia()));
+        }
+        if (receptor.getDireccion().getLocalidad() != null) {
+		domicilio.setAttribute("localidad", XML.codificarCadena(receptor.getDireccion().getLocalidad()));
+        }
+        if (receptor.getDireccion().getReferencia() != null) {
+		domicilio.setAttribute("referencia", XML.codificarCadena(receptor.getDireccion().getReferencia()));
+        }
+        domicilio.setAttribute("municipio", XML.codificarCadena(receptor.getDireccion().getMunicipio()));
+        domicilio.setAttribute("estado", XML.codificarCadena(receptor.getDireccion().getEstado()));
+        domicilio.setAttribute("pais", XML.codificarCadena("MÉXICO"));
+        domicilio.setAttribute("codigoPostal", receptor.getDireccion().getCodigoPostal());
+        receptorXML.addContent(domicilio);
+        return receptorXML;
         }
         /**
          * Genera el elemento del xml con los datos de los impuestos del cfdi
          * @return elemento con los impuestos
          */
         public Element generarImpuestos(){
-            return new Element("Impuestos", cfdi)
-                    .addContent(generarTraslados());
+            Element impuestos=new Element("Impuestos", cfdi);
+            //TRASLADO
+            Element traslado=new Element("Traslado", cfdi)
+                    .setAttribute("impuesto", "IVA")
+                    .setAttribute("tasa", XML.codificarNumero(factura.getTasa()) + "")
+                    .setAttribute("importe", XML.codificarNumero(factura.getImporteTasa()) + "");
+            //TRASLADOS
+            Element traslados=new Element("Traslados", cfdi);
+            traslados.addContent(traslado);
+            //IMPUESTOS
+            impuestos.addContent(traslados);
+            return impuestos;
         }
         /**
          * Genera el complemento del xml del cfdi
@@ -136,34 +208,6 @@ public class CFDI{
             return xml;
 	}
         /**
-         * Genera el elemento delxml con el domicilio fiscal del emisor dentro del cfdi
-         * @return elemento del domicilio fiscal del emisor
-         */
-        public Element generarDomicilioFiscalEmisor(){
-            Element domicilioFiscal = new Element("DomicilioFiscal", cfdi);
-            generarDireccionFiscal(domicilioFiscal, emisor.getDireccion());
-            return domicilioFiscal;
-        }
-        /**
-         * Genera el elemento del xml con los datos del lugar de expedición dentro del cfdi
-         * @return elemeto del lugar de expedición.
-         */
-        public Element generarExpedidoEn(){
-            Element expedidoEn = new Element("ExpedidoEn", cfdi);
-            generarDireccionFiscal(expedidoEn, factura.getExpedidoEn());
-            return expedidoEn;
-        }
-        /**
-         * Genera el elemento con los datos del domicilio de receptor dentro del
-         * espacio de nombre del cfdi
-         * @return elemento con el domicilio fiscal del receptor
-         */
-        public Element generarDomicilioReceptor(){
-            Element domicilio = new Element("Domicilio", cfdi);
-            generarDireccionFiscal(domicilio, receptor.getDireccion());
-            return domicilio;
-        }
-        /**
          * Genera el elemeto con los datos de los conceptos dentro del cfdi
          * @return elemento con los conceptos
          */
@@ -191,61 +235,5 @@ public class CFDI{
             return concepto_el.setAttribute("descripcion", XML.codificarCadena(concepto.getDescripcion()))
                 .setAttribute("valorUnitario", XML.codificarNumero(concepto.getValorUnitario()) + "")
 		.setAttribute("importe", XML.codificarNumero(concepto.getImporte()) + "");
-        }
-        /**
-         * Genera el elemento del xml dentro del cfdi con la información de los 
-         * traslados de la factura
-         * @return elemento con los traslados
-         */
-        public Element generarTraslados(){
-            return new Element("Traslados", cfdi)
-                        .addContent(generarTraslado());
-        }
-        /**
-         * Método que genera el traslado de la factura electrónica
-         * @return El traslado generado a apartir del IVA
-         */
-        private Element generarTraslado() {
-            return new Element("Traslado", cfdi)
-                    .setAttribute("impuesto", "IVA")
-                    .setAttribute("tasa", XML.codificarNumero(factura.getTasa()) + "")
-                    .setAttribute("importe", XML.codificarNumero(factura.getImporteTasa()) + "");
-	}
-        /**
-         * Método que genera la ubicación o dirección fiscal para los emisores, receptores y el lugar de expedición
-         * @param element Nodo del árbol del cual se desea generar la dirección Fiscal (ubicación)
-         * @param DireccionFiscal 
-         */
-        private void generarDireccionFiscal(Element element, Direccion DireccionFiscal) {
-		element.setAttribute("calle", XML.codificarCadena(DireccionFiscal.getCalle()));
-		if (DireccionFiscal.getNoExterior() != null && !DireccionFiscal.getNoExterior().isEmpty()) {
-			element.setAttribute("noExterior", XML.codificarCadena(DireccionFiscal.getNoExterior()));
-		}
-		if (DireccionFiscal.getNoInterior() != null && !DireccionFiscal.getNoInterior().isEmpty()) {
-			element.setAttribute("noInterior", XML.codificarCadena(DireccionFiscal.getNoInterior()));
-		}
-		if (DireccionFiscal.getColonia() != null && !DireccionFiscal.getColonia().isEmpty()) {
-			element.setAttribute("colonia", XML.codificarCadena(DireccionFiscal.getColonia()));
-		}
-		if (DireccionFiscal.getLocalidad() != null && !DireccionFiscal.getLocalidad().isEmpty()) {
-			element.setAttribute("localidad", XML.codificarCadena(DireccionFiscal.getLocalidad()));
-		}
-		if (DireccionFiscal.getReferencia() != null && !DireccionFiscal.getReferencia().isEmpty()) {
-			element.setAttribute("referencia", XML.codificarCadena(DireccionFiscal.getReferencia()));
-		}
-		element.setAttribute("municipio", XML.codificarCadena(DireccionFiscal.getMunicipio()));
-		element.setAttribute("estado", XML.codificarCadena(DireccionFiscal.getEstado()));
-		element.setAttribute("pais", XML.codificarCadena("MÉXICO"));
-		element.setAttribute("codigoPostal", DireccionFiscal.getCodigoPostal());
-	}
-        /**
-         * Método encargado de generar el elemento del árbol del CFDI que maneja
-         * la información del domicilio/dirección fiscal del emisor
-         * @return La direccion/domicilio fiscal del emisor
-         */
-        private Element obtenerDireccionFiscal() {
-            Element domicilioFiscal = new Element("DomicilioFiscal", cfdi);
-            generarDireccionFiscal(domicilioFiscal, emisor.getDireccion());
-            return domicilioFiscal;
         }
     }

@@ -9,15 +9,11 @@ import java.math.RoundingMode;
 import java.security.NoSuchProviderException;
 import java.security.PrivateKey;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.codec.binary.Base64;
-import org.jdom.Content;
 import org.jdom.Document;
-import org.jdom.Element;
-import org.jdom.Namespace;
 import org.jdom.output.Format;
 import org.jdom.output.XMLOutputter;
 
@@ -119,7 +115,6 @@ public class XML extends Formato{
                 .replaceAll(">", "&gt;")
                 .replaceAll("'", "&apos;");
     }
-    
     /**
      * Método encargado de convertir el xml a bytes
      * @param xml XML de la factura electrónica
@@ -178,10 +173,10 @@ public class XML extends Formato{
     public static void visualizarXML(File xml,HttpServletResponse response,HttpServletRequest request)throws IOException, FileNotFoundException, Exception{
         response.setContentType("application/octet-stream");
         response.addHeader("Content-Disposition", "attachment;filename=" + xml.getName());
-        byte[] bytePDF=new byte[(int)xml.length()];
+        byte[] byteXML=new byte[(int)xml.length()];
         FileInputStream fis=new FileInputStream(xml);
         fis.read();
-        response.getOutputStream().write(bytePDF);
+        response.getOutputStream().write(byteXML);
         response.getOutputStream().close();
     }
 }

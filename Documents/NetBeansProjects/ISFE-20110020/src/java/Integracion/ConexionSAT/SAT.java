@@ -29,7 +29,7 @@ public class SAT{
     public boolean ValidarCadenaOriginal(String cadenaOriginal) throws UnknownHostException, IOException
     {
         int puertoServicio=8090;
-        Socket socket = new Socket("http://148.204.57.222", puertoServicio);
+        Socket socket = new Socket("localhost", puertoServicio);
         DataInputStream entrada = new DataInputStream(socket.getInputStream());
         DataOutputStream salida = new DataOutputStream(socket.getOutputStream());
         salida.writeUTF(cadenaOriginal);
