@@ -7,6 +7,7 @@
 <%@page import="java.util.Calendar"%>
 <%@page import="subsistemaAutomatico.ReportesMensuales"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
+<% Calendar fechaActual = Calendar.getInstance();%>
 <%--
     String contribuyente = "";
     int id = 0 ;
@@ -33,19 +34,39 @@
             <script src="js/ui/jquery.ui.widget.js"></script>
             <script src="js/ui/jquery.effects.core.js"></script>
             <script type="text/javascript">
-			$(function(){
+            $(function(){
+                // Tabs
+                $('#tabs').tabs();
+            });
 
-				// Slider
-				$('#slider').slider({
-					range: true,
-					values: [17, 67]
-				});
-			});
 
-                        $(function(){
-                            // Tabs
-                            $('#tabs').tabs();
-                        });
+            function ValidarFolios() {
+                $("#ConfirmacionDeSolicitudFolios").text("");
+                var numFolios=$("#numeroFolios").val();
+                $.ajax({
+                    type: "POST",
+                    url: "Administrador",
+                    data: "Action=folios&numeroFolios="+numFolios,
+                    success: function(data){
+                        $("#ConfirmacionDeSolicitudFolios").text(data);
+                    }
+                });
+            }
+
+            function GenerarReportes() {
+            $("#ConfirmacionEnvioDeReportesMensuales").text("");
+                var mesReportado=$("#mesReportado").val();
+                var anioReportado=$("#anioReportado").val();
+                $.ajax({
+                    type: "POST",
+                    url: "Administrador",
+                    data: "Action=reportes&mesReportado="+mesReportado+"&anioReportado="+anioReportado,
+                    success: function(data){
+                        $("#ConfirmacionEnvioDeReportesMensuales").text(data);
+                    }
+                });
+            }
+
 		</script>
 
 	<center>
@@ -68,22 +89,45 @@
                         <ul>
                            <li><a href="#tabs-1">Solicitud de Folios al SAT</a></li>
                            <li><a href="#tabs-2">Env&iacute;o de Reportes Mensuales</a></li>
-                           <li><a href="#tabs-3">Administraci&oacute;n de Facturas</a></li>
                         </ul>
                         <div id="tabs-1">
                             <table>
                                 <tr>
                                     <td>
                                         <%
-                                            Calendar fechaActual = Calendar.getInstance();
                                             if(fechaActual.get(Calendar.DAY_OF_MONTH)<5 || (fechaActual.get(Calendar.DAY_OF_MONTH)>25&&fechaActual.get(Calendar.MONTH)-1<fechaActual.get(Calendar.MONTH)))
                                             {
                                                 out.println("Seleccione el numero de folios a solicitar:<br>");
-                                                out.println("<form action=\"Administrador\" method=\"post\">");
-                                                out.println("<input type=\"number\" min=\"1\" value=\"0\" id=\"numeroFolios\" name=\"numeroFolios\"/>");
+                                                out.println("<form id=\"formFolios\" action=\"Administrador\" name=\"formFolios\" method=\"post\">");
+                                                out.println("<input type=\"number\" min=\"1\" value=\"1\" id=\"numeroFolios\" name=\"numeroFolios\"/>");
                                                 out.println("</td>");
                                                 out.println("<td>");
-                                                out.println("<input type=\"submit\" value=\"Solicitar Bloque de Folios al SAT\" name=\"solicitarFolios\" class=\"ui-button ui-widget ui-state-default ui-corner-all\" role=\"button\" aria-disabled=\"false\"/>");
+                                                out.println("<input type=\"button\" onclick=\"ValidarFolios()\"  id=\"solicitarFolios\" value=\"Solicitar Bloque de Folios al SAT\" class=\"ui-button ui-widget ui-state-default ui-corner-all\" role=\"button\" aria-disabled=\"false\"/>");
+                                                out.println("</form>");
+                                            }
+                                            else
+                                            {
+                                                out.println("No es aun fecha de Solicitar Folios al SAT");
+                                            }
+                                        %>
+                                    </td>
+                                </tr>
+                            </table>
+                                    <br><br>
+                                    <label id="ConfirmacionDeSolicitudFolios"></label>
+                        </div>
+                        <div id="tabs-2">
+                            <table>
+                                <tr>
+                                    <td>
+                                        <%
+                                            if(fechaActual.get(Calendar.DAY_OF_MONTH)<5 || (fechaActual.get(Calendar.DAY_OF_MONTH)>25&&fechaActual.get(Calendar.MONTH)-1<fechaActual.get(Calendar.MONTH)))
+                                            {
+                                                out.println("Esta a punto de realizar el Reporte Mensual:<br>");
+                                                out.println("<form id=\"formReportes\" action=\"Administrador\" name=\"formReportes\" method=\"post\">");
+                                                out.println("<input type=\"hidden\" id=\"mesReportado\" name=\"mesReportado\" value=\""+fechaActual.get(Calendar.MONTH)+"\"/>");
+                                                out.println("<input type=\"hidden\" id=\"anioReportado\" name=\"anioReportado\" value=\""+fechaActual.get(Calendar.YEAR)+"\"/>");
+                                                out.println("<input type=\"button\" onclick=\"GenerarReportes()\" id=\"generarReportes\" value=\"Generar Reporte Mensual al SAT\" class=\"ui-button ui-widget ui-state-default ui-corner-all\" role=\"button\" aria-disabled=\"false\"/>");
                                                 out.println("</form>");
                                             }
                                             else
@@ -94,21 +138,8 @@
                                     </td>
                                 </tr>
                             </table>
-                        <%
-
-                            String mensaje=(String)session.getAttribute("mensaje");
-                            session.setAttribute("mensaje", null);
-                            if(mensaje!=null)
-                            {
-                                out.println("<label>"+mensaje+"</label><br>");
-                            }
-                        %>
-                        </div>
-                        <div id="tabs-2">
-
-                        </div>
-                        <div id="tabs-3">
-
+                                    <br><br>
+                                    <label id="ConfirmacionEnvioDeReportesMensuales"></label>
                         </div>
                     </div>
                 </center>

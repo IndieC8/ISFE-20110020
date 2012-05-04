@@ -49,7 +49,7 @@ public class SAT{
      * @param numFolios este parametro establece el numero de folios que se habran
      * de solicitar con el SAT
      */
-    public void manejoDeFolios(int numFolios)
+    public boolean manejoDeFolios(int numFolios)
     {
 	Integer arrayFolios[]=new Integer[numFolios];
     	Folio almacenaFolios = new Folio();
@@ -75,10 +75,12 @@ public class SAT{
 		}
 		i++;
             }
+            return true;
 	}
 	catch (Exception e)
 	{
             System.out.println("Excepcion: "+e.getMessage());
+            return false;
 	}
     }
 }

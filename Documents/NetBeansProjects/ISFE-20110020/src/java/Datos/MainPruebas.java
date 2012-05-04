@@ -117,7 +117,9 @@ public class MainPruebas {
             Document dXML=xml.generarXML(f, isfe);
             byte[] bXML=XML.convertirXMLaBytes(dXML, "FACTURA.xml");
             File fXML=XML.generarArchivoXML(bXML, "F.xml");
-            EnvioMail em=new EnvioMail("raul.hernandez.900519@gmail.com","PRUEBA XML","PRUEBA XML",fXML,f.getEmisor().getRFC()+f.getFolio().getNoFolio()+f.getReceptor().getRFC()+".xml");
+            EnvioMail em=new EnvioMail();
+            em.EnvioMail("raul.hernandez.900519@gmail.com","PRUEBA XML","PRUEBA XML",fXML,f.getEmisor().getRFC()+f.getFolio().getNoFolio()+f.getReceptor().getRFC()+".xml");
+
             //BufferedReader br=new BufferedReader(new FileReader(fXML));
             //String l=br.readLine();
             //while(l!=null){

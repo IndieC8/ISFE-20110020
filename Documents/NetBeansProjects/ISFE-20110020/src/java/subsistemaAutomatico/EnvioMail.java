@@ -37,7 +37,7 @@ public class EnvioMail
      * @throws MessagingException excepcion que maneja algun problema al
      * realizar el envio del correo
      */
-    public EnvioMail(String mailReceptor, String asunto, String cuerpo, File archivo, String nameArchivo)
+    public boolean EnvioMail(String mailReceptor, String asunto, String cuerpo, File archivo, String nameArchivo)
             throws MessagingException {
         this.mailReceptor = mailReceptor;
         this.asunto = asunto;
@@ -83,10 +83,12 @@ public class EnvioMail
             t.connect(correo, contrasena);
             t.sendMessage(message, message.getAllRecipients());
             t.close();
+            return true;
         }
         catch (Exception e)
         {
             e.printStackTrace();
+            return false;
         }
     }
     /**
