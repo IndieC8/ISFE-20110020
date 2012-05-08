@@ -1,5 +1,6 @@
 package dao;
 
+import Negocios.Cifrado.Cifrado;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.ResultSet;
@@ -62,7 +63,7 @@ public class Ingreso extends HttpServlet {
 
         } else {
             String nombre = request.getParameter("RFCLogin").toUpperCase();
-            Integer iD = new Integer(idUsuario);
+            String iD = Cifrado.codificarBase64( String.valueOf(idUsuario) );
             //creamos nuestra sesion
             HttpSession session = request.getSession(true);
             //Obtenemos los obejtos a guardar en session

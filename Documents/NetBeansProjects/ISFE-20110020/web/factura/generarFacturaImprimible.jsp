@@ -5,9 +5,11 @@
 --%>
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
-<%
+<%!
     String contribuyente = "";
-    int id = 0 ;
+    String id = "" ;
+%>
+<%
     HttpSession sesionOk = request.getSession();
     if (sesionOk.getAttribute("contribuyente") == null) {
         %>
@@ -17,7 +19,7 @@
         <%
     } else {
         contribuyente = (String) sesionOk.getAttribute("contribuyente");//Recoge la session
-        id = (Integer) sesionOk.getAttribute("identificador");//Recoge la session
+        id = (String) sesionOk.getAttribute("identificador");//Recoge la session
 %>
 <!DOCTYPE html>
 <html>
@@ -66,7 +68,7 @@
                                 <li><a href="../factura/generarFacturaImprimible.jsp">Generar Factura para Imprimir</a></li>
                             </ul>
                         </li>                       
-                        <li><a id="cerrarSesion"><img src="../images/icons/ingreso_ico.png" alt=""/> Cerrar Sesión</a></li>
+                        <li><a href="../cerrar.jsp"><img src="../images/icons/ingreso_ico.png"/> Cerrar Sesión &nbsp; &nbsp; <% out.println(contribuyente); %></a></li>
 		</ul>
                 </div>
 		<!-- Termina Menu -->

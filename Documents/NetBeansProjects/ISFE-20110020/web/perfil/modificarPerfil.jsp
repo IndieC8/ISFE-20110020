@@ -5,6 +5,23 @@
 --%>
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@page language="java" import="dao.*" %>
+
+<%!    String contribuyente = "";
+       String id = "";
+%>
+<%
+    HttpSession sesionOk = request.getSession();
+    if (sesionOk.getAttribute("contribuyente") == null) {
+%>
+<jsp:forward page="/index.jsp">
+    <jsp:param name="error" value="Es obligatorio identificarse"></jsp:param>
+</jsp:forward>
+<%        } else {
+    contribuyente = (String) sesionOk.getAttribute("contribuyente");//Recoge la session
+    id = (String) sesionOk.getAttribute("identificador");//Recoge la session
+%>
+
 <!DOCTYPE html>
 <html>
     <head>
@@ -14,141 +31,37 @@
         <script type="text/javascript" src="../js/jquery-ui-1.8.17.custom.min.js"></script>
         <script src="../js/jquery.perfil.js"></script>
         <script src="../js/ui/jquery.ui.dialog.js"></script>
+        <script src="../js/jquery.validate.js"></script>
 
         <script type="text/javascript">
+            $(document).ready(function(){
                 
-            $(function(){
-
-                // Tabs
-                $('#tabs').tabs();
-	
-
-                // Dialog			
-                $('#dialog').dialog({
-                    autoOpen: false,
-                    width: 600,
-                    buttons: {
-                        "Ok": function() { 
-                            $(this).dialog("close"); 
-                        }, 
-                        "Cancel": function() { 
-                            $(this).dialog("close"); 
-                        } 
-                    }
-                });
-				
-                // Dialog Link
-                $('#dialog_link').click(function(){
-                    $('#dialog').dialog('open');
-                    return false;
-                });
-
-				
-            });
-            
-                        
-            /*
-             *Activar el dialogo de Modificar password
-             */
-            $(function() {
-                // a workaround for a flaw in the demo system (http://dev.jqueryui.com/ticket/4375), ignore!
-                $( "#dialog:ui-dialog" ).dialog( "destroy" );
-		
-                
-		$("#dialogDireccionPerfil").dialog({
-                    autoOpen: false,
-                    height: 400,
-                    width: 450,
-                    modal: true,
-                    buttons: {
-                        "Aceptar": function() {
-                            //alert("ACEPTANDO");
-                            $("#ColoniaModificarPerfil").val($("#localidadModificarPerfil option:selected").html());
-                            $("#MunicipioModificarPerfil").val($("#municipioModificarPerfil option:selected").html());
+                               
+               $.ajax({
+                        type:"POST",
+                        url:"../Perfil",
+                        data:"idUsuario=<%=id%>",
+                        success: function(data){
+                            var aux = data.split("/");
                             
-                            $( this ).dialog("close");
-                                        
-                        },
-                        Cancel: function() {
-                            $( this ).dialog( "close" );
+                            $("#nombreModificarPerfil").text(aux[0]);
+                            $("#passwordModificarPerfil").val(aux[1]);
+                            $("#mailModificarPerfil").val(aux[2]);
+                            $("#telefonoModificarPerfil").val(aux[3]);
+                            $("#calleModificarPerfil").val(aux[4]);
+                            $("#exteriorModificarPerfil").val(aux[5]);
+                            $("#interiorModificarPerfil").val(aux[6]);
+                            $("#referenciaModificarPerfil").val(aux[7]);
+                            $("#ColoniaModificarPerfil").val(aux[8]);
+                            $("#MunicipioModificarPerfil").val(aux[9]);
+                            
                         }
-                    },
-                    close: function() {
-                        allFields.val( "" ).removeClass( "ui-state-error" );
-                    }
-                });
-                
-                
-		
-                $( "#dialogPwdPerfil" ).dialog({
-                    autoOpen: false,
-                    height: 300,
-                    width: 350,
-                    modal: true,
-                    buttons: {
-                        "Aceptar": function() {
-                            var pwd1 = $("#pwdModificarPerfil").val();
-                            var pwd2 = $("#pwd2ModificarPerfil").val();
-                            var rpwd = /^([0-9a-zA-Z])+$/;
-                            var campo = document.getElementById("pwdModificarPerfil");
-                            
-                            if(!campo.value.match(rpwd)){
-                                $("#errorModificarPwd").text("La contraseña solo debe contener: a-z 0-9");
-                                $("#pwdModificarPerfil").val("");
-                                $("#pwd2ModificarPerfil").val("");
-                                $("#pwdModificarPerfil").focus();
-                                return false;
-                            }else if(pwd1 != pwd2){
-                                $("#errorModificarPwd").text("Las contraseñas deben ser iguales");
-                                $("#pwdModificarPerfil").val("");
-                                $("#pwd2ModificarPerfil").val("");
-                                $("#pwdModificarPerfil").focus();
-                                return false;
-                            }else if(pwd1.length < 5){
-                                $("#errorModificarPwd").text("Ingresa más de 5 caracteres");
-                                $("#pwdModificarPerfil").val("");
-                                $("#pwd2ModificarPerfil").val("");
-                                $("#pwdModificarPerfil").focus();
-                                return false;
-                            }else{
-                                $("#passwordModificarPerfil").val(pwd2);
-                            }
-                            
-                            $( this ).dialog("close");
-                                        
-                        },
-                        Cancel: function() {
-                            $( this ).dialog( "close" );
-                        }
-                    },
-                    close: function() {
-                        allFields.val( "" ).removeClass( "ui-state-error" );
-                    }
-                });
+               });
+               
+               $("#FormularioModificacionPerfil").validate();
+                 
             });
-
-            function ModificarPassword(){
-                $("#errorModificarPwd").text("");
-                $("#pwdModificarPerfil").val("");
-                $("#pwd2ModificarPerfil").val("");
-                $( "#dialogPwdPerfil" ).dialog( "open" );
-            }
-            
-            function ModificarDireccion(){
-                $("#errorModificarColonia").text("");
-                $("#codigoModificarPerfil").val("");
-                $("#estadoModificarPerfil").val("");
-                $("#localidadModificarPerfil").html("");
-                $("#municipioModificarPerfil").html("");
-                $("#dialogDireccionPerfil").dialog("open");
-            }
-            
-            function BuscarCP(){
-                $("#errorModificarColonia").text("");
-                var codigo = $("#codigoModificarPerfil").val();
-                obtenerEstado(codigo,"errorModificarColonia","estadoModificarPerfil","municipioModificarPerfil","localidadModificarPerfil","codigoModificarPerfil");
                 
-            }
             
         </script>
     </head>
@@ -164,15 +77,15 @@
             <form>
                 <fieldset>  
                     Contraseña: &nbsp; &nbsp;
-                    <input type="password" id="pwdModificarPerfil" />
+                    <input type="password" id="pwdModificarPerfil" maxlength="30" />
                     <br>
                     Repite tu Contraseña: &nbsp; &nbsp;
-                    <input type="password" id="pwd2ModificarPerfil" />
+                    <input type="password" id="pwd2ModificarPerfil" maxlength="30" />
                 </fieldset>
             </form>
         </div>
         <!--Aqui termina el dialogo de Modificar Password-->
-        
+
         <!--Aqui va el dialogo de Modificar Colonia-->
         <div id="dialogDireccionPerfil" title="ISFE- Modificar Perfil">
             <p class="validateTips">
@@ -220,7 +133,7 @@
                                 <li><a href="../factura/generarFacturaImprimible.jsp">Generar Factura Imprimible</a></li>
                             </ul>
                         </li>                       
-                        <li><a id="cerrarSesion"><img src="../images/icons/ingreso_ico.png" alt=""/> Cerrar Sesión</a></li>
+                        <li><a href="../cerrar.jsp" id="cerrarSesion"><img src="../images/icons/ingreso_ico.png" alt=""/> Cerrar Sesión &nbsp; &nbsp;  <%out.println(contribuyente);%> </a></li>
                     </ul>
                 </div>
                 <!-- Termina Menu -->
@@ -234,7 +147,13 @@
                             <li><a href="#tabs-2">Verificar nuevos datos</a></li>
                         </ul>
                         <div id="tabs-1">
-                            <form>
+                            <div align="left">
+                                <p>
+                                    USUARIO: <label class="texto" id="nombreModificarPerfil"></label> 
+                                </p>
+                            </div>
+                            <br/>
+                            <form id="FormularioModificacionPerfil">
                                 <table border="0" id="mytable">
                                     <thead>
                                         <tr>
@@ -246,28 +165,13 @@
                                     </thead>
                                     <tbody>
                                         <tr>
-                                            <td>Nombre o Razón Social</td>
-                                            <td><input type="text" id="nombreModificarPerfil" size="35" readonly="readonly" style="text-transform: uppercase" /></td>
-                                            <td><input type="button" onclick="EditarModificacion(this.name)" name="nombreModificarPerfil" value="Editar"  class="ui-button ui-widget ui-state-default ui-corner-all" role="button" aria-disabled="false"/></td>
-                                        </tr>
-                                        <tr>
-                                            <td>RFC</td>
-                                            <td><input type="text" id="rfcModificarPerfil" size="35" readonly="readonly" /></td>
-                                            <td></td>
-                                        </tr>
-                                        <tr>
-                                            <td>CURP</td>
-                                            <td><input type="text" id="curpModificarPerfil" size="35" readonly="readonly" /></td>
-                                            <td></td>
-                                        </tr>
-                                        <tr>
                                             <td>Mail</td>
-                                            <td><input type="text" id="mailModificarPerfil" size="35" readonly="readonly" /></td>
+                                            <td><input type="text" id="mailModificarPerfil" size="35" readonly="readonly" maxlength="40" class="required email" /></td>
                                             <td><input type="button" onclick="EditarModificacion(this.name)" value="Editar" name="mailModificarPerfil" class="ui-button ui-widget ui-state-default ui-corner-all" role="button" aria-disabled="false"/></td>
                                         </tr>
                                         <tr>
                                             <td>Teléfono</td>
-                                            <td><input type="text" id="telefonoModificarPerfil" size="35" readonly="readonly"/></td>
+                                            <td><input type="text" id="telefonoModificarPerfil" size="35" readonly="readonly" maxlength="20" onkeypress="OnlyNumber(this.value,this)"/></td>
                                             <td><input type="button" onclick="EditarModificacion(this.name)" value="Editar" name="telefonoModificarPerfil" class="ui-button ui-widget ui-state-default ui-corner-all" role="button" aria-disabled="false"/></td>
                                         </tr>
                                         <tr>
@@ -277,17 +181,17 @@
                                         </tr>
                                         <tr>
                                             <td>Av / Calle</td>
-                                            <td><input type="text" size="35" id="calleModificarPerfil" readonly="readonly" style="text-transform: uppercase" /></td>
+                                            <td><input type="text" size="35" maxlength="50" id="calleModificarPerfil" readonly="readonly" style="text-transform: uppercase" /></td>
                                             <td><input type="button" onclick="EditarModificacion(this.name)" value="Editar" name="calleModificarPerfil" class="ui-button ui-widget ui-state-default ui-corner-all" role="button" aria-disabled="false"/></td>
                                         </tr>
                                         <tr>
                                             <td>Número Interior</td>
-                                            <td><input type="text" size="35" id="interiorModificarPerfil" readonly="readonly" style="text-transform: uppercase" /></td>
+                                            <td><input type="text" size="35" maxlength="5" id="interiorModificarPerfil" readonly="readonly" style="text-transform: uppercase" /></td>
                                             <td><input type="button" onclick="EditarModificacion(this.name)" value="Editar" name="interiorModificarPerfil" class="ui-button ui-widget ui-state-default ui-corner-all" role="button" aria-disabled="false"/></td>
                                         </tr>
                                         <tr>
                                             <td>Número Exterior</td>
-                                            <td><input type="text" size="35" id="exteriorModificarPerfil" readonly="readonly" onkeypress="OnlyNumber(this.value,this)" /></td>
+                                            <td><input type="text" size="35" maxlength="5" id="exteriorModificarPerfil" readonly="readonly" onkeypress="OnlyNumber(this.value,this)" /></td>
                                             <td><input type="button" onclick="EditarModificacion(this.name)" value="Editar" name="exteriorModificarPerfil" class="ui-button ui-widget ui-state-default ui-corner-all" role="button" aria-disabled="false"/></td>
                                         </tr>
 
@@ -303,11 +207,15 @@
                                         </tr>
                                         <tr>
                                             <td>Referencia</td>
-                                            <td><input type="text" size="35" id="referenciaModificarPerfil" readonly="readonly" style="text-transform: uppercase" /></td>
+                                            <td><input type="text" size="35" maxlength="25" id="referenciaModificarPerfil" readonly="readonly" style="text-transform: uppercase" /></td>
                                             <td><input type="button" onclick="EditarModificacion(this.name)" value="Editar" name="referenciaModificarPerfil" class="ui-button ui-widget ui-state-default ui-corner-all" role="button" aria-disabled="false"/></td>
                                         </tr>
                                     </tbody>
                                 </table>
+                                <br><br>
+                                <div align="right">
+                                    <input type="submit" style="display: none" value="Confirmar Modificaciones" id="ConfirmarModificacion" name="mailModificarPerfil" class="ui-button ui-widget ui-state-default ui-corner-all" role="button" aria-disabled="false"/>
+                                </div>
                             </form>
                         </div>
                         <div id="tabs-2">
@@ -331,3 +239,7 @@
     </center>
 </body>
 </html>
+
+<%
+    }
+%>

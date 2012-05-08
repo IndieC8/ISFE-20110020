@@ -48,6 +48,10 @@
         <servlet-name>Administrador</servlet-name>
         <servlet-class>dao.Administrador</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>Perfil</servlet-name>
+        <servlet-class>dao.Perfil</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>ObtenerEstado</servlet-name>
         <url-pattern>/ObtenerEstado</url-pattern>
@@ -95,6 +99,10 @@
     <servlet-mapping>
         <servlet-name>Administrador</servlet-name>
         <url-pattern>/Administrador</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>Perfil</servlet-name>
+        <url-pattern>/Perfil</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>
