@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <xsl:stylesheet version="1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:fo="http://www.w3.org/1999/XSL/Format" xmlns:cfdi="http://www.sat.gob.mx/cfd/3" xmlns:tfd="http://www.sat.gob.mx/TimbreFiscalDigital" xsi:schemaLocation="http://www.sat.gob.mx/cfd/3 cfdv3.xsd" xmlns:qr="http://code.google.com/p/fop-qrcode">
 	<xsl:output method="xml" indent="yes"/>
-
 	<xsl:template match="/">
 		<fo:root>
 			<fo:layout-master-set>
@@ -47,6 +46,11 @@
 				<fo:static-content flow-name="xsl-region-before" font-size="14pt" font-weight="bold">
 					<fo:block text-align="center">Factura emitida con ISFE.</fo:block>
 				</fo:static-content>
+                                <fo:flow flow-name="xsl-region-body">
+                                    <fo:block>
+                                        <xsl:apply-templates/>
+                                    </fo:block>
+                                </fo:flow>
 			</fo:page-sequence>
 		</fo:root>
 	</xsl:template>
@@ -249,7 +253,7 @@
 					<fo:table-row>
 						<fo:table-cell>
 							<fo:block>
-								<fo:external-graphic src="url('http://localhost:8084/ISFE/resources/QR.gif')" content-height="40" content-width="40"/>
+								<!--<fo:external-graphic src="url('http://localhost:8084/ISFE/resources/QR.gif')" content-height="40" content-width="40"/>-->
 							</fo:block>
 						</fo:table-cell>
 						<fo:table-cell space-start="0.25cm">

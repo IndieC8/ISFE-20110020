@@ -11,10 +11,10 @@
 <!DOCTYPE html>
 <html>
 	<head>
-            <meta http-equiv="X-UA-Compatible" content="IE=8" />
-            <meta http-equiv="X-UA-Compatible" content="IE=Emulate7" />
+            
             <title>ISFE - Inicio</title>
             <link rel="stylesheet" type="text/css" href="/ISFE-20110020/estilo/style.css" />
+            <script defer type="text/javascript" src="js/pngfix.js"></script>
             <script type="text/javascript" src="js/jquery-1.7.1.min.js"></script>
             <script type="text/javascript" src="js/jquery-ui-1.8.17.custom.min.js"></script>
             <script src="/ISFE-20110020/js/jquery.maskedinput.js"></script>

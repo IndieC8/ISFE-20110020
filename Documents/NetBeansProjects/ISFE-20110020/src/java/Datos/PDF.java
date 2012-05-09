@@ -33,7 +33,23 @@ public class PDF extends Formato{
      * @throws TransformerException
      * @throws IOException 
      */
-    public File generarArchivoPDF(File xml, File xsl) throws FileNotFoundException, FOPException, TransformerConfigurationException, TransformerException, IOException{
+    public static File generarArchivoPDF(File xml,String xsl,String nombre) throws FileNotFoundException, FOPException, TransformerConfigurationException, TransformerException, IOException{
+        FopFactory fopFactory = FopFactory.newInstance();
+        File fPDF=new File(nombre);
+        OutputStream out = new java.io.BufferedOutputStream(new java.io.FileOutputStream(fPDF));
+        try{
+            Fop fop = fopFactory.newFop(MimeConstants.MIME_PDF, out);
+            TransformerFactory factory = TransformerFactory.newInstance();
+            javax.xml.transform.Transformer transformer = factory.newTransformer(new StreamSource(new File(xsl)));
+            Source src = new StreamSource(xml);
+            Result res = new SAXResult(fop.getDefaultHandler());
+            transformer.transform(src, res);
+        }finally{
+            out.close();
+        }
+        return fPDF;
+    }
+    /**public File generarArchivoPDF(File xml, File xsl) throws FileNotFoundException, FOPException, TransformerConfigurationException, TransformerException, IOException{
         FopFactory fopFactory = FopFactory.newInstance();
         FOUserAgent foUserAgent = fopFactory.newFOUserAgent();
         foUserAgent.getRendererOptions().put("encryption-params", new PDFEncryptionParams(null, null, true, true, false, false));
@@ -75,7 +91,7 @@ public class PDF extends Formato{
         }
         
         return pdfSigned;
-    }
+    }*/
     /**
      * Método encargado de visualizar el PDF generado en un JSP o un Servlet
      * @param xml archivo xml de la factura electrónica
@@ -88,13 +104,11 @@ public class PDF extends Formato{
      * @throws TransformerException
      * @throws Exception 
      */
-    public static void visualizarPDF(File xml,HttpServletResponse response,HttpServletRequest request)throws IOException, FileNotFoundException, FOPException, TransformerConfigurationException,TransformerException, Exception{
-        PDF pdf=new PDF();
+    public static void visualizarPDF(File pdf,HttpServletResponse response,HttpServletRequest request)throws IOException, FileNotFoundException, FOPException, TransformerConfigurationException,TransformerException, Exception{
         String path=request.getSession().getServletContext().getRealPath("/");
-        File archivoPDF=pdf.generarArchivoPDF(xml, new File(path+"resurces/xslt/PDF.xsl"));
         response.setContentType("application/pdf");
-        byte[] bytePDF=new byte[(int)archivoPDF.length()];
-        FileInputStream fis=new FileInputStream(archivoPDF);
+        byte[] bytePDF=new byte[(int)pdf.length()];
+        FileInputStream fis=new FileInputStream(pdf);
         fis.read();
         response.getOutputStream().write(bytePDF);
         response.getOutputStream().close();

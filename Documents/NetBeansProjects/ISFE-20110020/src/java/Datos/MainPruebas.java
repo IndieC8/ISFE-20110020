@@ -15,8 +15,6 @@ import java.security.PrivateKey;
 import java.security.cert.CertificateException;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.jdom.Document;
 import subsistemaAutomatico.EnvioMail;
 
@@ -115,22 +113,27 @@ public class MainPruebas {
             f.generarTotal();
             XML xml=new XML();
             Document dXML=xml.generarXML(f, isfe);
-            byte[] bXML=XML.convertirXMLaBytes(dXML, "FACTURA.xml");
-            File fXML=XML.generarArchivoXML(bXML, "F.xml");
-            EnvioMail em=new EnvioMail();
+            File fXML=XML.generarArchivoXML(dXML, "f.xml");
+            BufferedReader br=new BufferedReader(new FileReader(fXML));
+            String l=br.readLine();
+            while(l!=null){
+               System.out.println(l);
+                l=br.readLine();
+            }
+            File fPDF=PDF.generarArchivoPDF(fXML, "PDF.xsl", "F.pdf");
+            /**EnvioMail em=new EnvioMail();
             em.EnvioMail("raul.hernandez.900519@gmail.com","PRUEBA XML","PRUEBA XML",fXML,f.getEmisor().getRFC()+f.getFolio().getNoFolio()+f.getReceptor().getRFC()+".xml");
-
-            //BufferedReader br=new BufferedReader(new FileReader(fXML));
-            //String l=br.readLine();
-            //while(l!=null){
-                //System.out.println(l);
-                //l=br.readLine();
-            //}
+            BufferedReader br=new BufferedReader(new FileReader(fXML));
+            String l=br.readLine();
+            while(l!=null){
+               System.out.println(l);
+                l=br.readLine();
+            }
             String cad="||3.0|11|2012-04-27T14:00:34|121|2012|INGRESO|UNA SOLA EXIBICION|34.00|10.00|288.00|PAM660606ER9|JUAN|ANTONIO R VARGAS|GUSTAVO A MADERO|DISTRITO FEDERAL|MEXICO|MEXICO|PAM660606ER9|PEDRO PEREZ|ANTONIO R VARGAS|GUSTAVO A MADERO|DISTRITO FEDERAL|MEXICO|1|TABLETAS|30.00|30.00|2|BOTELLA|50.00|100.00||";
             System.out.println(cad);
             System.out.println();
             SAT sat=new SAT();
-            System.out.println(sat.ValidarCadenaOriginal(cad));
+            System.out.println(sat.ValidarCadenaOriginal(cad));*/
         } catch (SecurityException ex) {
             throw new SecurityException("",ex);
         } catch (UnsupportedEncodingException ex) {

@@ -10,6 +10,8 @@ import java.security.NoSuchProviderException;
 import java.security.PrivateKey;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.codec.binary.Base64;
@@ -116,36 +118,6 @@ public class XML extends Formato{
                 .replaceAll("'", "&apos;");
     }
     /**
-     * Método encargado de convertir el xml a bytes
-     * @param xml XML de la factura electrónica
-     * @param nombre  nombre de la factura electrónica
-     * @return arreglos de bytes  de la factura electrónica
-     */
-    public static byte[] convertirXMLaBytes(Document xml,String nombre){
-        byte[] bytesXML=null;
-        FileInputStream fis=null;
-        FileOutputStream fos=null;
-        try{
-            XMLOutputter out=new XMLOutputter(Format.getPrettyFormat());
-            File archivo=File.createTempFile(nombre, ".xml");
-            fos=new FileOutputStream(archivo);
-            out.output(xml, fos);
-            bytesXML=new byte[(int)archivo.length()];
-            fis=new FileInputStream(archivo);
-            fis.read(bytesXML);
-        }catch(IOException ex){
-            System.err.println(ex.getMessage());
-        }finally{
-            try {
-                fis.close();
-            } catch (Exception ex) {}
-            try {
-                fos.close();
-            } catch (Exception ex) {}
-        }
-        return bytesXML;
-    }
-    /**
      * Método encargado de generar el archivo xml 
      * @param xml arreglo de bytes del xml
      * @param nombre del archivo a generar
@@ -154,12 +126,28 @@ public class XML extends Formato{
      * @throws FileNotFoundException
      * @throws Exception
      */
-    public static File generarArchivoXML(byte[] xml,String nombre)throws IOException, FileNotFoundException,Exception{
-        File archivo=File.createTempFile(nombre, ".xml");
-        FileOutputStream fos=new FileOutputStream(archivo);
-        fos.write(xml);
-        fos.close();
-        return archivo;
+    @SuppressWarnings("CallToThreadDumpStack")
+    public static File generarArchivoXML(Document xml,String nombre){
+        File fXML=null;
+        FileOutputStream fos=null;
+        try{
+            XMLOutputter out=new XMLOutputter(Format.getPrettyFormat());
+            fXML=new File(nombre);
+            fos=new FileOutputStream(fXML);
+            out.output(xml, fos);
+        }catch(IOException ex){
+            System.err.println(ex.getMessage());
+            ex.printStackTrace();
+        }
+        finally{
+            try {
+                fos.close();
+            } catch (IOException ex) {
+                System.err.println(ex.getMessage());
+                ex.printStackTrace();
+            }
+        }
+        return fXML;
     }
     /**
      * Método encargado de visualizar el xml dentro de un JSP o Servlet
