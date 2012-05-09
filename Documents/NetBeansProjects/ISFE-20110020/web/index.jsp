@@ -1,4 +1,4 @@
-<%-- 
+<%--
     Document   : Index
     Created on : 23/01/2012, 03:09:10 PM
     Author     : kawatoto
@@ -11,56 +11,58 @@
 <!DOCTYPE html>
 <html>
 	<head>
+            
             <title>ISFE - Inicio</title>
             <link rel="stylesheet" type="text/css" href="/ISFE-20110020/estilo/style.css" />
+            <script defer type="text/javascript" src="js/pngfix.js"></script>
             <script type="text/javascript" src="js/jquery-1.7.1.min.js"></script>
             <script type="text/javascript" src="js/jquery-ui-1.8.17.custom.min.js"></script>
             <script src="/ISFE-20110020/js/jquery.maskedinput.js"></script>
             <script src="/ISFE-20110020/js/jquery.menu.js"></script>
-            
+
             <script type="text/javascript">
 			$(function(){
-			
+
 				// Slider
 				$('#slider').slider({
 					range: true,
 					values: [17, 67]
-				});				
+				});
 			});
-                        
+
                         jQuery(function(){
                             $("#RFCLogin").mask("aaa*-999999-aa*");
                          });
 		</script>
-            
+
             <script>
                     $(function() {
                         $( "input:submit, a, button", ".demo" ).button();
                         $( "a", ".demo" ).click(function() { return false; });
                     });
-                    
+
                     /*Validar login*/
                     function Sesion(){
                         $("#errorUsuarioNoEncontrado").text("");
                         $("#errorLoginPWD").text("");
                         $("#errorLoginRFC").text("");
-                        
-                        
+
+
                         var rfc = $("#RFCLogin").val().toUpperCase();
                         var aux = rfc.split("-");
                         rfc = aux[0]+aux[1]+aux[2];
-                        
+
                         var pwd = $("#passwordLogin").val();
                         var campo = document.getElementById("passwordLogin");
                         var rpwd = /^([0-9a-zA-Z])+$/;
-                        
+
                         if(rfc == ""){
                             $("#errorLoginRFC").text("Ingresa tu R.F.C.");
                         }else if(!campo.value.match(rpwd)){
                             $("#errorLoginPWD").text("El password solo debe contener: a-z 0-9");
                             $("#passwordLogin").val("");
                         }
-                        
+
                         $.ajax({
                             type: "POST",
                             url: "Ingreso",
@@ -76,16 +78,16 @@
                                 }
                             }
                         });
-                        
+
                     }
-          </script>  
+          </script>
 	<center>
             <div class="principal">
             <div class="header">
                 <div class="logo"><a href="/ISFE-20110020/index.jsp" ><img src="/ISFE-20110020/images/logo1.png" alt="ISFE" height="164"/></a></div>
             </div>
 		<div class="contenido_principal">
-		<!-- Comienza Menu -->              
+		<!-- Comienza Menu -->
                 <div class="menu">
 		<ul>
                     <li><a href="/ISFE-20110020/Uso.jsp"><img src="/ISFE-20110020/images/icons/valida_ico.png" alt=""/>¿C&oacute;mo usar ISFE?</a></li>
@@ -108,7 +110,7 @@
                                             <tbody>
                                                 <tr class="trLogin">
                                                     <h2>&nbsp;&nbsp;&nbsp;Ingrese a ISFE</h2>
-                                                    &nbsp; &nbsp; R.F.C. del contribuyente: 
+                                                    &nbsp; &nbsp; R.F.C. del contribuyente:
                                                     <td colspan="3" class="tdLogin">
                                                         <input type="text" name="RFCLogin" style="text-transform:uppercase" id="RFCLogin"  class="text ui-widget-content ui-corner-all" />
                                                         <label id="errorLoginRFC"></label>
@@ -127,7 +129,7 @@
                                                     </td>
                                                 </tr>
                                             </tbody>
-                                        </table>                                        
+                                        </table>
                                     </form>
                                 </td>
                             </tr>
@@ -145,7 +147,7 @@
             <div class="footer">
                 <br><br>
                 Derechos reservados ISFE <br>
-                HTML5 | CSS 2.0 | JavaScript | Apache Tomcat | J2EE 
+                HTML5 | CSS 2.0 | JavaScript | Apache Tomcat | J2EE
                 <br>
                 <a href="http://twitter.com/" ><img src="/ISFE-20110020/images/twitter.png" alt="http://twitter.com" width="25" height="25"></a>
                 <a href="http://www.facebook.com/" ><img src="/ISFE-20110020/images/Facebook.png" alt="http://www.facebook.com" width="25" height="25"></a>
