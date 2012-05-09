@@ -21,6 +21,7 @@
         <script src="js/jquery.validate.js"></script>
         <script src="js/jquery.maskedinput.js"></script>
         <script src="js/ui/jquery.ui.dialog.js"></script>
+        <script src="js/jquery.perfil.js"></script>
 
 
         <script type="text/javascript">
@@ -101,13 +102,7 @@
             });
             
 	
-            /*Permite ingresar solo números*/
-            function OnlyNumber(value,elemnt){
-                if( isNaN(value) ){
-                    elemnt.value = "";
-                }
-            }
-            
+                       
             var contribuyente;
             /*Evalua la opción si es Persona Fisica o moral*/
             function Contribuyente(value){
@@ -139,47 +134,7 @@
                 $("#dialogPrivadaUsuario").dialog("open");
             }
          
-            function obtenerEstado(){
-                var codigoPostal=$("#codigoPostal").val();
-                $("#ErrorCodigoPostalUsuario").text("");
-                
-                $.ajax({
-                    type:"POST",
-                    url:"ObtenerEstado",
-                    data:"codigoPostal="+codigoPostal,
-                    success: function(datos){
-                        $("#estado").val(datos);
-                        if(datos == ""){
-                            $("#ErrorCodigoPostalUsuario").text("El código postal no existe");
-                            $("#codigoPostal").val("");
-                            $("#codigoPostal").focus();
-                            return false;
-                        }
-           
-                    }
-                });
-                
-                $.ajax({
-                    type:"POST",
-                    url:"ObtenerMunicipio",
-                    data:"codigoPostal="+codigoPostal,
-                    success: function(data){
-                        $("#municipio").html(data);
-                    }    
-                });
-                
-                $.ajax({
-                    type:"POST",
-                    url:"ObtenerLocalidad",
-                    data:"codigoPostal="+codigoPostal,
-                    success: function(data){
-                        $("#localidad").html(data);
-                    }    
-                });
-                
-                $("#emailUsuario").focus();
-            }
-            
+                       
             /*Busca si existe el rfc*/
             function validarRFC(){
                 var rfc = $("#UsuarioRFC").val().toUpperCase();
@@ -343,13 +298,13 @@
                                         </tr>
                                         <tr>
                                             <td>Código Postal*:</td>
-                                            <td><input type="text" id="codigoPostal" class="required" name="codigoPostal" size="25" maxlength="5" onblur="obtenerEstado()" onkeyup="OnlyNumber(this.value,this)"  />
+                                            <td><input type="text" id="codigoPostal" class="required" name="codigoPostal" size="25" maxlength="5" onblur="BuscarCPRegistro()" onkeyup="OnlyNumber(this.value,this)"  />
                                                 <label id="ErrorCodigoPostalUsuario"></label>
                                             </td>                                           
                                         </tr>
                                         <tr>
                                             <td>Estado:</td>
-                                            <td><input type="text" id="estado" readonly="readonly" size="25" ></td> 
+                                            <td><input type="text" id="estado" name="estado" readonly="readonly" size="25" ></td> 
                                         </tr>
                                         <tr>
                                             <td>Delegaci&oacute;n/Municipio:</td>

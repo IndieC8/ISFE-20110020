@@ -1,4 +1,4 @@
-/* 
+/* #codigoPostal"
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
@@ -134,15 +134,20 @@ function ModificarDireccion(){
 function BuscarCP(){
     $("#errorModificarColonia").text("");
     var codigo = $("#codigoModificarPerfil").val();
-    obtenerEstado(codigo,"errorModificarColonia","estadoModificarPerfil","municipioModificarPerfil","localidadModificarPerfil","codigoModificarPerfil");
+    obtenerEstado(codigo,"errorModificarColonia","estadoModificarPerfil","municipioModificarPerfil","localidadModificarPerfil","codigoModificarPerfil","../");
                 
+}
+
+function BuscarCPRegistro(){
+    $("#ErrorCodigoPostalUsuario").text("");
+    var codigo = $("#codigoPostal").val();
+    obtenerEstado(codigo,"ErrorCodigoPostalUsuario","estado","municipio","localidad","codigoPostal","");
 }
 
 
 function EditarModificacion(elemnt){
     $("#"+elemnt).removeAttr("readonly");
     $("#"+elemnt).focus();
-    
     $("#ConfirmarModificacion").show();
 }
 
@@ -153,11 +158,11 @@ function OnlyNumber(value,elemnt){
     }
 }
 
-function obtenerEstado(codigo,error,estado,municipio,localidad,campo){
+function obtenerEstado(codigo,error,estado,municipio,localidad,campo,url){
     
     $.ajax({
         type:"POST",
-        url:"../ObtenerEstado",
+        url: url+"ObtenerEstado",
         data:"codigoPostal="+codigo,
         success: function(datos){
             $("#"+estado).val(datos);
@@ -173,7 +178,7 @@ function obtenerEstado(codigo,error,estado,municipio,localidad,campo){
                 
     $.ajax({
         type:"POST",
-        url:"../ObtenerMunicipio",
+        url:url+"ObtenerMunicipio",
         data:"codigoPostal="+codigo,
         success: function(data){
             $("#"+municipio).html(data);
@@ -182,7 +187,7 @@ function obtenerEstado(codigo,error,estado,municipio,localidad,campo){
                 
     $.ajax({
         type:"POST",
-        url:"../ObtenerLocalidad",
+        url:url+"ObtenerLocalidad",
         data:"codigoPostal="+codigo,
         success: function(data){
             $("#"+localidad).html(data);

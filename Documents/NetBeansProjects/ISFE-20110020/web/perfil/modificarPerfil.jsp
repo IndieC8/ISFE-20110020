@@ -171,7 +171,7 @@
                                         </tr>
                                         <tr>
                                             <td>Teléfono</td>
-                                            <td><input type="text" id="telefonoModificarPerfil" size="35" readonly="readonly" maxlength="20" onkeypress="OnlyNumber(this.value,this)"/></td>
+                                            <td><input type="text" id="telefonoModificarPerfil" size="35" readonly="readonly" maxlength="20" onkeypress="OnlyNumber(this.value,this)" class="required" /></td>
                                             <td><input type="button" onclick="EditarModificacion(this.name)" value="Editar" name="telefonoModificarPerfil" class="ui-button ui-widget ui-state-default ui-corner-all" role="button" aria-disabled="false"/></td>
                                         </tr>
                                         <tr>
