@@ -5,7 +5,6 @@
 package Datos;
 
 import Integracion.ConexionSAT.CSD;
-import Integracion.ConexionSAT.SAT;
 import Negocios.Cifrado.Cifrado;
 import Negocios.ObtenerFiel.Fiel;
 import Negocios.ObtenerFolios.Folio;
@@ -16,7 +15,6 @@ import java.security.cert.CertificateException;
 import java.util.ArrayList;
 import java.util.Date;
 import org.jdom.Document;
-import subsistemaAutomatico.EnvioMail;
 
 /**
  *
