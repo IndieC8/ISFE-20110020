@@ -17,6 +17,7 @@ public class Factura {
     private double IVA=0f;
     private double SubTotal=0f;
     private double Total=0f;
+    private double descuento=0f;
     private String cadenaCSD=null;
     //private CadenaOriginal cadenaOriginal=null;
     private Folio folio=null;
@@ -300,10 +301,23 @@ public class Factura {
         this.Total=this.SubTotal+this.IVA;
     }
     /**
-     * 
+     * Método encargado de generar la tasa de la factura
      * @return Tasa de la factura generada
      */
     public double getTasa() {
         return 0.16 * 100;
+    }
+    /**
+     * Método encargado de ingresar el descuento total de las facturas
+     */
+    public void setDescuento(double descuento){
+        this.descuento=descuento;
+    }
+    /**
+     * Método encargado de obtener el descuento total de la factura
+     * @return descuento de la factura
+     */
+    public double getDescuento(){
+        return this.descuento;
     }
 }

@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.Random;
 
 /**
  * Clase que representa los folios que se utilizan para la generación de las
@@ -28,6 +29,7 @@ public class Folio {
     /**
      * Cosntructor que recibe el folio y el estado del mismo
      */
+    @SuppressWarnings("OverridableMethodCallInConstructor")
     public Folio(long UUID,long noFolio,boolean usado){
         this.setUUID(UUID);
         this.setNoFolio(noFolio);
@@ -83,7 +85,15 @@ public class Folio {
     }
 
     public long getUUID(){
-        return this.UUID;
+        long temp=0;
+        Random uuid=new Random();
+        uuid.setSeed(UUID);
+        temp=uuid.nextLong();
+        if(temp<0)
+            return (-1)*temp;
+        else
+            return temp;
+        
     }
     public void setUUID(long UUID){
         this.UUID=UUID;
