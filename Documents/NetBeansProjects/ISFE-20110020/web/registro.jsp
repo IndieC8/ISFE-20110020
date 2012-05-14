@@ -25,7 +25,6 @@
 
 
         <script type="text/javascript">
-            var FIEL, CSD;
             $(document).ready(function(){
                                        
                 $("#formulario_registro").validate({
@@ -55,148 +54,7 @@
                     }
                 });
             });
-                
-            $(function() {
-                // a workaround for a flaw in the demo system (http://dev.jqueryui.com/ticket/4375), ignore!
-                $( "#dialog:ui-dialog" ).dialog( "destroy" );
-		
-                
-		$("#dialogPrivadaUsuario").dialog({
-                    autoOpen: false,
-                    height: 280,
-                    width: 350,
-                    modal: true,
-                    buttons: {
-                        "Aceptar": function() {
-                            alert("ACEPTANDO");
-                            $( this ).dialog("close");
-                                        
-                        },
-                        Cancel: function() {
-                            $( this ).dialog( "close" );
-                        }
-                    },
-                    close: function() {
-                        allFields.val( "" ).removeClass( "ui-state-error" );
-                    }
-                });
-                    
-            });
-                
-                
-            jQuery(function(){
-                $("#UsuarioRFC").mask("aaa*-999999-aaa*");
-                $("#RFCLogin").mask("aaa*-999999-aaa*");
-                $("#CURPUsuario").mask("aaa*999999aaaaa*99");
-            });
-                    
-                
-                
-            $(function(){
-	
-                // Tabs
-                $('#tabs').tabs();
-			
-				
-				
-            });
             
-	
-                       
-            var contribuyente;
-            /*Evalua la opción si es Persona Fisica o moral*/
-            function Contribuyente(value){
-                contribuyten = "";
-                $("#RazonUser").hide();
-                $("#NombreUser").hide();
-                $("#PaternoUser").hide();
-                $("#MaternoUser").hide();
-                $("#CURPUser").hide();
-                $("#NombreUsuario").val("");
-                $("#APaternoUsuario").val("");
-                $("#AMaternoUsuario").val("");
-                $("#CURPUsuario").val("");
-                $("#RazonUsuario").val("");
-                 
-                if(value == "Moral"){
-                    $("#RazonUser").show();
-                    contribuyente = "Moral";
-                }else{
-                    $("#NombreUser").show();
-                    $("#PaternoUser").show();
-                    $("#MaternoUser").show();
-                    $("#CURPUser").show();
-                    contribuyente = "Fisica";
-                }
-            }
-            
-            function SubirCSD(){
-                $("#dialogPrivadaUsuario").dialog("open");
-            }
-         
-                       
-            /*Busca si existe el rfc*/
-            function validarRFC(){
-                var rfc = $("#UsuarioRFC").val().toUpperCase();
-                var aux = rfc.split('-');
-                rfc = aux[0]+aux[1]+aux[2];
-                $("#ErrorRFCUsuario").text("");
-                
-                $.ajax({
-                    type: "POST",
-                    url: "Registrar",
-                    data: "usuario=validar&rfc="+rfc,
-                    success: function(data){
-                        $("#ErrorRFCUsuario").text(data);
-                    }
-                });
-            }
-            
-            $.validator.setDefaults({
-                submitHandler: function() {
-                    $("#siguienteRegistro").attr("disabled", "disabled");
-                    var rfc = $("#UsuarioRFC").val().toUpperCase();
-                    var aux = rfc.split("-");
-                    rfc = aux[0]+aux[1]+aux[2];
-                    var tel = $("#UsuarioTelefono").val().toUpperCase();
-                    var calle = $("#UsuarioCalle").val().toUpperCase();
-                    var exterior = $("#UsuarioExterior").val().toUpperCase();
-                    var interior = $("#UsuarioInterior").val().toUpperCase();
-                    var col = $("#localidad").val();
-                    var municipio = $("#municipio").val();
-                    var mail = $("#emailUsuario").val().toUpperCase();
-                    var referencia= $("#referenciaUsuario").val().toUpperCase();
-                    var pwd = $("#rePasswordUsuario").val().toUpperCase();
-                    if(contribuyente == "Moral"){
-                        var razon = $("#RazonUsuario").val().toUpperCase();
-                        $.ajax({
-                            type: "POST",
-                            url: "Registrar",
-                            data: "usuario=Moral&razon="+razon+"&rfcUsuario="+rfc+"&telefono="+tel+"&calle="+calle+"&interio="+interior+"&exterior="+exterior+"&colonia="+col+"&municipio="+municipio+"&mail="+mail+"&referencia="+referencia+"&password="+pwd,
-                            success: function(data){
-                                alert(data);
-                            }
-                        });
-                    }else{
-                        var nombre = $("#nombreUsuario").val().toUpperCase();
-                        var paterno = $("#APaternoUsuario").val().toUpperCase();
-                        var materno =$("#AMaternoUsuario").val().toUpperCase();
-                        var curp = $("#CURPUsuario").val().toUpperCase();
-                        $.ajax({
-                            type: "POST",
-                            url: "Registrar",
-                            data: "usuario=Fisica&nombre="+nombre+"&paterno="+paterno+"&materno="+materno+"&rfcUsuario="+rfc+"&curp="+curp+"&telefono="+tel+"&calle="+calle+"&interio="+interior+"&exterior="+exterior+"&colonia="+col+"&municipio="+municipio+"&mail="+mail+"&referencia="+referencia+"&password="+pwd,
-                            success: function(data){
-                                $("#formularioVerificacion").html(data);
-                                $("#formularioVerificacion").show(); 
-                            }
-                        });
-                    }
-                    $("#tabs-2").show();
-                    $("#tabs-3").show();
-                    $("#FIELCSDUsuario").show();
-                }
-            });
         </script>
 
     </head>
@@ -215,6 +73,61 @@
         </form>
     </div>
     <!--Aqui termina el dialogo de Modificar Password-->
+    <!--Dialogo de Confirmar Datos-->
+    <div id="ConfirmarDatos" title="ISFE- Registro de Usuario">
+        <p class="validateTips">
+            <label>
+                <img src="images/important.gif" />
+                &nbsp;  
+                Verifica que tus datos este correctos:
+            </label>
+        </p>
+        <form>
+            <center><table class="table1">
+                    <tbody>
+                        <tr>
+                            <th scope="row">Razón Social</th>
+                            <td id="confirmarRazonSocial"><span class="check"></span></td>
+
+                            <th scope="row">RFC</th>
+                            <td id="confirmarRFC"><span class="check"></span></td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Teléfono</th>
+                            <td id="confirmarTelefono"><span class="check"></span></td>
+
+                            <th scope="row">Mail</th>
+                            <td id="confirmarMail"><span class="check"></span></td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Dirección</th>
+                            <td id="confirmarDireccion"><span class="check"></span></td>
+
+                            <th scope="row">Referencia</th>
+                            <td id="confirmarReferencia"><span class="check"></span></td>
+
+                        </tr>
+                        <tr>
+                            <th scope="row">Colonia</th>
+                            <td id="confirmarColonia"><span class="check"></span></td>
+
+                            <th scope="row">Municipio</th>
+                            <td id="confirmarMunicipio"><span class="check"></span></td>
+
+                        </tr>
+                        <tr>
+                            <th scope="row">Estado</th>
+                            <td id="confirmarEstado"><span class="check"></span></td>
+
+                            <th id="CUPRConfirmacion" style="display: none" scope="row">CURP</th>
+                            <td id="confirmarCURP" style="display: none"><span class="check"></span></td>
+
+                        </tr>
+                    </tbody>
+                </table></center>
+        </form>
+    </div>
+    <!--Termina el dialogo de Confirmar Datos-->
     <center>
         <div class="principal">
             <div class="header">
@@ -240,7 +153,6 @@
                         <ul>
                             <li><a href="#tabs-1">Datos de Usuario</a></li>
                             <li><a id="FIELCSDUsuario" href="#tabs-2">FIEL y CSD</a></li>
-                            <li><a href="#tabs-3">Registrar Solicitante</a></li>
                         </ul>
                         <div id="tabs-1">
                             <font color="red">Los campos marcados con (*) son obligatorios</font><br><br>
@@ -251,26 +163,32 @@
                                         <tr>
                                             <td rowspan="21"><img src="images/formularios/add_user.png"/></td>
                                             <td>Tipo de Contribuyente*:</td> 
-                                            <td><input type="radio" class="required" id="personaMoral" name="contribuyenteUsuario" value="Moral" onclick="Contribuyente(this.value)">Persona Moral<input type="radio" class="required" name="contribuyenteUsuario" value="Fisica" onclick="Contribuyente(this.value)">Persona Fisica</td>
+                                            <td>
+
+                                                <input type="radio"  class="required" id="personaMoral" name="contribuyenteUsuario" value="Moral" onclick="Contribuyente(this.value)">Persona Moral
+                                                &nbsp; &nbsp; 
+                                                <input type="radio"  id="personaFisica" name="contribuyenteUsuario" value="Fisica" onclick="Contribuyente(this.value)">Persona Fisica
+
+                                            </td>
                                         </tr>
                                         <tr style="display:none" id="NombreUser">
-                                            <td>Nombre:</td>
+                                            <td>Nombre*:</td>
                                             <td><input type="text" maxlength="60" id="nombreUsuario" name="nombre" class="required" size="25" style="text-transform:uppercase" /></td>
                                         </tr>
                                         <tr style="display:none" id="PaternoUser">
-                                            <td>Apellido Paterno:</td>
+                                            <td>Apellido Paterno*:</td>
                                             <td><input type="text" maxlength="60" id="APaternoUsuario" name="apPaterno" class="required" size="25" style="text-transform:uppercase" /></td>
                                         </tr>
                                         <tr style="display:none" id="MaternoUser">
-                                            <td>Apellido Materno:</td>
+                                            <td>Apellido Materno*:</td>
                                             <td><input type="text" maxlength="60" id="AMaternoUsuario" name="apMaterno" class="required" size="25" style="text-transform:uppercase" /></td>
                                         </tr>
                                         <tr style="display:none" id="CURPUser">
-                                            <td>CURP*:</td>
+                                            <td>CURP:</td>
                                             <td><input type="text" minlength="9" id="CURPUsuario" name="curp" class="required" size="25" style="text-transform:uppercase" /></td>
                                         </tr>
                                         <tr style="display:none" id="RazonUser">
-                                            <td>Razón Social:</td>
+                                            <td>Razón Social*:</td>
                                             <td><input type="text" maxlength="180" id="RazonUsuario"  name="razonsocial" class="required" size="25" style="text-transform:uppercase" /></td>
 
                                         </tr>
@@ -303,11 +221,11 @@
                                             </td>                                           
                                         </tr>
                                         <tr>
-                                            <td>Estado:</td>
+                                            <td>Estado*:</td>
                                             <td><input type="text" id="estado" name="estado" readonly="readonly" size="25" ></td> 
                                         </tr>
                                         <tr>
-                                            <td>Delegaci&oacute;n/Municipio:</td>
+                                            <td>Delegaci&oacute;n/Municipio*:</td>
                                             <td>
                                                 <select id="municipio" name="municipio" >
 
@@ -315,7 +233,7 @@
                                             </td>
                                         </tr>
                                         <tr>
-                                            <td>Colonia/Localidad</td>
+                                            <td>Colonia/Localidad*:</td>
                                             <td>
                                                 <select id="localidad" name="localidad" >
 
@@ -352,12 +270,13 @@
                                 <form method="post" enctype="multipart/form-data" id="subirFIEL">
                                     <tr>
                                         <td width="30%">
+                                            Archivo .KEY de la FIEL
                                             <input type="file" id="archivoREQ" onclick="LimpiarError()" />
                                             <label id="ErrorArchivoREQ"></label>     
                                         </td>
 
                                         <td>
-                                            <input type="button" value="&nbsp; &nbsp; Subir FIEL &nbsp; &nbsp;" name="subirFIEL" class="ui-button ui-widget ui-state-default ui-corner-all" role="button" aria-disabled="false"/>
+                                            <input type="button" value="&nbsp; &nbsp; Subir FIEL &nbsp; &nbsp;" name="subirFIEL" onclick="SubirKEY()" class="ui-button ui-widget ui-state-default ui-corner-all" role="button" aria-disabled="false"/>
                                         </td>
                                     </tr>     
                                 </form>
@@ -370,12 +289,13 @@
                                 <form method="post" enctype="multipart/form-data" id="subirCSD">
                                     <tr>
                                         <td width="30%">
+                                            Archivo .CER del CSD
                                             <input type="file" id="archivoCER" onclick="LimpiarError()">
                                             <label id="ErrorArchivoCER"></label>
                                         </td>
 
                                         <td>
-                                            <input type="button" value=" &nbsp; &nbsp; Subir CSD &nbsp; &nbsp;" name="subirCSD" class="ui-button ui-widget ui-state-default ui-corner-all" onclick="SubirCSD()" role="button" aria-disabled="false"/>
+                                            <input type="button" value=" &nbsp; &nbsp; Subir CSD &nbsp; &nbsp;" name="subirCSD" class="ui-button ui-widget ui-state-default ui-corner-all" role="button" aria-disabled="false"/>
                                         </td>
 
                                     </tr>
@@ -385,7 +305,7 @@
                                                                                          
                                 $(function(){
                                     $("#archivoREQ").MultiFile({
-                                        accept:'req', max:1, STRING: {
+                                        accept:'key', max:1, STRING: {
                                             remove:'X',
                                             selected:'Selecionado: $file',
                                             denied:'REQ/Archivo de extención $ext invalido!',
@@ -406,15 +326,6 @@
                                 });
                                 
                             </script>
-                        </div>
-                        <div id="tabs-3" style="display:none">
-                            <font color="red">Favor de Verificar sus datos antes de completar el registro</font>
-                            <form>
-                                <div id="formularioVerificacion" style="display:none"></div>
-                                <br>
-                                <input type="submit" value="Registrar Usuario" name="registrarUsuario" class="ui-button ui-widget ui-state-default ui-corner-all" role="button" aria-disabled="false"/>
-                                <input type="button" value="Regresar" name="regresar" class="ui-button ui-widget ui-state-default ui-corner-all" role="button" aria-disabled="false"/>
-                            </form>
                         </div>
                     </div>
                     <br><br>
