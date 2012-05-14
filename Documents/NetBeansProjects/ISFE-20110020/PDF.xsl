@@ -39,8 +39,8 @@
 					<fo:block text-align-last="justify">
 						Este documento es una representación impresa de un CFDI
 						<fo:leader leader-pattern="space"/>
-						<fo:page-number/> de
-						<fo:page-number-citation ref-id="last-page"/>
+						<!--<fo:page-number/> de-->
+						<!--<fo:page-number-citation ref-id="last-page"/>-->
 					</fo:block>
 				</fo:static-content>
 				<fo:static-content flow-name="xsl-region-before" font-size="14pt" font-weight="bold">
@@ -254,7 +254,14 @@
 						<fo:table-cell>
 							<fo:block>
 								<!--<fo:external-graphic src="url('http://localhost:8084/ISFE/resources/QR.gif')" content-height="40" content-width="40"/>-->
-							</fo:block>
+                                                                <fo:instream-foreign-object>
+                                                                    <qr:qrcode xmlns:qr="http://code.google.com/p/fop-qrcode" 
+                                                                        length="20" margin="4" 
+                                                                        message="hello, world" 
+                                                                        type="1" correction="L">
+                                                                    </qr:qrcode>
+                                                                </fo:instream-foreign-object>
+                                                        </fo:block>
 						</fo:table-cell>
 						<fo:table-cell space-start="0.25cm">
 							<fo:block font-weight="bold">

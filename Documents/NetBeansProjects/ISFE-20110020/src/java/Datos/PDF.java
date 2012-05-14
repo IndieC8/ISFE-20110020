@@ -94,17 +94,12 @@ public class PDF extends Formato{
     }*/
     /**
      * Método encargado de visualizar el PDF generado en un JSP o un Servlet
-     * @param xml archivo xml de la factura electrónica
-     * @param response salida hacia el JSP
-     * @param request entrada del JSP
-     * @throws IOException
-     * @throws FileNotFoundException
-     * @throws FOPException
-     * @throws TransformerConfigurationException
-     * @throws TransformerException
-     * @throws Exception 
+     * @param pdf Archivo pdf a visualizar en el navegador
+     * @param response del jsp
+     * @param request del jsp
+     * @throws IOException Si hay errores de entrada/salida
      */
-    public static void visualizarPDF(File pdf,HttpServletResponse response,HttpServletRequest request)throws IOException, FileNotFoundException, FOPException, TransformerConfigurationException,TransformerException, Exception{
+    public static void visualizarPDF(File pdf,HttpServletResponse response,HttpServletRequest request)throws IOException{
         String path=request.getSession().getServletContext().getRealPath("/");
         response.setContentType("application/pdf");
         byte[] bytePDF=new byte[(int)pdf.length()];

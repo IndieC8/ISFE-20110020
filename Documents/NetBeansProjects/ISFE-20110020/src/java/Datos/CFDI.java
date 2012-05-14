@@ -61,8 +61,10 @@ public class CFDI{
                     .setAttribute("formaDePago", factura.getFormaDePago())
                     .setAttribute("noCertificado", emisor.getCSD().getNoCertificado())
                     .setAttribute("certificado", XML.codificarBase64(emisor.getCSD().getArchivoCSD()))
-                    .setAttribute("subTotal", XML.codificarNumero(factura.getSubTotal()) + "")
-                    .setAttribute("total", XML.codificarNumero(factura.getTotal()) + "")
+                    .setAttribute("subTotal", XML.codificarNumero(factura.getSubTotal()) + "");
+                if(factura.getDescuento()!=0)
+                    comprobante.setAttribute("descuento", XML.codificarNumero(factura.getDescuento()) + "");
+                comprobante.setAttribute("total", XML.codificarNumero(factura.getTotal()) + "")
                     .setAttribute("metodoDePago", factura.getMetodoDePago())
                     .setAttribute("tipoDeComprobante", factura.getTipoDeComprobante())
                     .addContent(generarEmisor())
