@@ -41,59 +41,39 @@ public class Registrar extends HttpServlet {
                     out.println("El RFC ya se dio de alta");
                 }
 
-            }else if("Moral".equals(request.getParameter("usuario"))){
-                String razon = request.getParameter("razon");
+            }else if("Guardar".equals(request.getParameter("usuario"))){
+                
+                
                 String rfc = request.getParameter("rfcUsuario");
                 String telefono = request.getParameter("telefono");
                 String calle = request.getParameter("calle");
                 String interior  = request.getParameter("interior");
                 String exterior  = request.getParameter("exterior");
-                String colonia = request.getParameter("colonia");
-                String localidad = request.getParameter("localidad");
-                String municipio = request.getParameter("municipio");
+                int localidad = Integer.parseInt(request.getParameter("localidad"));
                 String mail  = request.getParameter("mail");
                 String referencia  = request.getParameter("referencia");
                 String password  = request.getParameter("password");
-                String estado = request.getParameter("estado");
-                String codigoPostal = request.getParameter("codigoPostal");
-               
-                u = new Usuario();
-                 
-                u.inicializarDatos(true,rfc,null,null,null,razon,mail,calle,interior,exterior,colonia,localidad,municipio,referencia,estado,codigoPostal,password,null,telefono);
+                Sql sql = new Sql();
                 
-                out.println("<p>Razón Social: "+razon+"</p>");
-                out.println("<p>RFC: "+rfc+"</p>");
-                out.println("<p>Teléfono: "+telefono+"</p>");
-                out.println("<p>Calle: "+calle+"</p>");
-                out.println("<p>Número Interior: "+interior+"</p>");
-                out.println("<p>Número Exterior: "+exterior+"</p>");
-                out.println("<p>Colonia: "+colonia+"</p>");
-                out.println("<p>Municipio: "+municipio+"</p>");
-                out.println("<p>E-mail: "+mail+"</p>");
-                out.println("<p>Referencia: "+referencia+"</p>");
-                out.println("<p>Password: "+password+"</p>");                
+                if("Moral".equals(request.getParameter("Tipo")) ){
+                     String razon = request.getParameter("razon"); 
+                     String consulta = "INSERT INTO usuario VALUES(0,true,null,null,null,'"+razon+"',null,'"+rfc+"','"+password+"',"
+                             + "'"+mail+"','"+telefono+"','"+calle+"','"+exterior+"','"+interior+"','"+referencia+"',"+localidad+",null,null)";
+                     String resultado = sql.ejecuta(consulta);
+                     out.println(resultado);
+                     
+                }else{
+                    String nombre = request.getParameter("nombre");
+                    String paterno = request.getParameter("paterno");
+                    String materno = request.getParameter("materno");
+                    String curp = request.getParameter("curp");
+                    
+                    String consulta = "INSERT INTO usuario VALUES(0,false,'"+nombre+"','"+paterno+"','"+materno+"',null,'"+curp+"','"+rfc+"','"+password+"',"
+                             + "'"+mail+"','"+telefono+"','"+calle+"','"+exterior+"','"+interior+"','"+referencia+"',"+localidad+",null,null)";
+                     String resultado = sql.ejecuta(consulta);
+                     out.println(resultado);
+                }
                 
-            }else if("Fisica".equals(request.getParameter("usuario"))){
-                String nombre = request.getParameter("nombre");
-                String paterno = request.getParameter("paterno");
-                String materno = request.getParameter("materno");
-                String rfc = request.getParameter("rfcUsuario");
-                String curp = request.getParameter("curpUsuario");
-                String tel = request.getParameter("telefono");
-                String calle = request.getParameter("calle");
-                String interior  = request.getParameter("interior");
-                String exterior  = request.getParameter("exterior");
-                String colonia = request.getParameter("colonia");
-                String municipio = request.getParameter("municipio");
-                String mail  = request.getParameter("mail");
-                String referencia  = request.getParameter("referencia");
-                String password  = request.getParameter("password");
-                String estado = request.getParameter("estado");
-                String codigoPostal = request.getParameter("codigoPostal");
-                String localidad = request.getParameter("localidad");
-
-                u = new Usuario();
-                u.inicializarDatos(false,rfc,nombre,paterno,materno,null,mail,calle,interior,exterior,colonia,localidad,municipio,referencia,estado,codigoPostal,password,curp,tel);
             }
         } finally {            
             out.close();

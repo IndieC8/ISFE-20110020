@@ -3,6 +3,12 @@
  * and open the template in the editor.
  */
 
+/*Variables Globales*/
+var FIEL, CSD;
+var contribuyente;
+var rfc, tel, calle, exterior, interior, col , mail , referencia, pwd, nombre, paterno, materno , curp,razon;
+
+/*Funciones Generales del Menu del Usuario y Registro*/
 $(function(){
 
     // Tabs
@@ -33,9 +39,7 @@ $(function(){
 });
             
                         
-/*
-             *Activar el dialogo de Modificar password
-             */
+
 $(function() {
     // a workaround for a flaw in the demo system (http://dev.jqueryui.com/ticket/4375), ignore!
     $( "#dialog:ui-dialog" ).dialog( "destroy" );
@@ -48,7 +52,6 @@ $(function() {
         modal: true,
         buttons: {
             "Aceptar": function() {
-                //alert("ACEPTANDO");
                 $("#ColoniaModificarPerfil").val($("#localidadModificarPerfil option:selected").html());
                 $("#MunicipioModificarPerfil").val($("#municipioModificarPerfil option:selected").html());
                             
@@ -111,7 +114,198 @@ $(function() {
             allFields.val( "" ).removeClass( "ui-state-error" );
         }
     });
+    
+    /*REGISTRO*/
+    $("#ConfirmarDatos").dialog({
+        autoOpen: false,
+        height: 380,
+        width: 750,
+        modal: true,
+        buttons: {
+            "Aceptar": function() {
+                
+                $.ajax({
+                    type: "POST",
+                    url: "Registrar",
+                    data: "usuario=Guardar&Tipo="+contribuyente+"&nombre="+nombre+"&paterno="+paterno+"&materno="+materno+"&razon="+razon+"&rfcUsuario="+rfc+"&curp="+curp+"&telefono="+tel+"&calle="+calle+"&interior="+interior+"&exterior="+exterior+"&localidad="+col+"&mail="+mail+"&referencia="+referencia+"&password="+pwd,
+                    success: function(data){
+                        alert("Registro Hecho");
+                        LimpiarRegistro();
+                                
+                    }
+                });
+                $( this ).dialog("close");
+                                        
+            },
+            Cancel: function() {
+                $( this ).dialog( "close" );
+            }
+        },
+        close: function() {
+            allFields.val( "" ).removeClass( "ui-state-error" );
+        }
+    });
+                
+    $("#dialogPrivadaUsuario").dialog({
+        autoOpen: false,
+        height: 280,
+        width: 350,
+        modal: true,
+        buttons: {
+            "Aceptar": function() {
+                alert("ACEPTANDO");
+                $( this ).dialog("close");
+                                        
+            },
+            Cancel: function() {
+                $( this ).dialog( "close" );
+            }
+        },
+        close: function() {
+            allFields.val( "" ).removeClass( "ui-state-error" );
+        }
+    });
 });
+
+/*Limpiar los campos del Registro*/
+function LimpiarRegistro(){
+    $("#UsuarioRFC").val("");
+    $("#UsuarioTelefono").val("");
+    $("#UsuarioCalle").val("");
+    $("#UsuarioExterior").val("");
+    $("#UsuarioInterior").val("")
+    $("#estado").val("")
+    $("#localidad").html("");
+    $("#municipio").html("");
+    $("#emailUsuario").val("");
+    $("#referenciaUsuario").val("");
+    $("#rePasswordUsuario").val("");
+    $("#RazonUsuario").val("");
+    $("#RazonUser").hide();
+    $("#nombreUsuario").val("");
+    $("#NombreUser").hide();
+    $("#APaternoUsuario").val("");
+    $("#PaternoUser").hide();
+    $("#AMaternoUsuario").val("");
+    $("#MaternoUser").hide();
+    $("#CURPUsuario").val("");
+    $("#CURPUser").hide();
+    $("#codigoPostal").val("");
+    $("#passwordUsuario").val("");
+    //$("#personaMoral").attr('checked','');
+    //$("#personaFisica").attr('checked','');
+    return false;
+    
+}
+
+/*Valida los datos del Registro*/
+$.validator.setDefaults({
+    submitHandler: function() {
+                    
+        //$("#siguienteRegistro").attr("disabled", "disabled");
+        rfc = $("#UsuarioRFC").val().toUpperCase();
+        var aux = rfc.split("-");
+        rfc = aux[0]+aux[1]+aux[2];
+        tel = $("#UsuarioTelefono").val().toUpperCase();
+        calle = $("#UsuarioCalle").val().toUpperCase();
+        exterior = $("#UsuarioExterior").val().toUpperCase();
+        interior = $("#UsuarioInterior").val().toUpperCase();
+        col = $("#localidad").val();
+        mail = $("#emailUsuario").val();
+        referencia= $("#referenciaUsuario").val().toUpperCase();
+        pwd = $("#rePasswordUsuario").val().toUpperCase();
+                    
+        if(interior != ""){
+            var aux = "No Interior "+interior
+        }else{
+            var aux = "";
+        }
+                    
+        $("#confirmarRFC").text(rfc);
+        $("#confirmarTelefono").text(tel);
+        $("#confirmarMail").text(mail);
+        $("#confirmarDireccion").text("Calle: "+calle+" No. Exterior "+exterior+" "+aux);
+        $("#confirmarReferencia").text(referencia);
+        $("#confirmarColonia").text( $("#localidad option:selected").html() );
+        $("#confirmarMunicipio").text( $("#municipio option:selected").html() );
+        $("#confirmarEstado").text( $("#estado").val() ); 
+                    
+                    
+        if(contribuyente == "Moral"){
+            razon = $("#RazonUsuario").val().toUpperCase();
+            $("#confirmarRazonSocial").text(razon);
+                        
+        }else{
+            nombre = $("#nombreUsuario").val().toUpperCase();
+            paterno = $("#APaternoUsuario").val().toUpperCase();
+            materno =$("#AMaternoUsuario").val().toUpperCase();
+            curp = $("#CURPUsuario").val().toUpperCase();
+            $("#confirmarRazonSocial").text(nombre+" "+paterno+" "+materno);
+            if(curp != ""){
+                $("#confirmarCURP").text(curp);
+                $("#CUPRConfirmacion").show();
+                $("#confirmarCURP").show();
+            }
+        }
+        $("#ConfirmarDatos").dialog("open");
+    }
+});
+
+/*Evalua la opción si es Persona Fisica o moral*/
+function Contribuyente(value){
+    contribuyten = "";
+    $("#RazonUser").hide();
+    $("#NombreUser").hide();
+    $("#PaternoUser").hide();
+    $("#MaternoUser").hide();
+    $("#CURPUser").hide();
+    $("#NombreUsuario").val("");
+    $("#APaternoUsuario").val("");
+    $("#AMaternoUsuario").val("");
+    $("#CURPUsuario").val("");
+    $("#RazonUsuario").val("");
+                
+                
+                 
+    if(value == "Moral"){
+        $("#RazonUser").show();
+        contribuyente = "Moral";
+    }else{
+        $("#NombreUser").show();
+        $("#PaternoUser").show();
+        $("#MaternoUser").show();
+        $("#CURPUser").show();
+        contribuyente = "Fisica";
+    }
+}
+            
+function SubirKEY(){
+    $("#dialogPrivadaUsuario").dialog("open");
+}
+         
+                       
+/*Busca si existe el rfc*/
+function validarRFC(){
+    var rfc = $("#UsuarioRFC").val().toUpperCase();
+    var aux = rfc.split('-');
+    rfc = aux[0]+aux[1]+aux[2];
+    $("#ErrorRFCUsuario").text("");
+                
+    $.ajax({
+        type: "POST",
+        url: "Registrar",
+        data: "usuario=validar&rfc="+rfc,
+        success: function(data){
+            $("#ErrorRFCUsuario").text(data);
+        }
+    });
+}
+    
+jQuery(function(){
+    $("#UsuarioRFC").mask("aaaa-999999-aaa");
+    $("#CURPUsuario").mask("aaaa999999aaaaaa99");
+});
+
 
 function ModificarPassword(){
     $("#errorModificarPwd").text("");
@@ -194,8 +388,4 @@ function obtenerEstado(codigo,error,estado,municipio,localidad,campo,url){
         }    
     });
     
-}
-
-function ConfirmarModificacion(){
-    $("#tabs-2");
 }
