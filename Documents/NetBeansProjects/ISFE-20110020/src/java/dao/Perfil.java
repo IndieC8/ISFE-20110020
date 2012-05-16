@@ -36,48 +36,83 @@ public class Perfil extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         PrintWriter out = response.getWriter();
+        Sql s = new Sql();
+        
         try {
 
-            Sql s = new Sql();
-            String aux = request.getParameter("idUsuario");
-            aux = Cifrado.decodificarBase64(aux);
-
-            String sql = "select tipoPersona,nombre,apellidoMaterno, apellidoPaterno,razonSocial,contrasena,mail,telefono,calle,noExterior,noInterior,referencia FROM usuario WHERE idUsuario = " + Integer.parseInt(aux) + ";";
-            ResultSet rs;
-            rs = s.consulta(sql);
-
-            while (rs.next()) {
+            if ("Actualizar".equals(request.getParameter("Perfil"))) {
+                String aux = request.getParameter("idUsuario");
+                aux = Cifrado.decodificarBase64(aux);
                 
-                if (rs.getBoolean("tipoPersona") == false) {
-                    out.println(rs.getString("nombre") + " " + rs.getString("apellidoPaterno") + " " + rs.getString("apellidoMaterno") + "/");
+                                
+                String mail = request.getParameter("mail");
+                String telefono = request.getParameter("telefono");
+                String pwd = request.getParameter("pwd");
+                String calle = request.getParameter("calle");
+                String exterior = request.getParameter("exterior");
+                String interior = request.getParameter("interior");
+                String localidad =  request.getParameter("idLocalidad");
+                String referencia  = request.getParameter("referencia");
+                
+                
+                
+                
+                String actualizar = "UPDATE usuario SET mail='"+mail+"' , telefono ='"+telefono+"' ,contrasena = '"+pwd+"' , calle = '"+calle+"' , "
+                        + "noExterior = '"+exterior+"' , noInterior = '"+interior+"' , idLocalidad = "+localidad+" , referencia = '"+referencia+"' "
+                        + "WHERE idUsuario =  "+ Integer.parseInt(aux) +" ";
+                
+             
+                
+                String resultado = s.ejecuta(actualizar);
+                out.println(resultado);
+                
+            }else if("CSD".equals(request.getParameter("Archivo"))){
+                String file_name = request.getParameter("archivo");
+                out.println(file_name);
+            } else {
+                
+                String aux = request.getParameter("idUsuario");
+                aux = Cifrado.decodificarBase64(aux);
 
-                } else {
-                    out.println(rs.getString("razonSocial") + "/");
+                String sql = "select tipoPersona,nombre,apellidoMaterno, apellidoPaterno,razonSocial,contrasena,mail,telefono,calle,noExterior,noInterior,referencia FROM usuario WHERE idUsuario = " + Integer.parseInt(aux) + ";";
+                ResultSet rs;
+                rs = s.consulta(sql);
+
+                while (rs.next()) {
+
+                    if (rs.getBoolean("tipoPersona") == false) {
+                        out.println(rs.getString("nombre") + " " + rs.getString("apellidoPaterno") + " " + rs.getString("apellidoMaterno") + "/");
+
+                    } else {
+                        out.println(rs.getString("razonSocial") + "/");
+                    }
+
+                    out.println(rs.getString("contrasena") + "/");
+                    out.println(rs.getString("mail") + "/");
+                    out.println(rs.getString("telefono") + "/");
+                    out.println(rs.getString("calle") + "/");
+                    out.println(rs.getString("noExterior") + "/");
+                    out.println(rs.getString("noInterior") + "/");
+                    out.println(rs.getString("referencia") + "/");
+
                 }
-                
-                out.println(rs.getString("contrasena") + "/");
-                out.println(rs.getString("mail") + "/");
-                out.println(rs.getString("telefono") + "/");
-                out.println(rs.getString("calle") + "/");
-                out.println(rs.getString("noExterior") + "/");
-                out.println(rs.getString("noInterior") + "/");
-                out.println(rs.getString("referencia") + "/");
 
+                sql = "select l.idLocalidad, l.nombreLocalidad, m.nombreMunicipio FROM localidad l, municipio m, usuario u WHERE u.idLocalidad = l.idLocalidad AND l.idMunicipio = m.idMunicipio AND u.idUsuario = " + Integer.parseInt(aux) + ";";
+                rs = s.consulta(sql);
+                while (rs.next()) {
+                    out.println(rs.getString("nombreLocalidad") + "/");
+                    out.println(rs.getInt("idLocalidad") + "/");
+                    out.println(rs.getString("nombreMunicipio"));
+                }
             }
 
-            sql = "select l.nombreLocalidad, m.nombreMunicipio FROM localidad l, municipio m, usuario u WHERE u.idLocalidad = l.idLocalidad AND l.idMunicipio = m.idMunicipio AND u.idUsuario = " + Integer.parseInt(aux) + ";";
-            rs = s.consulta(sql);
-            while (rs.next()) {
-                out.println(rs.getString("nombreLocalidad") + "/");
-                out.println(rs.getString("nombreMunicipio"));
-            }
 
         } catch (InstantiationException ex) {
-            Logger.getLogger(Perfil.class.getName()).log(Level.SEVERE, null, ex);
+            out.println(ex);
         } catch (IllegalAccessException ex) {
-            Logger.getLogger(Perfil.class.getName()).log(Level.SEVERE, null, ex);
+            out.println(ex);
         } catch (SQLException ex) {
-            Logger.getLogger(Perfil.class.getName()).log(Level.SEVERE, null, ex);
+            out.println(ex);
         } finally {
             out.close();
         }

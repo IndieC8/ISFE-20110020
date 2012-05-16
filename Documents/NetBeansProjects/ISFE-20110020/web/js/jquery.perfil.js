@@ -54,11 +54,13 @@ $(function() {
             "Aceptar": function() {
                 $("#ColoniaModificarPerfil").val($("#localidadModificarPerfil option:selected").html());
                 $("#MunicipioModificarPerfil").val($("#municipioModificarPerfil option:selected").html());
-                            
+                $("#idLocalidadModificar").val( $("#localidadModificarPerfil").val() );
                 $( this ).dialog("close");
                                         
             },
-            Cancel: function() {
+            Cancelar: function() {
+                $("#ConfirmarModificacion").hide();
+                $("#MensajeConfirmarModificacion").text("");
                 $( this ).dialog( "close" );
             }
         },
@@ -72,7 +74,7 @@ $(function() {
     $( "#dialogPwdPerfil" ).dialog({
         autoOpen: false,
         height: 300,
-        width: 350,
+        width: 380,
         modal: true,
         buttons: {
             "Aceptar": function() {
@@ -106,7 +108,9 @@ $(function() {
                 $( this ).dialog("close");
                                         
             },
-            Cancel: function() {
+            Cancelar: function() {
+                $("#ConfirmarModificacion").hide();
+                $("#MensajeConfirmarModificacion").text("");
                 $( this ).dialog( "close" );
             }
         },
@@ -137,7 +141,7 @@ $(function() {
                 $( this ).dialog("close");
                                         
             },
-            Cancel: function() {
+            Cancelar: function() {
                 $( this ).dialog( "close" );
             }
         },
@@ -157,7 +161,7 @@ $(function() {
                 $( this ).dialog("close");
                                         
             },
-            Cancel: function() {
+            Cancelar: function() {
                 $( this ).dialog( "close" );
             }
         },
@@ -213,7 +217,7 @@ $.validator.setDefaults({
         col = $("#localidad").val();
         mail = $("#emailUsuario").val();
         referencia= $("#referenciaUsuario").val().toUpperCase();
-        pwd = $("#rePasswordUsuario").val().toUpperCase();
+        pwd = $("#rePasswordUsuario").val();
                     
         if(interior != ""){
             var aux = "No Interior "+interior
@@ -282,6 +286,18 @@ function Contribuyente(value){
 function SubirKEY(){
     $("#dialogPrivadaUsuario").dialog("open");
 }
+
+function SubirCSD(){
+    var archivo = $("#archivoCER").val();
+    $.ajax({
+        url: "Perfil",
+        type: "POST",
+        data: "Archivo=CSD&archivo="+archivo,
+        success: function(data){
+            alert(data);
+        }
+    });
+}
          
                        
 /*Busca si existe el rfc*/
@@ -312,6 +328,8 @@ function ModificarPassword(){
     $("#pwdModificarPerfil").val("");
     $("#pwd2ModificarPerfil").val("");
     $("#guardarCambiosModificarPerfil").show();
+    $("#ConfirmarModificacion").show();
+    $("#MensajeConfirmarModificacion").text("");
     $( "#dialogPwdPerfil" ).dialog( "open" );
 }
             
@@ -322,6 +340,8 @@ function ModificarDireccion(){
     $("#localidadModificarPerfil").html("");
     $("#municipioModificarPerfil").html("");
     $("#guardarCambiosModificarPerfil").show();
+    $("#ConfirmarModificacion").show();
+    $("#MensajeConfirmarModificacion").text("");
     $("#dialogDireccionPerfil").dialog("open");
 }
             
@@ -343,6 +363,7 @@ function EditarModificacion(elemnt){
     $("#"+elemnt).removeAttr("readonly");
     $("#"+elemnt).focus();
     $("#ConfirmarModificacion").show();
+    $("#MensajeConfirmarModificacion").text("");
 }
 
 /*Permite ingresar solo números*/

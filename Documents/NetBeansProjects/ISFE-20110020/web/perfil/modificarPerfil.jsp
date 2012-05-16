@@ -8,7 +8,7 @@
 <%@page language="java" import="dao.*" %>
 
 <%!    String contribuyente = "";
-       String id = "";
+    String id = "";
 %>
 <%
     HttpSession sesionOk = request.getSession();
@@ -37,32 +37,64 @@
             $(document).ready(function(){
                 
                                
-               $.ajax({
-                        type:"POST",
-                        url:"../Perfil",
-                        data:"idUsuario=<%=id%>",
-                        success: function(data){
-                            var aux = data.split("/");
+                $.ajax({
+                    type:"POST",
+                    url:"../Perfil",
+                    data:"idUsuario=<%=id%>",
+                    success: function(data){
+                        var aux = data.split("/");
                             
-                            $("#nombreModificarPerfil").text(aux[0]);
-                            $("#passwordModificarPerfil").val(aux[1]);
-                            $("#mailModificarPerfil").val(aux[2]);
-                            $("#telefonoModificarPerfil").val(aux[3]);
-                            $("#calleModificarPerfil").val(aux[4]);
-                            $("#exteriorModificarPerfil").val(aux[5]);
-                            $("#interiorModificarPerfil").val(aux[6]);
-                            $("#referenciaModificarPerfil").val(aux[7]);
-                            $("#ColoniaModificarPerfil").val(aux[8]);
-                            $("#MunicipioModificarPerfil").val(aux[9]);
+                        $("#nombreModificarPerfil").text(aux[0]+" \t Tu datos son:");
+                        $("#passwordModificarPerfil").val(aux[1]);
+                        $("#mailModificarPerfil").val(aux[2]);
+                        $("#telefonoModificarPerfil").val(aux[3]);
+                        $("#calleModificarPerfil").val(aux[4]);
+                        $("#exteriorModificarPerfil").val(aux[5]);
+                        $("#interiorModificarPerfil").val(aux[6]);
+                        $("#referenciaModificarPerfil").val(aux[7]);
+                        $("#ColoniaModificarPerfil").val(aux[8]);
+                        $("#idLocalidadModificar").val(aux[9]);
+                        $("#MunicipioModificarPerfil").val(aux[10]);
                             
-                        }
-               });
+                    }
+                });
                
-               $("#FormularioModificacionPerfil").validate();
+                $("#FormularioModificacionPerfil").validate();
                  
             });
-                
             
+            /*Valida los datos del Registro*/
+            $.validator.setDefaults({
+                submitHandler: function() {
+                    var mail = $("#mailModificarPerfil").val();
+                    var telefono = $("#telefonoModificarPerfil").val();
+                    var pwd = $("#passwordModificarPerfil").val();
+                    var calle = $("#calleModificarPerfil").val();
+                    var exterior = $("#exteriorModificarPerfil").val();
+                    var interior = $("#interiorModificarPerfil").val();
+                    var idLocalidad = $("#idLocalidadModificar").val();
+                    var referencia = $("#referenciaModificarPerfil").val();
+                    
+                    $.ajax({
+                        type: "POST",
+                        url: "../Perfil",
+                        data: "Perfil=Actualizar&idUsuario=<%=id%>&mail="+mail+"&telefono="+telefono+"&pwd="+pwd+"&calle="+calle+"&exterior="+exterior+"&interior="+interior+"&idLocalidad="+idLocalidad+"&referencia="+referencia,
+                        success: function(data){
+                            if(data !=""){ 
+                                $("#ConfirmarModificacion").hide();
+                                $("#MensajeConfirmarModificacion").text("Tu actualización esta hecha!");
+                                $("#referenciaModificarPerfil").attr("readonly", "readonly");
+                                $("#interiorModificarPerfil").attr("readonly", "readonly");;
+                                $("#exteriorModificarPerfil").attr("readonly", "readonly");;
+                                $("#calleModificarPerfil").attr("readonly", "readonly");;
+                                $("#telefonoModificarPerfil").attr("readonly", "readonly");;
+                                $("#mailModificarPerfil").attr("readonly", "readonly");;
+                            }
+                        }
+                    });
+                }
+            });
+
         </script>
     </head>
     <body>
@@ -143,15 +175,18 @@
                     <!--Comienza el formulario-->	
                     <div id="tabs">
                         <ul>
-                            <li><a href="#tabs-1">Modificar Datos de Usuario</a></li>
-                            <li><a href="#tabs-2">Verificar nuevos datos</a></li>
+                            <li><a href="#tabs-1" id="nombreModificarPerfil"></a></li>
+
                         </ul>
                         <div id="tabs-1">
-                            <div align="left">
-                                <p>
-                                    USUARIO: <label class="texto" id="nombreModificarPerfil"></label> 
-                                </p>
-                            </div>
+                            <p>
+                                <label>Para modificar tus datos edita el campo que deseas actualizar.
+                                </label>
+                                <label>
+                                    Los campos con (*) son abligatorios
+                                </label>
+                            </p>
+                            <br/>
                             <br/>
                             <form id="FormularioModificacionPerfil">
                                 <table border="0" id="mytable">
@@ -165,23 +200,23 @@
                                     </thead>
                                     <tbody>
                                         <tr>
-                                            <td>Mail</td>
+                                            <td>Mail*</td>
                                             <td><input type="text" id="mailModificarPerfil" size="35" readonly="readonly" maxlength="40" class="required email" /></td>
                                             <td><input type="button" onclick="EditarModificacion(this.name)" value="Editar" name="mailModificarPerfil" class="ui-button ui-widget ui-state-default ui-corner-all" role="button" aria-disabled="false"/></td>
                                         </tr>
                                         <tr>
-                                            <td>Teléfono</td>
+                                            <td>Teléfono*</td>
                                             <td><input type="text" id="telefonoModificarPerfil" size="35" readonly="readonly" maxlength="20" onkeypress="OnlyNumber(this.value,this)" class="required" /></td>
                                             <td><input type="button" onclick="EditarModificacion(this.name)" value="Editar" name="telefonoModificarPerfil" class="ui-button ui-widget ui-state-default ui-corner-all" role="button" aria-disabled="false"/></td>
                                         </tr>
                                         <tr>
-                                            <td>Contraseña</td>
-                                            <td><input type="password" size="35" id="passwordModificarPerfil" readonly="readonly" /></td>
+                                            <td>Contraseña*</td>
+                                            <td><input type="password" size="35" id="passwordModificarPerfil" readonly="readonly" class="required" /></td>
                                             <td><input type="button" onclick="ModificarPassword()" value="Editar" name="passwordModificarPerfil" class="ui-button ui-widget ui-state-default ui-corner-all" role="button" aria-disabled="false"/></td>
                                         </tr>
                                         <tr>
-                                            <td>Av / Calle</td>
-                                            <td><input type="text" size="35" maxlength="50" id="calleModificarPerfil" readonly="readonly" style="text-transform: uppercase" /></td>
+                                            <td>Av / Calle*</td>
+                                            <td><input type="text" class="required" size="35" maxlength="50" id="calleModificarPerfil" readonly="readonly" style="text-transform: uppercase"  /></td>
                                             <td><input type="button" onclick="EditarModificacion(this.name)" value="Editar" name="calleModificarPerfil" class="ui-button ui-widget ui-state-default ui-corner-all" role="button" aria-disabled="false"/></td>
                                         </tr>
                                         <tr>
@@ -190,30 +225,32 @@
                                             <td><input type="button" onclick="EditarModificacion(this.name)" value="Editar" name="interiorModificarPerfil" class="ui-button ui-widget ui-state-default ui-corner-all" role="button" aria-disabled="false"/></td>
                                         </tr>
                                         <tr>
-                                            <td>Número Exterior</td>
-                                            <td><input type="text" size="35" maxlength="5" id="exteriorModificarPerfil" readonly="readonly" onkeypress="OnlyNumber(this.value,this)" /></td>
+                                            <td>Número Exterior*</td>
+                                            <td><input type="text" class="required digits" size="35" maxlength="5" id="exteriorModificarPerfil" readonly="readonly" onkeyup="OnlyNumber(this.value,this)" /></td>
                                             <td><input type="button" onclick="EditarModificacion(this.name)" value="Editar" name="exteriorModificarPerfil" class="ui-button ui-widget ui-state-default ui-corner-all" role="button" aria-disabled="false"/></td>
                                         </tr>
 
                                         <tr>
-                                            <td>Colonia</td>
-                                            <td><input type="text" size="35" id="ColoniaModificarPerfil" readonly="readonly" /></td>
+                                            <td>Colonia* <input type="hidden" id="idLocalidadModificar"/></td>
+                                            
+                                            <td><input type="text" size="35" id="ColoniaModificarPerfil" class="required" readonly="readonly" /></td>
+                                            <td><input type="button" onclick="ModificarDireccion()" value="Editar" class="ui-button ui-widget ui-state-default ui-corner-all" role="button"  aria-disabled="false"/></td>
+                                        </tr>
+                                        <tr>
+                                            <td>Municipio*</td>
+                                            <td><input type="text" size="35" id="MunicipioModificarPerfil" class="required" readonly="readonly" /></td>
                                             <td><input type="button" onclick="ModificarDireccion()" value="Editar" class="ui-button ui-widget ui-state-default ui-corner-all" role="button" aria-disabled="false"/></td>
                                         </tr>
                                         <tr>
-                                            <td>Municipio</td>
-                                            <td><input type="text" size="35" id="MunicipioModificarPerfil" readonly="readonly" /></td>
-                                            <td><input type="button" onclick="ModificarDireccion()" value="Editar" class="ui-button ui-widget ui-state-default ui-corner-all" role="button" aria-disabled="false"/></td>
-                                        </tr>
-                                        <tr>
-                                            <td>Referencia</td>
-                                            <td><input type="text" size="35" maxlength="25" id="referenciaModificarPerfil" readonly="readonly" style="text-transform: uppercase" /></td>
+                                            <td>Referencia*</td>
+                                            <td><input type="text" size="35" maxlength="35" id="referenciaModificarPerfil" class="required" readonly="readonly" style="text-transform: uppercase" /></td>
                                             <td><input type="button" onclick="EditarModificacion(this.name)" value="Editar" name="referenciaModificarPerfil" class="ui-button ui-widget ui-state-default ui-corner-all" role="button" aria-disabled="false"/></td>
                                         </tr>
                                     </tbody>
                                 </table>
                                 <br><br>
                                 <div align="right">
+                                    <label id="MensajeConfirmarModificacion"></label>
                                     <input type="submit" style="display: none" value="Confirmar Modificaciones" id="ConfirmarModificacion" name="mailModificarPerfil" class="ui-button ui-widget ui-state-default ui-corner-all" role="button" aria-disabled="false"/>
                                 </div>
                             </form>
