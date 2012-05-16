@@ -38,7 +38,7 @@
 				<fo:static-content flow-name="xsl-region-after" font-size="11pt">
 					<fo:block text-align-last="justify">
 						Este documento es una representación impresa de un CFDI
-						<fo:leader leader-pattern="space"/>
+						<!--<fo:leader leader-pattern="space"/>-->
 						<!--<fo:page-number/> de-->
 						<!--<fo:page-number-citation ref-id="last-page"/>-->
 					</fo:block>
@@ -63,8 +63,8 @@
 				<fo:table-body>
 					<fo:table-row>
 						<fo:table-cell>
-							<fo:block font-weight="bold" font-size="12pt" color="#ffffff" border="solid 1pt #212A3B" background-color="#212A3B">Emisor:</fo:block>
-							<fo:block id="Emisor" border="solid 1pt #212A3B">
+							<fo:block font-weight="bold" font-size="12pt" color="#ffffff" border="solid 1pt #C0C0C0" background-color="#C0C0C0">Emisor:</fo:block>
+							<fo:block id="Emisor" border="solid 1pt #C0C0C0">
 								<fo:block font-size="12pt" wrap-option="wrap" font-weight="bold">
 									<xsl:value-of select="@nombre"/>
 								</fo:block>
@@ -149,27 +149,27 @@
 	<xsl:template match="cfdi:Conceptos">
 		<fo:block space-after="0.5cm">
 			<fo:block id="Conceptos">
-				<fo:table wrap-option="wrap" border="solid 1pt #C0C0C0" display-align="center" table-layout="fixed">
+				<fo:table wrap-option="wrap" border="solid 1pt #000080" display-align="center" table-layout="fixed">
 					<fo:table-column column-width="proportional-column-width(1)" />
 					<fo:table-column column-width="proportional-column-width(1.5)" />
 					<fo:table-column column-width="proportional-column-width(4)" />
 					<fo:table-column column-width="proportional-column-width(1.5)" />
 					<fo:table-column column-width="proportional-column-width(1.5)" />
 					<fo:table-header table-omit-header-at-break="false">
-						<fo:table-row font-weight="bold" background-color="#212A3B" color="#ffffff" text-align="center">
-							<fo:table-cell border="solid 1pt #c0c0c0">
+						<fo:table-row font-weight="bold" background-color="#C0C0C0" color="#ffffff" text-align="center">
+							<fo:table-cell border="solid 1pt #000080">
 								<fo:block>Cantidad</fo:block>
 							</fo:table-cell>
-							<fo:table-cell border="solid 1pt #c0c0c0">
+							<fo:table-cell border="solid 1pt #000080">
 								<fo:block>U. de Medida</fo:block>
 							</fo:table-cell>
-							<fo:table-cell border="solid 1pt #c0c0c0">
+							<fo:table-cell border="solid 1pt #000080">
 								<fo:block>Descripción</fo:block>
 							</fo:table-cell>
-							<fo:table-cell border="solid 1pt #c0c0c0">
+							<fo:table-cell border="solid 1pt #000080">
 								<fo:block>Precio Unitario</fo:block>
 							</fo:table-cell>
-							<fo:table-cell border="solid 1pt #c0c0c0">
+							<fo:table-cell border="solid 1pt #000080">
 								<fo:block>Importe</fo:block>
 							</fo:table-cell>
 						</fo:table-row>
@@ -177,28 +177,28 @@
 					<fo:table-body text-align="center">
 						<xsl:for-each select="cfdi:Concepto">
 							<fo:table-row >
-								<fo:table-cell border="solid 1pt #c0c0c0">
+								<fo:table-cell border="solid 1pt #000080">
 									<fo:block>
 										<xsl:value-of select="@cantidad"/>
 									</fo:block>
 								</fo:table-cell>
-								<fo:table-cell border="solid 1pt #c0c0c0">
+								<fo:table-cell border="solid 1pt #000080">
 									<fo:block>
 										<xsl:value-of select="@unidad"/>
 									</fo:block>
 								</fo:table-cell>
-								<fo:table-cell border="solid 1pt #c0c0c0">
+								<fo:table-cell border="solid 1pt #000080">
 									<fo:block font-weight="bold">
 										<xsl:value-of select="@descripcion"/>
 									</fo:block>
 								</fo:table-cell>
-								<fo:table-cell border="solid 1pt #c0c0c0">
+								<fo:table-cell border="solid 1pt #000080">
 									<fo:block>
 										$
 										<xsl:value-of select="@valorUnitario"/>
 									</fo:block>
 								</fo:table-cell>
-								<fo:table-cell border="solid 1pt #c0c0c0">
+								<fo:table-cell border="solid 1pt #000080">
 									<fo:block>
 										$
 										<xsl:value-of select="@importe"/>
@@ -208,30 +208,30 @@
 						</xsl:for-each>
 
 						<fo:table-row font-weight="bold">
-							<fo:table-cell column-number="4" border="solid 1pt #c0c0c0">
+							<fo:table-cell column-number="4" border="solid 1pt #000080">
 								<fo:block  text-align="right">Subtotal:&#0160;</fo:block>
 							</fo:table-cell>
-							<fo:table-cell border="solid 1pt #c0c0c0">
+							<fo:table-cell border="solid 1pt #000080">
 								<fo:block >&#0160;$
 									<xsl:value-of select="../../cfdi:Comprobante/@subTotal"/>
 								</fo:block>
 							</fo:table-cell>
 						</fo:table-row>
 						<fo:table-row font-weight="bold">
-							<fo:table-cell column-number="4" border="solid 1pt #c0c0c0">
+							<fo:table-cell column-number="4" border="solid 1pt #000080">
 								<fo:block  text-align="right"> I.V.A.:&#0160;</fo:block>
 							</fo:table-cell>
-							<fo:table-cell border="solid 1pt #c0c0c0">
+							<fo:table-cell border="solid 1pt #000080">
 								<fo:block >&#0160;$
 									<xsl:value-of select="../cfdi:Impuestos/cfdi:Traslados/cfdi:Traslado[1]/@importe"/>
 								</fo:block>
 							</fo:table-cell>
 						</fo:table-row>
-						<fo:table-row font-weight="bold" color="#212A3B">
-							<fo:table-cell column-number="4" border="solid 1pt #c0c0c0">
+						<fo:table-row font-weight="bold" color="#2a364b">
+							<fo:table-cell column-number="4" border="solid 1pt #000080">
 								<fo:block  text-align="right">Total:&#0160;</fo:block>
 							</fo:table-cell>
-							<fo:table-cell border="solid 1pt #c0c0c0">
+							<fo:table-cell border="solid 1pt #000080">
 								<fo:block >&#0160;$
 									<xsl:value-of select="../../cfdi:Comprobante/@total"/>
 								</fo:block>
