@@ -4,17 +4,8 @@
  */
 package Datos;
 
-import Integracion.ConexionSAT.CSD;
-import Negocios.Cifrado.Cifrado;
-import Negocios.ObtenerFiel.Fiel;
-import Negocios.ObtenerFolios.Folio;
 import java.io.*;
-import java.security.NoSuchProviderException;
-import java.security.PrivateKey;
 import java.security.cert.CertificateException;
-import java.util.ArrayList;
-import java.util.Date;
-import org.jdom.Document;
 
 /**
  *
@@ -24,7 +15,7 @@ public class MainPruebas {
     public static void main(String[] args) throws FileNotFoundException, IOException, CertificateException, Exception{
         try {
             //CERTIFICADO
-            File fCSD=new File("CSD-ISFE.cer");
+            /**File fCSD=new File("CSD-ISFE.cer");
             InputStream isCSD=new FileInputStream(fCSD);
             byte[] bCSD=new byte[(int)fCSD.length()];
             int offset=0;
@@ -111,7 +102,8 @@ public class MainPruebas {
             f.generarTotal();
             XML xml=new XML();
             Document dXML=xml.generarXML(f, isfe);
-            File fXML=XML.generarArchivoXML(dXML, "f.xml");
+            File fXML=XML.generarArchivoXML(dXML, "f.xml");*/
+            File fXML=new File("f.xml");
             BufferedReader br=new BufferedReader(new FileReader(fXML));
             String l=br.readLine();
             while(l!=null){
@@ -132,10 +124,8 @@ public class MainPruebas {
             System.out.println();
             SAT sat=new SAT();
             System.out.println(sat.ValidarCadenaOriginal(cad));*/
-        } catch (SecurityException ex) {
-            throw new SecurityException("",ex);
-        } catch (UnsupportedEncodingException ex) {
-        } catch (NoSuchProviderException ex) {
+        } catch (Exception ex) {
+            throw new Exception("",ex);
         }
     }
 }

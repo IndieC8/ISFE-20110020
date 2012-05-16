@@ -251,17 +251,23 @@
 				<fo:table-column />
 				<fo:table-body>
 					<fo:table-row>
-						<fo:table-cell>
-							<fo:block>
-								<!--<fo:external-graphic src="url('http://localhost:8084/ISFE/resources/QR.gif')" content-height="40" content-width="40"/>-->
+						<fo:table-cell space-start="0.25cm">
+                                                    <fo:block font-weight="bold">
+							Barra Bidimensional
+                                                    </fo:block>
+                                                    <fo:block space-after="0.25cm">
+                                                        <xsl:call-template name="QRCode">
+                                                            <xsl:with-param name="str" select="intersperse-with-zero-spaces"/>
+                                                        </xsl:call-template>
+                                                    </fo:block>
+							<!--<fo:block>
+								<fo:external-graphic src="url('http://localhost:8084/ISFE/resources/QR.gif')" content-height="40" content-width="40"/>
                                                                 <fo:instream-foreign-object>
                                                                     <qr:qrcode xmlns:qr="http://code.google.com/p/fop-qrcode" 
-                                                                        length="20" margin="4" 
-                                                                        message="hello, world" 
-                                                                        type="1" correction="L">
+                                                                        length="40" cellsize="8" margin="5" type="9" correction="H" message='{$str}'>
                                                                     </qr:qrcode>
                                                                 </fo:instream-foreign-object>
-                                                        </fo:block>
+                                                        </fo:block>-->
 						</fo:table-cell>
 						<fo:table-cell space-start="0.25cm">
 							<fo:block font-weight="bold">
@@ -308,11 +314,8 @@
 		<xsl:if test="string-length($str) &gt; 0">
 			<xsl:variable name="c1" select="substring($str, 1, 1)"/>
 			<xsl:variable name="c2" select="substring($str, 2, 1)"/>
-
 			<xsl:value-of select="$c1"/>
-			<xsl:if test="$c2 != '' and
-            not(contains($spacechars, $c1) or
-            contains($spacechars, $c2))">
+			<xsl:if test="$c2 != '' and not(contains($spacechars, $c1) or contains($spacechars, $c2))">
 				<xsl:text>&#x200B;</xsl:text>
 			</xsl:if>
 

@@ -1,18 +1,15 @@
 package Datos;
 
-import com.itextpdf.text.pdf.PdfReader;
-import com.itextpdf.text.pdf.PdfSignatureAppearance;
-import com.itextpdf.text.pdf.PdfStamper;
 import java.io.*;
-import java.security.KeyStore;
-import java.security.PrivateKey;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.xml.transform.*;
 import javax.xml.transform.sax.SAXResult;
 import javax.xml.transform.stream.StreamSource;
-import org.apache.fop.apps.*;
-import org.apache.fop.pdf.PDFEncryptionParams;
+import org.apache.fop.apps.FOPException;
+import org.apache.fop.apps.Fop;
+import org.apache.fop.apps.FopFactory;
+import org.apache.fop.apps.MimeConstants;
 
 /**
  * Clase que representa y genera el Formato PDF para la factura electrónica
