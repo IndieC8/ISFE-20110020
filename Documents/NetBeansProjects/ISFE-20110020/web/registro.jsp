@@ -200,7 +200,7 @@
                                         </tr>
                                         <tr>
                                             <td>Tel&eacute;fono*:</td>
-                                            <td><input type="text" id="UsuarioTelefono" class="required" name="telefono" maxlength="25" size="25" onkeyup="OnlyNumber(this.value,this)" /></td>
+                                            <td><input type="text" id="UsuarioTelefono" class="required" name="telefono" maxlength="16" size="25" onkeyup="OnlyNumber(this.value,this)" /></td>
                                         </tr>
                                         <tr>
                                             <td>Calle*:</td>
@@ -241,12 +241,12 @@
                                             </td>
                                         </tr>
                                         <tr>
-                                            <td>E-mail*:</td>
-                                            <td><input type="text" id="emailUsuario" class="required email" name="email" value="" size="25" /></td>
-                                        </tr>
-                                        <tr>
                                             <td>Referencia*:</td>
                                             <td><input type="text" id="referenciaUsuario" class="required" name="referencia" maxlength="25" size="25" style="text-transform:uppercase" /></td>
+                                        </tr>
+                                        <tr>
+                                            <td>E-mail*:</td>
+                                            <td><input type="text" id="emailUsuario" class="required email" name="email" value="" size="25" /></td>
                                         </tr>
                                         <tr>
                                             <td>Contrase&ntilde;a*:</td>

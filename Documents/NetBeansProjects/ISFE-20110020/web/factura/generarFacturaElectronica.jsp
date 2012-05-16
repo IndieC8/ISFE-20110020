@@ -5,8 +5,7 @@
 --%>
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
-<%!
-    String contribuyente = "";
+<%!    String contribuyente = "";
     String id = "";
 %>
 <%
@@ -27,14 +26,11 @@
         <link rel="stylesheet" type="text/css" href="../estilo/style.css" />
         <script type="text/javascript" src="../js/jquery-1.7.1.min.js"></script>
         <script type="text/javascript" src="../js/jquery-ui-1.8.17.custom.min.js"></script>
-        <script src="../js/jquery.validate.js"></script> <!--Validar Formulario -->
-        <script src="../js/jquery.maskedinput.js"></script> <!--Mascara para formulario-->
         <script src="../js/ui/jquery.ui.autocomplete.js"></script> <!--Realiza el autocomplete de los productos-->
 
         <script type="text/javascript">
             $(document).ready(function(){
-                $("#descripcionFactura").validate();
-
+                
                 var id= $("#idUsuarioFactura").val();
 
                 $.ajax({
@@ -58,7 +54,6 @@
 
         <script>
             $(function() {
-                $( "input:submit, a, button", ".demo" ).button();
                 $( "a", ".demo" ).click(function() { return false; });
             });
 
@@ -82,11 +77,11 @@
             }
 
             function ValidarSuma(){
-
+                
                 var cantidad = $("#cantidadFactura").val();
                 var descuento = $("#descuentoFactura").val();
 
-
+                
                 if(cantidad == "0"){
                     $("#errorCantidadFactura").text("Indica la cantidad del producto");
                 }
@@ -211,68 +206,93 @@
 
 
             function lookup(nombreProducto) {
-		if(nombreProducto.length == 0) {
-			 //Esconde el dialogo de sugerencia.
-			$('#suggestions').hide();
-		} else
-			var nombreProducto= $("#nombreProducto").val();
-                        $.ajax({
-                            type: "POST",
-                            url: "../Producto",
-                            data: "nombreProducto="+ nombreProducto,
-                            success: function(data){
-                                if(data.length >0) {
-                                    $('#suggestions').show();
-                                    $('#autoSuggestionsList').html(data);
-				}
-                            }
-                        });
+                if($("#cantidadFactura").val() == 0){
+                    $("#errorCantidadFactura").text("Indica la cantidad del producto");
+                    $("#cantidadFactura").focus();
+                    $("#nombreProducto").val("");
+                }               
+                if(nombreProducto.length == 0) {
+                    //Esconde el dialogo de sugerencia.
+                    $('#suggestions').hide();
+                } else
+                    //var nombreProducto= $("#nombreProducto").val();
+                $.ajax({
+                    type: "POST",
+                    url: "../Producto",
+                    data: "idUsuario=<%=id%>&nombreProducto="+ nombreProducto,
+                    success: function(data){
+                        if(data.length >0) {
+                            $('#suggestions').show();
+                            $('#autoSuggestionsList').html(data);
+                        }
+                    }
+                });
 
-		//}
+                //}
             } // lookup
 
-            function fill(nombreProducto,descripcionProducto,unidadProducto) {
+            function fill(nombreProducto,descripcionProducto,unidadProducto,valorUnitario) {
+                 
+                if(nombreProducto != undefined){
                     $('#nombreProducto').val(nombreProducto);
                     $('#descripcionProducto').val(descripcionProducto);
                     $('#unidadProducto').val(unidadProducto);
-                    setTimeout("$('#suggestions').hide();", 200);
+                    $("#valorUnitario").val(valorUnitario);
+                    Importe = valorUnitario;
+                    ValidarSuma();
+                }else{
+                    $('#descripcionProducto').val("");
+                    $('#unidadProducto').val("");
+                    $("#valorUnitario").val("");
+                    Importe = 0;
+                }
+                
+                /*Validar que existe el importe*/
+                if(Importe == undefined || Importe == 0){
+                    $("#importeTotal").val("");
+                    $("#valorUnitario").val("");
+                    $("#IVATotal").val("");
+                    $("#GranTotal").val("");
+                }
+                
+                setTimeout("$('#suggestions').hide();", 200);    
             }
         </script>
         <style type="text/css">
 
-	h3 {
-		margin: 0px;
-		padding: 0px;
-	}
+            h3 {
+                margin: 0px;
+                padding: 0px;
+            }
 
-	.suggestionsBox {
-		position: relative;
-		left: 30px;
-		margin: 10px 0px 0px 0px;
-		width: 200px;
-		background-color: #212427;
-		-moz-border-radius: 7px;
-		-webkit-border-radius: 7px;
-		border: 2px solid #000;
-		color: #fff;
-	}
+            .suggestionsBox {
+                position: relative;
+                left: 30px;
+                margin: 10px 0px 0px 0px;
+                width: 200px;
+                background-color: #212427;
+                -moz-border-radius: 7px;
+                -webkit-border-radius: 7px;
+                border: 2px solid #000;
+                color: #fff;
+            }
 
-	.suggestionList {
-		margin: 0px;
-		padding: 0px;
-	}
+            .suggestionList {
+                margin: 0px;
+                padding: 0px;
+            }
 
-	.suggestionList li {
+            .suggestionList li {
 
-		margin: 0px 0px 3px 0px;
-		padding: 3px;
-		cursor: pointer;
-	}
+                margin: 0px 0px 3px 0px;
+                padding: 3px;
+                cursor: pointer;
+            }
 
-	.suggestionList li:hover {
-		background-color: #659CD8;
-	}
-</style>
+            .suggestionList li:hover {
+                background-color: #659CD8;
+            }
+        </style>
 
     </head>
     <body>
@@ -283,7 +303,7 @@
             </div>
             <div class="contenido_principal">
                 <!-- Comienza Menu -->
-                <input type="hidden" id="idUsuarioFactura" value="<% out.println(id); %>"/>
+
                 <div class="menu">
                     <ul>
                         <li><a href="../index-user.jsp" ><img src="../images/icons/home.png" alt="" height="20"/> Home</a></li>
@@ -304,7 +324,7 @@
                                 <li><a href="">Estado de la Factura</a></li>
                             </ul>
                         </li>
-                        <li><a href="../cerrar.jsp"><img src="../images/icons/ingreso_ico.png"/> Cerrar Sesión &nbsp; &nbsp; <% out.println(contribuyente); %></a></li>
+                        <li><a href="../cerrar.jsp"><img src="../images/icons/ingreso_ico.png"/> Cerrar Sesión &nbsp; &nbsp; <% out.println(contribuyente);%></a></li>
                     </ul>
                 </div>
                 <!-- Termina Menu -->
@@ -331,7 +351,7 @@
                                             Nombre Producto:<br>
                                             <div>
                                                 <div>
-                                                    <input type="text" size="45" class="required" minlength="5" name="nombreProducto" id="nombreProducto"  onkeyup="lookup(this.value);" onblur="fill();" style="text-transform:uppercase" maxlength="100" />
+                                                    <input type="text" size="45" minlength="5" name="nombreProducto" id="nombreProducto"  onkeyup="lookup(this.value);" onblur="fill();" style="text-transform:uppercase" maxlength="100" />
                                                 </div>
                                                 <div class="suggestionsBox" id="suggestions" style="display: none;">
                                                     <img style="position: relative; top: -12px; left: 30px;" src="../images/upArrow.png" alt="upArrow" />
@@ -345,18 +365,18 @@
                                     <tr>
                                         <td colspan="3">
                                             Descripcion:<br>
-                                            <textarea id="descripcionProducto" name="descripcion" class="required" minlength="7" rows="3" cols="69" style="text-transform:uppercase" maxlength="140">
+                                            <textarea id="descripcionProducto" name="descripcion" minlength="7" rows="3" cols="69" style="text-transform:uppercase" maxlength="140">
                                             </textarea>
                                         </td>
                                     </tr>
                                     <tr>
                                         <td>
                                             Unidad:<br>
-                                            <select name="unidad" id="unidadProducto" onchange="BorrarError(this.id)" class="required">
+                                            <select name="unidad" id="unidadProducto" onchange="BorrarError(this.id)" >
                                                 <option value="0">SELECCIONE</option>
                                                 <option value="Lt">LT</option>
                                                 <option value="Kg">KG</option>
-                                                <option value="Pieza">PIEZAS</option>
+                                                <option value="pieza">PIEZAS</option>
                                                 <option value="Oz">OZ</option>
                                                 <option value="Mt">MT</option>
                                             </select>
@@ -364,7 +384,7 @@
                                         </td>
                                         <td>
                                             Valor Unitario:<br>
-                                            $<input type="text" id="valorUnitario" class="required" name="valorUnitario" maxlength="20" onblur="ValidarSuma()" onkeyup="OnlyNumber(this.value,this)"/>
+                                            $<input type="text" id="valorUnitario" name="valorUnitario" maxlength="20" onblur="ValidarSuma()" onkeyup="OnlyNumber(this.value,this)"/>
                                         </td>
                                         <td>
                                             Descuento:<br>
@@ -374,15 +394,15 @@
                                     <tr>
                                         <td>
                                             SubTotal:<br>
-                                            $<input type="text" id="importeTotal" name="importe" class="required" maxlength="20" readonly="readonly"/>
+                                            $<input type="text" id="importeTotal" name="importe" maxlength="20" readonly="readonly"/>
                                         </td>
                                         <td>
                                             IVA:<br>
-                                            $<input type="text" id="IVATotal" name="IVA" class="required" maxlength="20" readonly="readonly"/>
+                                            $<input type="text" id="IVATotal" name="IVA" maxlength="20" readonly="readonly"/>
                                         </td>
                                         <td>
                                             Total:<br>
-                                            $<input type="text" id="GranTotal" name="importe" class="required" maxlength="20" readonly="readonly"/>
+                                            $<input type="text" id="GranTotal" name="importe" maxlength="20" readonly="readonly"/>
                                         </td>
                                     </tr>
                                 </table>
@@ -419,7 +439,7 @@
                                 Cliente Asociado a la Factura: <select id="UsuariosClienteFactura"></select>
                                 <br/><br/><br/>
                                 <div align="right">
-                                <input  type="submit" width="50" value="Confirmar Factura" class="ui-button ui-widget ui-state-default ui-corner-all" role="button" aria-disabled="false"/>
+                                    <input  type="submit" width="50" value="Confirmar Factura" class="ui-button ui-widget ui-state-default ui-corner-all" role="button" aria-disabled="false"/>
                                 </div>
                             </div>
                         </div>

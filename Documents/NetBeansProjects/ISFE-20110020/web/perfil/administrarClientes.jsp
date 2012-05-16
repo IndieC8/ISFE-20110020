@@ -8,21 +8,19 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@ page language="java" import="dao.*" %>
 
-<%!
-    String contribuyente = "";
-    String id = "" ;
+<%!    String contribuyente = "";
+    String id = "";
 %>
 <%
     HttpSession sesionOk = request.getSession();
     if (sesionOk.getAttribute("contribuyente") == null) {
-        %>
-        <jsp:forward page="/index.jsp">
-            <jsp:param name="error" value="Es obligatorio identificarse"></jsp:param>
-        </jsp:forward>
-        <%
-    } else {
-        contribuyente = (String) sesionOk.getAttribute("contribuyente");//Recoge la session
-        id = (String) sesionOk.getAttribute("identificador");//Recoge la session
+%>
+<jsp:forward page="/index.jsp">
+    <jsp:param name="error" value="Es obligatorio identificarse"></jsp:param>
+</jsp:forward>
+<%        } else {
+    contribuyente = (String) sesionOk.getAttribute("contribuyente");//Recoge la session
+    id = (String) sesionOk.getAttribute("identificador");//Recoge la session
 %>
 
 <!DOCTYPE html>
@@ -36,8 +34,9 @@
         <script src="../js/jquery.maskedinput.js"></script> <!--Mascara para el RFC -->
         <script src="../js/jquery.validate.js"></script> <!--Validar Formulario -->
         <script src="../js/jquery.cliente.js"></script> <!--Funciones del  Formulario -->
+        <script src="../js/jquery.perfil.js"></script>
+
         <script type="text/javascript">
-            
             $(document).ready(function(){
                                     
                 $("#formulario_registroCliente").validate({
@@ -48,77 +47,13 @@
                     },
                     messages:{
                         RFCCliente:{
-                            required: "Ingresa el RFC del Cliente"
+                            required: "Ingresa el RFC de tu Cliente"
                         }
                     }
                 });
             });
-                
-            jQuery(function(){
-                $("#RFCCliente").mask("aaa*-999999-aa*");
-                $("#rfcClienteModificar").mask("aaa*-999999-aa*");
-                $("#rfcClienteEliminar").mask("aaa*-999999-aa*");
-            });
-                
-            $(function(){
-
-                	
-                // Tabs
-                $('#tabs').tabs();
-	
-
-                // Dialog			
-                $('#dialog').dialog({
-                    autoOpen: false,
-                    width: 600,
-                    buttons: {
-                        "Ok": function() { 
-                            $(this).dialog("close"); 
-                        }, 
-                        "Cancel": function() { 
-                            $(this).dialog("close"); 
-                        } 
-                    }
-                });
-				
-                // Dialog Link
-                $('#dialog_link').click(function(){
-                    $('#dialog').dialog('open');
-                    return false;
-                });
-
-				
-            });
-
-            $(function() {
-                $( "input:submit, a, button", ".demo" ).button();
-                $( "a", ".demo" ).click(function() { return false; });
-            });
-               
-            /*Evalua la opción si es Persona Fisica o moral*/
-            var Tipo="";
-            function Contribuyente(value){
-                $("#razonClient").hide();
-                $("#NombreClient").hide();
-                $("#PaternoClient").hide();
-                $("#MaternoClient").hide();
-                $("#nombreCliente").val("");
-                $("#paternoCliente").val("");
-                $("#maternoCliente").val("");
-                $("#razonCliente").val("");
-                 
-                if(value == "Moral"){
-                    $("#razonClient").show();
-                    Tipo = "Moral";
-                }else{
-                    $("#NombreClient").show();
-                    $("#PaternoClient").show();
-                    $("#MaternoClient").show();
-                    Tipo = "Fisica";
-                }
-                
-            }
             
+            /*Validador del Formulario de Registro*/
             $.validator.setDefaults({
                 submitHandler: function() { 
                     if($("#indicacionesCliente").text() != ""){
@@ -129,107 +64,60 @@
                         return false;
                     }
                     
-                    var nombre = $("#nombreCliente").val().toUpperCase();   
-                    var paterno = $("#paternoCliente").val().toUpperCase();
-                    var materno = $("#maternoCliente").val().toUpperCase();
-                    var razon = $("#razonCliente").val().toUpperCase();
-                    var rfc = $("#RFCCliente").val().toUpperCase();
+                    if(Tipo == "Moral"){
+                        razon = $("#razonCliente").val().toUpperCase();
+                        $("#confirmarRazonCliente").text(razon);
+                    }else{
+                        nombre = $("#nombreCliente").val().toUpperCase();   
+                        paterno = $("#paternoCliente").val().toUpperCase();
+                        materno = $("#maternoCliente").val().toUpperCase();
+                        $("#confirmarRazonCliente").text(nombre+" "+paterno+" "+materno);
+                    }
+                    
+                    var auxCalle = "";
+                    var auxInterior = "";
+                    var auxExterior = "";
+                    
+                    rfc = $("#RFCCliente").val().toUpperCase();
                     var aux = rfc.split('-');
                     rfc = aux[0]+aux[1]+aux[2];
-                    var mail = $("#mailCliente").val();
-                    var calle = $("#calleCliente").val().toUpperCase();
-                    var exterior = $("#exteriorCliente").val();
-                    var interior = $("#interiorCliente").val();
-                    var colonia = $("#localidadCliente").val();
-                    var municipio = $("#municipioCliente").val();
-                    var referencia = $("#referenciaCliente").val().toUpperCase();
-                
-                    $.ajax({
-                        type:"POST",
-                        url:"../Cliente",
-                        data:"Cliente=guardar&tipoPersona="+Tipo+"&Nombre="+nombre+"&Paterno="+paterno+"&Materno="+materno+"&Razon="+razon+"&RFCCliente="+
-                            rfc+"&Mail="+mail+"&Calle="+calle+"&Interior="+interior+"&Exterior="+exterior+"&Colonia="+colonia+"&Municipio="+
-                            municipio+"&Referencia="+referencia,
-                        success: function(data){
-                            alert(data);
-                            Limpiar();
-                        }
-                    }); 
+                    mail = $("#mailCliente").val();
+                    calle = $("#calleCliente").val().toUpperCase();
+                    exterior = $("#exteriorCliente").val();
+                    interior = $("#interiorCliente").val();
+                    colonia = $("#localidadCliente").val();
+                    referencia = $("#referenciaCliente").val().toUpperCase();
+                    municipio = $("#municipioCliente").val();
+                    
+                    if(interior != ""){
+                        auxInterior = "No. Interior: "+interior; 
+                    }
+                    
+                    if(exterior != ""){
+                        auxExterior = "No. Exterior: "+exterior;
+                    }
+                    
+                    if(calle != ""){
+                        auxCalle = "Calle: "+calle;
+                    }
+                    
+                    $("#confirmarRFCCliente").text(rfc);
+                    $("#confirmarMailCliente").text(mail);
+                    $("#confirmarDireccionCliente").text(auxCalle+" "+auxExterior+" "+auxInterior);
+                    $("#confirmarReferenciaCliente").text(referencia);
+                    $("#confirmarColoniaCliente").text( $("#localidadCliente option:selected").html() );
+                    $("#confirmarMunicipioCliente").text( $("#municipioCliente option:selected").html() );
+                    $("#confirmarEstadoCliente").text( $("#estadoCliente").val() ); 
+                    
+                    $("#ConfirmarDatosCliente").dialog("open");
                     
                 } 
             });
-        
+
+            
+            
         </script>
 
-
-        <script>
-            /*
-             *Variable de idCliente para Eliminar
-             */
-             var idClienteEliminar = "";
-             
-            /*
-             *Activar el dialogo de Eliminar Cliente
-             */
-            $(function() {
-                // a workaround for a flaw in the demo system (http://dev.jqueryui.com/ticket/4375), ignore!
-                $( "#dialog:ui-dialog" ).dialog( "destroy" );
-		
-                var rfc = $( "#rfc" ),
-                password = $( "#password" ),
-                allFields = $( [] ).add( rfc ).add( password ),
-                tips = $( ".validateTips" );
-
-		
-		
-                $( "#dialog-form" ).dialog({
-                    autoOpen: false,
-                    height: 300,
-                    width: 350,
-                    modal: true,
-                    buttons: {
-                        "Eliminar": function() {
-                            alert("Eliminando");
-                                        
-                        },
-                        Cancel: function() {
-                            $( this ).dialog( "close" );
-                        }
-                    },
-                    close: function() {
-                        allFields.val( "" ).removeClass( "ui-state-error" );
-                    }
-                });
-
-                /*Funcion para activar el dialogo*/
-                $( "#EliminarCliente" ).click(function() {
-                    $("#ErrorEliminarCliente").text("");
-                    var rfc = $("#rfcClienteEliminar").val().toUpperCase();
-                    if(rfc == ""){
-                        $("#ErrorEliminarCliente").text("Debes ingresar el R.F.C.");
-                    }else{
-                        $("#rfcErrorMensaje").text(rfc);
-                        var aux = rfc.split("-");
-                        rfc = aux[0]+aux[1]+aux[2];
-                        
-                        $.ajax({
-                            type: "POST",
-                            url: "../Cliente",
-                            data: "Cliente=baja&rfc="+rfc,
-                            success: function(data){
-                                var aux = data.split("/");
-                                idClienteEliminar = aux[0];
-                                $("#nombreErrorMensaje").text(aux[1]);
-                            }
-                        });
-                        $( "#dialog-form" ).dialog( "open" );
-                    }
-                });
-                        
-                
-            });
-        
-        </script>
     </head>
     <body>
         <!--Aqui va el dialogo de Eliminar Cliente-->
@@ -254,6 +142,54 @@
             </form>
         </div>
         <!--Aqui termina el dialogo de Eliminar Cliente-->
+        <!--Dialogo de Confirmar Datos-->
+        <div id="ConfirmarDatosCliente" title="ISFE- Registro de Clientes">
+            <p class="validateTips">
+                <label>
+                    <img src="../images/important.gif" />
+                    &nbsp;  
+                    Verifica que los datos de tu cliente sean correctos:
+                </label>
+            </p>
+            <form>
+                <center><table class="table1">
+                        <tbody>
+                            <tr>
+                                <th scope="row">Razón Social</th>
+                                <td id="confirmarRazonCliente"><span class="check"></span></td>
+
+                                <th scope="row">RFC</th>
+                                <td id="confirmarRFCCliente"><span class="check"></span></td>
+                            </tr>
+                            <tr>
+                                <th scope="row">Dirección</th>
+                                <td id="confirmarDireccionCliente"><span class="check"></span></td>
+
+                                <th scope="row">Referencia</th>
+                                <td id="confirmarReferenciaCliente"><span class="check"></span></td>
+
+                            </tr>
+                            <tr>
+                                <th scope="row">Colonia</th>
+                                <td id="confirmarColoniaCliente"><span class="check"></span></td>
+
+                                <th scope="row">Municipio</th>
+                                <td id="confirmarMunicipioCliente"><span class="check"></span></td>
+
+                            </tr>
+                            <tr>
+                                <th scope="row">Estado</th>
+                                <td id="confirmarEstadoCliente"><span class="check"></span></td>
+
+                                <th scope="row">Mail</th>
+                                <td id="confirmarMailCliente"><span class="check"></span></td>
+                            </tr>
+                        </tbody>
+                    </table></center>
+            </form>
+        </div>
+        <!--Termina el dialogo de Confirmar Datos-->
+
     <center>
         <div class="principal">
             <div class="header">
@@ -268,7 +204,7 @@
                         <li><a href="../Usar.jsp"><img src="../images/icons/valida_ico.png" alt=""/>¿C&oacute;mo usar ISFE?</a></li>
                         <li><a href="../perfil.jsp" id="current"><img src="../images/icons/perfil_ico.png" alt=""/> Perfil</a>
                             <ul>
-                               <!-- <li><a href="../perfil/consultarPerfil.jsp">Consultar Perfil</a></li> -->
+                                <!-- <li><a href="../perfil/consultarPerfil.jsp">Consultar Perfil</a></li> -->
                                 <li><a href="../perfil/modificarPerfil.jsp">Modificar Perfil</a></li>
                                 <li><a href="../perfil/administrarFIELyCSD.jsp">Administrar FIEL y CSD</a></li>
                                 <li><a href="../perfil/administrarClientes.jsp">Administrar Clientes</a></li>
@@ -280,7 +216,7 @@
                                 <li><a href="../factura/generarFacturaImprimible.jsp">Generar Factura Imprimible</a></li>
                             </ul>
                         </li>                       
-                        <li><a href="../cerrar.jsp"><img src="../images/icons/ingreso_ico.png"/> Cerrar Sesión &nbsp; &nbsp; <% out.println(contribuyente); %></a></li>
+                        <li><a href="../cerrar.jsp"><img src="../images/icons/ingreso_ico.png"/> Cerrar Sesión &nbsp; &nbsp; <% out.println(contribuyente);%></a></li>
                     </ul>
                 </div>
                 <!-- Termina Menu -->
@@ -302,7 +238,7 @@
                                         <tr>
                                             <td rowspan="19"><img src="../images/formularios/add_user.png"/></td>
                                             <td>Tipo de Contribuyente*:</td> 
-                                            <td><input type="radio" class="required" id="clienteMoral" name="contribuyenteCliente" value="Moral" onclick="Contribuyente(this.value)">Persona Moral<input type="radio" class="required" name="contribuyenteCliente" id="clienteFisica" value="Fisica" onclick="Contribuyente(this.value)">Persona Fisica</td>
+                                            <td><input type="radio" class="required" id="clienteMoral" name="contribuyenteCliente" value="Moral" onclick="ContribuyenteCliente(this.value)">Persona Moral<input type="radio" class="required" name="contribuyenteCliente" id="clienteFisica" value="Fisica" onclick="ContribuyenteCliente(this.value)">Persona Fisica</td>
                                         </tr>
                                         <tr style="display:none" id="NombreClient">
                                             <td>Nombre*:</td>
@@ -322,7 +258,7 @@
                                         </tr>
                                         <tr>
                                             <td>R.F.C.*:</td>
-                                            <td><input type="text" name="RFCCliente" id="RFCCliente" style="text-transform:uppercase" onblur="validarRFC()">
+                                            <td><input type="text" class="required" name="RFCCliente" id="RFCCliente" style="text-transform:uppercase" onblur="validarRFC()">
                                                 <label id="indicacionesCliente"></label>
                                             </td>
                                         </tr>
@@ -340,37 +276,37 @@
                                         </tr>
                                         <tr>
                                             <td>N° Interior:</td>
-                                            <td><input type="text" id="interiorCliente" maxlength="5" onkeypress="OnlyNumber(this.value,this)"></td>
+                                            <td><input type="text" id="interiorCliente" maxlength="5" ></td>
                                         </tr>
                                         <tr>
-                                            <td>Código Postal:</td>
-                                            <td><input type="text" id="codigoPostalCliente" name="codigoPostal" maxlength="5" onblur="obtenerEstadoCliente()" onkeyup="OnlyNumber(this.value,this)"  />
+                                            <td>Código Postal*:</td>
+                                            <td><input type="text" id="codigoPostalCliente" class="required" name="codigoPostal" maxlength="5" onblur="BuscarCodigo()" onkeyup="OnlyNumber(this.value,this)"  />
                                                 <label id="ErrorCodigoPostalCliente"></label>
                                             </td>                                           
                                         </tr>
                                         <tr>
-                                            <td>Estado:</td>
-                                            <td><input type="text" id="estadoCliente" readonly="readonly" ></td> 
+                                            <td>Estado*:</td>
+                                            <td><input type="text" id="estadoCliente" class="required" readonly="readonly" ></td> 
                                         </tr>
                                         <tr>
-                                            <td>Delegaci&oacute;n/Municipio:</td>
+                                            <td>Delegaci&oacute;n/Municipio*:</td>
                                             <td>
-                                                <select id="municipioCliente" name="municipio" >
+                                                <select id="municipioCliente" class="required" name="municipio" >
 
                                                 </select>
                                             </td>
                                         </tr>
                                         <tr>
-                                            <td>Colonia/Localidad</td>
+                                            <td>Colonia/Localidad*:</td>
                                             <td>
-                                                <select id="localidadCliente" name="localidad" >
+                                                <select id="localidadCliente" class="required" name="localidad" >
 
                                                 </select>
                                             </td>
                                         </tr>
                                         <tr>
-                                            <td>Referencia*:</td>
-                                            <td><input type="text" class="required" maxlength="25" id="referenciaCliente" style="text-transform:uppercase"></td>
+                                            <td>Referencia:</td>
+                                            <td><input type="text" maxlength="25" id="referenciaCliente" style="text-transform:uppercase"></td>
                                         </tr>
                                         <tr align="center">
                                             <td><input type="reset" width="50" value="Cancelar" name="cancelar" onclick="Limpiar()" class="ui-button ui-widget ui-state-default ui-corner-all" role="button" aria-disabled="false"/></td>
@@ -379,6 +315,8 @@
                                     </tbody>
                                 </table>
                             </form>
+                            <br/>
+                            <label><h3 id="ConfirmacionGuardarCliente"></h3></label>
                         </div>
                         <div id="tabs-2">
                             <div id="formulario_busquedaModificacionCliente">

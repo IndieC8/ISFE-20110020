@@ -204,11 +204,13 @@ public class Cliente extends HttpServlet {
                 /*
                  * Alta del cliente
                  */
+                
                 if ("Moral".equals(request.getParameter("tipoPersona"))) {
                     c.inicializar(true, request.getParameter("RFCCliente"), null, null, null, request.getParameter("Razon"), request.getParameter("Mail"), request.getParameter("Calle"), request.getParameter("Interior"), request.getParameter("Exterior"), request.getParameter("Colonia"),request.getParameter("Localidad"),request.getParameter("Municipio"),request.getParameter("Referencia"),request.getParameter("Estado"),request.getParameter("codigoPostal"));
                 } else {
                     c.inicializar(false, request.getParameter("RFCCliente"), request.getParameter("Nombre"), request.getParameter("Paterno"), request.getParameter("Materno"), null, request.getParameter("Mail"), request.getParameter("Calle"), request.getParameter("Interior"), request.getParameter("Exterior"), request.getParameter("Colonia"),request.getParameter("Localidad"),request.getParameter("Municipio"),request.getParameter("Referencia"),request.getParameter("Estado"),request.getParameter("codigoPostal"));
                 }
+
                 /*
                  * Validamos los datos del cliente
                  */
@@ -223,7 +225,7 @@ public class Cliente extends HttpServlet {
                     if (mensaje != null) {
                         out.println(mensaje);
                     } else {
-                        out.println("Cliente guardado!");
+                        out.println("Tu cliente se guardado exitosamente!");
                     }
 
                 }

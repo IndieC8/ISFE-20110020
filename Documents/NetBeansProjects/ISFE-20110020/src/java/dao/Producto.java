@@ -4,6 +4,7 @@
  */
 package dao;
 
+import Negocios.Cifrado.Cifrado;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.ResultSet;
@@ -38,12 +39,16 @@ public class Producto extends HttpServlet {
         try
         {
             Sql sql = new Sql();
+            String aux = request.getParameter("idUsuario");
+            aux = Cifrado.decodificarBase64(aux);
+            
             String nombreProducto = request.getParameter("nombreProducto");
-            ResultSet busqueda=sql.consulta("select nombreProducto,descripcionProducto,unidad from producto where nombreProducto LIKE '"+nombreProducto+"%'");
+            
+            ResultSet busqueda=sql.consulta("select nombreProducto,descripcionProducto,unidad,valorUnitario from producto where nombreProducto LIKE '"+nombreProducto+"%' AND idUsuario = "+Integer.parseInt(aux) +"");
 
             while(busqueda.next())
             {
-                out.println("<li onclick=\"fill('"+busqueda.getString("nombreProducto")+"','"+busqueda.getString("descripcionProducto")+"','"+busqueda.getString("unidad")+"');\">"+busqueda.getString("nombreProducto")+"</li>");
+                out.println("<li onclick=\"fill('"+busqueda.getString("nombreProducto")+"','"+busqueda.getString("descripcionProducto")+"','"+busqueda.getString("unidad")+"','"+busqueda.getString("valorUnitario") +"');\">"+busqueda.getString("nombreProducto")+"</li>");
             }
 
         }

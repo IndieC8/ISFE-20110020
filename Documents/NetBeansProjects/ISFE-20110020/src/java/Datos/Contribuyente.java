@@ -307,9 +307,7 @@ public class Contribuyente {
             return "Ingresa el RFC";
         } else if ("".equals(Correo)) {
             return "Ingresa el E-mail";
-        } else if ("".equals(Referencia)) {
-            return "Ingresa la Referencia";
-        }
+        } 
 
         return null;
     }
