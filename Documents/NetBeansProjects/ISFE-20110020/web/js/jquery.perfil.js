@@ -286,6 +286,18 @@ function Contribuyente(value){
 function SubirKEY(){
     $("#dialogPrivadaUsuario").dialog("open");
 }
+
+function SubirCSD(){
+    var archivo = $("#archivoCER").val();
+    $.ajax({
+        url: "Perfil",
+        type: "POST",
+        data: "Archivo=CSD&archivo="+archivo,
+        success: function(data){
+            alert(data);
+        }
+    });
+}
          
                        
 /*Busca si existe el rfc*/

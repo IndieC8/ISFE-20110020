@@ -63,7 +63,7 @@
         <p class="validateTips">
             <img src="images/key.png" />
             &nbsp;
-            Ingresa tu clave privada para válidar tu Certificado
+            Ingresa tu clave privada para válidar tu FIEL
         </p>
         <form>
             <fieldset>  
@@ -208,7 +208,7 @@
                                         </tr>
                                         <tr>
                                             <td>Num. Exterior*:</td>
-                                            <td><input type="text" id="UsuarioExterior" class="required" name="numexterior" maxlength="5" size="25" onkeyup="OnlyNumber(this.value,this)" /></td>
+                                            <td><input type="text" id="UsuarioExterior" class="required digits" name="numexterior" maxlength="5" size="25" onkeyup="OnlyNumber(this.value,this)" /></td>
                                         </tr>
                                         <tr>
                                             <td>Num. Interior:</td>
@@ -295,7 +295,8 @@
                                         </td>
 
                                         <td>
-                                            <input type="button" value=" &nbsp; &nbsp; Subir CSD &nbsp; &nbsp;" name="subirCSD" class="ui-button ui-widget ui-state-default ui-corner-all" role="button" aria-disabled="false"/>
+                                            
+                                            <input type="button" value=" &nbsp; &nbsp; Subir CSD &nbsp; &nbsp;" name="subirCSD" onclick="SubirCSD()" class="ui-button ui-widget ui-state-default ui-corner-all" role="button" aria-disabled="false"/>
                                         </td>
 
                                     </tr>

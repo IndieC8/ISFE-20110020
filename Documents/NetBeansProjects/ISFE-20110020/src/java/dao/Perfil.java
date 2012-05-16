@@ -66,6 +66,9 @@ public class Perfil extends HttpServlet {
                 String resultado = s.ejecuta(actualizar);
                 out.println(resultado);
                 
+            }else if("CSD".equals(request.getParameter("Archivo"))){
+                String file_name = request.getParameter("archivo");
+                out.println(file_name);
             } else {
                 
                 String aux = request.getParameter("idUsuario");

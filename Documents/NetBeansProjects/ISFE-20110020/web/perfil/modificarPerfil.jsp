@@ -216,7 +216,7 @@
                                         </tr>
                                         <tr>
                                             <td>Av / Calle*</td>
-                                            <td><input type="text" size="35" maxlength="50" id="calleModificarPerfil" readonly="readonly" style="text-transform: uppercase" class="required" /></td>
+                                            <td><input type="text" class="required" size="35" maxlength="50" id="calleModificarPerfil" readonly="readonly" style="text-transform: uppercase"  /></td>
                                             <td><input type="button" onclick="EditarModificacion(this.name)" value="Editar" name="calleModificarPerfil" class="ui-button ui-widget ui-state-default ui-corner-all" role="button" aria-disabled="false"/></td>
                                         </tr>
                                         <tr>
@@ -226,7 +226,7 @@
                                         </tr>
                                         <tr>
                                             <td>Número Exterior*</td>
-                                            <td><input type="text" size="35" maxlength="5" id="exteriorModificarPerfil" readonly="readonly" onkeypress="OnlyNumber(this.value,this)" class="required" /></td>
+                                            <td><input type="text" class="required digits" size="35" maxlength="5" id="exteriorModificarPerfil" readonly="readonly" onkeyup="OnlyNumber(this.value,this)" /></td>
                                             <td><input type="button" onclick="EditarModificacion(this.name)" value="Editar" name="exteriorModificarPerfil" class="ui-button ui-widget ui-state-default ui-corner-all" role="button" aria-disabled="false"/></td>
                                         </tr>
 

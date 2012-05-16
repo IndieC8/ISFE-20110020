@@ -512,7 +512,7 @@
 			 if(aux[0] == "REQ"){
 			    $("#ErrorArchivoREQ").text(aux[1]);
 			 }else{
-			 	 $("#ErrorArchivoCER").text(aux[1]);
+                            $("#ErrorArchivoCER").text(aux[1]);
 			 }
 			 
 			//}// save a byte!
