@@ -190,7 +190,7 @@ public class CFDI{
             return complemento;
         }
         /**
-         * Genera un xml con todos los datos ya previamente establecidos pero 
+         * Genera un xml con todos los datos ya previamente establecidos pero
          * agregando el sello de la firma digital del emisor (usuario)
          * @param sello de la firma digital
          * @return xml sellado
@@ -200,7 +200,7 @@ public class CFDI{
             return xml;
         }
         /**
-         * Genera un nuevo xml con los datos del xml generado pero agregando el 
+         * Genera un nuevo xml con los datos del xml generado pero agregando el
          * timbre fiscal digital al mismo.
          * @param timbre espacio de nombre con los datos del timbre fiscal digital
          * @return xml con el timbre fiscal digital.
@@ -230,9 +230,6 @@ public class CFDI{
                 .setAttribute("cantidad", concepto.getCantidad() + "");
             if (concepto.getUnidad() != null) {
 		concepto_el.setAttribute("unidad", XML.codificarCadena(concepto.getUnidad()));
-            }
-            if (concepto.getNoIdentificacion() != null) {
-		concepto_el.setAttribute("noIdentificacion", XML.codificarCadena(concepto.getNoIdentificacion()));
             }
             return concepto_el.setAttribute("descripcion", XML.codificarCadena(concepto.getDescripcion()))
                 .setAttribute("valorUnitario", XML.codificarNumero(concepto.getValorUnitario()) + "")

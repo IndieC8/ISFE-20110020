@@ -30,7 +30,7 @@
 
         <script type="text/javascript">
             $(document).ready(function(){
-                
+
                 var id= $("#idUsuarioFactura").val();
 
                 $.ajax({
@@ -77,11 +77,11 @@
             }
 
             function ValidarSuma(){
-                
+
                 var cantidad = $("#cantidadFactura").val();
                 var descuento = $("#descuentoFactura").val();
 
-                
+
                 if(cantidad == "0"){
                     $("#errorCantidadFactura").text("Indica la cantidad del producto");
                 }
@@ -210,7 +210,7 @@
                     $("#errorCantidadFactura").text("Indica la cantidad del producto");
                     $("#cantidadFactura").focus();
                     $("#nombreProducto").val("");
-                }               
+                }
                 if(nombreProducto.length == 0) {
                     //Esconde el dialogo de sugerencia.
                     $('#suggestions').hide();
@@ -232,7 +232,7 @@
             } // lookup
 
             function fill(nombreProducto,descripcionProducto,unidadProducto,valorUnitario) {
-                 
+
                 if(nombreProducto != undefined){
                     $('#nombreProducto').val(nombreProducto);
                     $('#descripcionProducto').val(descripcionProducto);
@@ -246,7 +246,7 @@
                     $("#valorUnitario").val("");
                     Importe = 0;
                 }
-                
+
                 /*Validar que existe el importe*/
                 if(Importe == undefined || Importe == 0){
                     $("#importeTotal").val("");
@@ -254,8 +254,8 @@
                     $("#IVATotal").val("");
                     $("#GranTotal").val("");
                 }
-                
-                setTimeout("$('#suggestions').hide();", 200);    
+
+                setTimeout("$('#suggestions').hide();", 200);
             }
         </script>
         <style type="text/css">
@@ -444,7 +444,7 @@
                             </div>
                         </div>
                         <div id="tabs-3">
-                            <iframe src="https://www.consulta.sat.gob.mx/SICOFI_WEB/ModuloECFD_Plus/ValidadorComprobantes/Validador.asp" width="770" height="930" frameborder="0"> </iframe>
+                            <iframe src="https://www.consulta.sat.gob.mx/sicofi_web/moduloECFD_plus/ValidadorCFDI/Validador%20cfdi.html" width="770" height="930" frameborder="0"> </iframe>
                         </div>
                     </div>
                     <br><br>
