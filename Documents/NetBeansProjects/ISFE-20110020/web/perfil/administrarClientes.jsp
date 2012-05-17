@@ -38,6 +38,8 @@
 
         <script type="text/javascript">
             $(document).ready(function(){
+                
+                $("#actualizarCliente").validate();
                                     
                 $("#formulario_registroCliente").validate({
                     rules:{
@@ -53,42 +55,112 @@
                 });
             });
             
-            /*Validador del Formulario de Registro*/
+            $(function() {
+                $("#ConfirmarDatosCliente").dialog({
+                    autoOpen: false,
+                    height: 380,
+                    width: 750,
+                    modal: true,
+                    buttons: {
+                        "Aceptar": function() {
+                            if(Actualizacion == "actualizar"){
+                                $.ajax({
+                                    type:"POST", url:"../Cliente",
+                                    data:"Cliente=actualizacion&idCliente="+idClienteActualizar+"&idUsuario=<%=id%>&mail="+mail+"&calle="+calle+"&interior="+interior+"&exterior="+exterior+"&idLocalidad="+colonia+"&referencia="+referencia,
+                                    success: function(data){
+                                        //$("#ConfirmacionGuardarCliente").text(data); regresarModificacion(); 
+                                        alert(data);
+                                    }
+                                });
+                            }else{
+                                $.ajax({
+                                    type:"POST", url:"../Cliente",
+                                    data:"Cliente=guardar&tipoPersona="+Tipo+"&Nombre="+nombre+"&Paterno="+paterno+"&Materno="+materno+"&Razon="+razon+"&RFCCliente="+
+                                        rfcCliente+"&Mail="+mail+"&Calle="+calle+"&Interior="+interior+"&Exterior="+exterior+"&Colonia="+colonia+"&Municipio="+
+                                        municipio+"&Referencia="+referencia+"&idUsuario=<%=id%>",
+                                    success: function(data){
+                                        $("#ConfirmacionGuardarCliente").text(data); Limpiar(); }
+                                });
+                            }
+                            $( this ).dialog( "close" );     
+                        },
+                        Cancel: function() {
+                            $( this ).dialog( "close" );
+                        }
+                    },
+                    close: function() {
+                        allFields.val( "" ).removeClass( "ui-state-error" );
+                    } 
+                });
+
+            });
+            
+            /*Validador del Formulario de Registro y Actualización*/
             $.validator.setDefaults({
-                submitHandler: function() { 
-                    if($("#indicacionesCliente").text() != ""){
-                        $("#RFCCliente").focus();
-                        return false;
-                    }else if($("#codigoPostalCliente").text() != ""){
-                        $("#codigoPostalCliente").focus();
-                        return false;
-                    }
+                submitHandler: function() {
                     
-                    if(Tipo == "Moral"){
-                        razon = $("#razonCliente").val().toUpperCase();
-                        $("#confirmarRazonCliente").text(razon);
+                    if(Actualizacion == "actualizar"){
+                        if($("#ErrorCodigoPostalModificarCliente").text() != ""){
+                            $("#codigoClienteModificar").focus();
+                        }else{
+                            if(Tipo == "Moral"){ razon = $("#razonClienteModificar").val().toUpperCase();}
+                            else{ razon = $("#nombreClienteModificar").val().toUpperCase()+" "+$("#paternoClienteModificar").val().toUpperCase()+" "+$("#maternoClienteModificar").val().toUpperCase(); }
+                            
+                            rfcCliente = $("#RFCClienteModificar").val().toUpperCase();
+                            var aux = rfcCliente.split('-');
+                            rfcCliente = aux[0]+aux[1]+aux[2];
+                            mail = $("#mailClienteModificar").val();
+                            calle = $("#CalleClienteModificar").val().toUpperCase();
+                            exterior = $("#exteriorClienteModificar").val();
+                            interior = $("#interiorClienteModificar").val();
+                            colonia = $("#localidadClienteModificar").val();
+                            referencia = $("#referenciaClienteModificar").val().toUpperCase();
+                            
+                            $("#confirmarColoniaCliente").text( $("#localidadClienteModificar option:selected").html() );
+                            $("#confirmarMunicipioCliente").text( $("#delegacionClienteModificar option:selected").html() );
+                            $("#confirmarEstadoCliente").text( $("#EstadoClienteModificar").val() ); 
+                            $("#confirmarRazonCliente").text(razon);
+                            idClienteActualizar = $("#idClienteModificar").val();
+                        }
                     }else{
-                        nombre = $("#nombreCliente").val().toUpperCase();   
-                        paterno = $("#paternoCliente").val().toUpperCase();
-                        materno = $("#maternoCliente").val().toUpperCase();
-                        $("#confirmarRazonCliente").text(nombre+" "+paterno+" "+materno);
-                    }
                     
+                        if($("#indicacionesCliente").text() != ""){
+                            $("#RFCCliente").focus();
+                            return false;
+                        }else if($("#codigoPostalCliente").text() != ""){
+                            $("#codigoPostalCliente").focus();
+                            return false;
+                        }
+                    
+                        if(Tipo == "Moral"){
+                            razon = $("#razonCliente").val().toUpperCase();
+                            $("#confirmarRazonCliente").text(razon);
+                        }else{
+                            nombre = $("#nombreCliente").val().toUpperCase();   
+                            paterno = $("#paternoCliente").val().toUpperCase();
+                            materno = $("#maternoCliente").val().toUpperCase();
+                            $("#confirmarRazonCliente").text(nombre+" "+paterno+" "+materno);
+                        }
+
+                        rfcCliente = $("#RFCCliente").val().toUpperCase();
+                        var aux = rfcCliente.split('-');
+                        rfcCliente = aux[0]+aux[1]+aux[2];
+                        mail = $("#mailCliente").val();
+                        calle = $("#calleCliente").val().toUpperCase();
+                        exterior = $("#exteriorCliente").val();
+                        interior = $("#interiorCliente").val();
+                        colonia = $("#localidadCliente").val();
+                        referencia = $("#referenciaCliente").val().toUpperCase();
+                        municipio = $("#municipioCliente").val();
+                        
+                        $("#confirmarColoniaCliente").text( $("#localidadCliente option:selected").html() );
+                        $("#confirmarMunicipioCliente").text( $("#municipioCliente option:selected").html() );
+                        $("#confirmarEstadoCliente").text( $("#estadoCliente").val() ); 
+                    
+                    }
                     var auxCalle = "";
                     var auxInterior = "";
                     var auxExterior = "";
-                    
-                    rfc = $("#RFCCliente").val().toUpperCase();
-                    var aux = rfc.split('-');
-                    rfc = aux[0]+aux[1]+aux[2];
-                    mail = $("#mailCliente").val();
-                    calle = $("#calleCliente").val().toUpperCase();
-                    exterior = $("#exteriorCliente").val();
-                    interior = $("#interiorCliente").val();
-                    colonia = $("#localidadCliente").val();
-                    referencia = $("#referenciaCliente").val().toUpperCase();
-                    municipio = $("#municipioCliente").val();
-                    
                     if(interior != ""){
                         auxInterior = "No. Interior: "+interior; 
                     }
@@ -101,14 +173,10 @@
                         auxCalle = "Calle: "+calle;
                     }
                     
-                    $("#confirmarRFCCliente").text(rfc);
+                    $("#confirmarRFCCliente").text(rfcCliente);
                     $("#confirmarMailCliente").text(mail);
                     $("#confirmarDireccionCliente").text(auxCalle+" "+auxExterior+" "+auxInterior);
                     $("#confirmarReferenciaCliente").text(referencia);
-                    $("#confirmarColoniaCliente").text( $("#localidadCliente option:selected").html() );
-                    $("#confirmarMunicipioCliente").text( $("#municipioCliente option:selected").html() );
-                    $("#confirmarEstadoCliente").text( $("#estadoCliente").val() ); 
-                    
                     $("#ConfirmarDatosCliente").dialog("open");
                     
                 } 
@@ -226,9 +294,9 @@
                     <!--Comienza el formulario-->	
                     <div id="tabs">
                         <ul>
-                            <li><a href="#tabs-1">Agregar Cliente</a></li>
-                            <li><a href="#tabs-2">Modificar Cliente</a></li>
-                            <li><a href="#tabs-3">Dar de Baja a Cliente</a></li>
+                            <li><a onclick="BorrarErrorBaja()" href="#tabs-1">Agregar Cliente</a></li>
+                            <li><a onclick="BorrarErrorBaja()" href="#tabs-2">Modificar Cliente</a></li>
+                            <li><a onclick="BorrarErrorBaja()" href="#tabs-3">Dar de Baja a Cliente</a></li>
                         </ul>
                         <div id="tabs-1">
                             <font color="red">Los campos marcados con (*) son obligatorios</font><br><br>
@@ -242,15 +310,15 @@
                                         </tr>
                                         <tr style="display:none" id="NombreClient">
                                             <td>Nombre*:</td>
-                                            <td><input type="text" class="required" minlength="5" maxlength="60" id="nombreCliente" style="text-transform:uppercase"></td>
+                                            <td><input type="text" class="required" minlength="2" maxlength="60" id="nombreCliente" style="text-transform:uppercase"></td>
                                         </tr>
                                         <tr style="display:none" id="PaternoClient">
                                             <td>Apellido Paterno*:</td>
-                                            <td><input type="text" class="required" minlength="5" maxlength="60" id="paternoCliente" style="text-transform:uppercase"></td>
+                                            <td><input type="text" class="required" minlength="2" maxlength="60" id="paternoCliente" style="text-transform:uppercase"></td>
                                         </tr>
                                         <tr style="display:none" id="MaternoClient">
                                             <td>Apellido Materno*:</td>
-                                            <td><input type="text" class="required" minlength="5" maxlength="60" id="maternoCliente" style="text-transform:uppercase"></td>
+                                            <td><input type="text" class="required" minlength="2" maxlength="60" id="maternoCliente" style="text-transform:uppercase"></td>
                                         </tr>
                                         <tr style="display:none" id="razonClient">
                                             <td>Razon Social:</td>
@@ -326,18 +394,20 @@
                                         <tr>
                                             <td>R.F.C: </td>
                                             <td>
-                                                <input type="text" style="text-transform:uppercase" id="rfcClienteModificar" width="20"/>
+                                                <input type="text" onkeyup="BorrarErrorBaja()" style="text-transform:uppercase" id="rfcClienteModificar" width="20"/>
                                                 <label id="ErrorRFCMoficiarCliente"></label>
                                             </td>
                                             <td><input type="button" value="Buscar" onclick="ModificarCliente()" name="Buscar" class="ui-button ui-widget ui-state-default ui-corner-all" role="button" aria-disabled="false"/></td>
                                         </tr>
                                     </table>
-                                    <br><br><br>
-                                    <div id="ResultadoModificarCliente"></div>
-                                    <br><br>
                                 </form>
+                                <br><br><br>
+                                <div id="ResultadoModificarCliente"></div>
+                                <br><br>
                             </div>
-                            <div id="formulario_actualizacionModficarCliente" style="display:none"></div>
+                            <form id="actualizarCliente">
+                                <div id="formulario_actualizacionModficarCliente" style="display:none"></div>
+                            </form>
                         </div>
                         <div id="tabs-3">
                             <form id="bajaCliente" action="" method="post">
@@ -346,13 +416,15 @@
                                     <tr>
                                         <td>R.F.C: </td>
                                         <td>
-                                            <input type="text" style=" text-transform:uppercase" id="rfcClienteEliminar" width="20"/>
+                                            <input type="text" style=" text-transform:uppercase" id="rfcClienteEliminar" onkeyup="BorrarErrorBaja()" width="20"/>
                                             <label id="ErrorEliminarCliente"></label>
                                         </td>
                                         <td><input type="button" id="EliminarCliente"  value="Buscar" name="Buscar" class="ui-button ui-widget ui-state-default ui-corner-all" role="button" aria-disabled="false"/></td>
                                     </tr>
                                 </table>
                             </form>
+                            <br/>
+                            <label><h3 id="ConfirmacionEliminarCliente"></h3></label>
                         </div>
                     </div>
                     <br><br>

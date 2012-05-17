@@ -1,5 +1,6 @@
 package Datos;
 
+import Negocios.Cifrado.Cifrado;
 import dao.Sql;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -22,6 +23,7 @@ public class Contribuyente {
     private String Correo = "";
     private Direccion direccion = null;
     private String Referencia = "";
+    private String idUsuario = "";
     Sql sql;
     /**
      * Constructor vacio
@@ -49,7 +51,7 @@ public class Contribuyente {
      * @param estado de la dirección del Contribuyente
      * @param codigoPostal de la dirección del Contribuyente
      */
-    public void inicializar(boolean TipoPersona, String RFC, String Nombre, String Paterno, String Materno, String Razon, String Correo, String calle, String interior, String exterior, String colonia, String localidad, String municipio, String referencia, String estado, String codigoPostal) {
+    public void inicializar(boolean TipoPersona, String RFC, String Nombre, String Paterno, String Materno, String Razon, String Correo, String calle, String interior, String exterior, String colonia, String localidad, String municipio, String referencia, String estado, String codigoPostal,String usuario) {
         this.setTipoPersona(TipoPersona);
         this.setRFC(RFC);
         this.setNombre(Nombre);
@@ -59,6 +61,7 @@ public class Contribuyente {
         this.setCorreo(Correo);
         direccion = new Direccion(calle, interior, exterior, colonia, localidad, municipio, referencia, estado, codigoPostal);
         this.setReferencia(referencia);
+        this.idUsuario = Cifrado.decodificarBase64(usuario);
         sql = new Sql();
     }
     /**
@@ -90,7 +93,7 @@ public class Contribuyente {
     public String Insertar(){
         sql = new Sql();
         String consulta= "INSERT INTO cliente VALUES(0,"+this.isTipoPersona()+",'"+this.getNombre()+"','"+this.getApPaterno()+"','"+this.getApMaterno()+"','"+this.getRazonSocial()+"','"+this.getRFC()+"',"
-                + "'"+this.getCorreo()+"','"+direccion.getCalle()+"','"+direccion.getNoInterior()+"','"+direccion.getNoExterior()+"',"+direccion.getColonia()+",'"+direccion.getReferencia()+"',0)";
+                + "'"+this.getCorreo()+"','"+direccion.getCalle()+"','"+direccion.getNoInterior()+"','"+direccion.getNoExterior()+"',"+direccion.getColonia()+",'"+direccion.getReferencia()+"',"+Integer.parseInt(this.idUsuario) +")";
         return sql.ejecuta(consulta);
     }
     /**
@@ -229,7 +232,7 @@ public class Contribuyente {
             while(rs.next()){
                 resultado[0] = String.valueOf( rs.getInt("idCliente") );
                 if( rs.getBoolean("tipoPersona") == false){
-                    resultado[1] = rs.getString("nombreCliente") + rs.getString("APaternoCliente") + rs.getString("AMaternoCliente");
+                    resultado[1] = rs.getString("nombreCliente") +" "+ rs.getString("APaternoCliente")+" "+ rs.getString("AMaternoCliente");
                 }else{
                     resultado[1] = rs.getString("razonCliente");
                 }

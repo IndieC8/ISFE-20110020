@@ -4,8 +4,11 @@
  */
 
 /*Variables Globales*/
-var nombre ,paterno, materno, razon, rfc , mail, calle , exterior , interior , colonia , municipio , referencia;
+var nombre ,paterno, materno, rfcCliente, razon, mail, calle , exterior , interior , colonia , municipio , referencia;
 var idClienteEliminar = "";
+var Atualizacion = null;
+var idClienteActualizar = "";
+
 
 /*Busqueda del cliente por su RFC*/
 function ModificarCliente(){
@@ -26,7 +29,13 @@ function ModificarCliente(){
             url: "../Cliente",
             data: "Cliente=buscar&rfc="+rfcBuscar,
             success: function(data){
-                $("#ResultadoModificarCliente").html(data);
+                if(data == 0){
+                    $("#ErrorRFCMoficiarCliente").text("No existe tu cliente");
+                    $("#rfcClienteModificar").val("");
+                }else{
+                    $("#ResultadoModificarCliente").html(data);
+                    
+                }
             }
         });
     }
@@ -94,7 +103,10 @@ function ActualizarCliente(idCliente){
         url: "../Cliente",
         data: "Cliente=modificar&idCliente="+idCliente,
         success: function(data){
-            $("#formulario_actualizacionModficarCliente").html(data);
+            var aux = data.split("**");
+            Tipo = aux[0];
+            $("#formulario_actualizacionModficarCliente").html(aux[1]);
+            Actualizacion = "actualizar";
         }
     });
 }
@@ -132,7 +144,7 @@ $(function(){
                 $(this).dialog("close"); 
             } 
         }
-     });
+    });
 				
     // Dialog Link
     $('#dialog_link').click(function(){
@@ -168,6 +180,7 @@ function ContribuyenteCliente(value){
         Tipo = "Fisica";
     }
     
+    BorrarErrorBaja();
     return false;
 }
             
@@ -176,41 +189,6 @@ $(function() {
     // a workaround for a flaw in the demo system (http://dev.jqueryui.com/ticket/4375), ignore!
     $( "#dialog:ui-dialog" ).dialog( "destroy" );
 		
-    var rfc = $( "#rfc" ),
-    password = $( "#password" ),
-    allFields = $( [] ).add( rfc ).add( password ),
-    tips = $( ".validateTips" );
-                
-    $("#ConfirmarDatosCliente").dialog({
-        autoOpen: false,
-        height: 380,
-        width: 750,
-        modal: true,
-        buttons: {
-            "Aceptar": function() {
-                $.ajax({
-                    type:"POST",
-                    url:"../Cliente",
-                    data:"Cliente=guardar&tipoPersona="+Tipo+"&Nombre="+nombre+"&Paterno="+paterno+"&Materno="+materno+"&Razon="+razon+"&RFCCliente="+
-                    rfc+"&Mail="+mail+"&Calle="+calle+"&Interior="+interior+"&Exterior="+exterior+"&Colonia="+colonia+"&Municipio="+
-                    municipio+"&Referencia="+referencia,
-                    success: function(data){
-                        $("#ConfirmacionGuardarCliente").text(data);
-                        Limpiar();
-                    }
-                });
-                $( this ).dialog( "close" );     
-            },
-            Cancel: function() {
-                $( this ).dialog( "close" );
-            }
-        },
-        close: function() {
-            allFields.val( "" ).removeClass( "ui-state-error" );
-        } 
-    });
-		
-		
     $( "#dialog-form" ).dialog({
         autoOpen: false,
         height: 300,
@@ -218,7 +196,16 @@ $(function() {
         modal: true,
         buttons: {
             "Eliminar": function() {
-                alert("Eliminando");
+                $.ajax({
+                    type: "POST",
+                    url: "../Cliente",
+                    data: "Cliente=eliminar&idCliente="+idClienteEliminar,
+                    success: function(data){
+                        $("#ConfirmacionEliminarCliente").text("Tu cliente se ha eliminado!");
+                        $("#rfcClienteEliminar").val("");
+                    }
+                });
+                $( this ).dialog( "close" );
                                         
             },
             Cancel: function() {
@@ -251,15 +238,34 @@ $(function() {
                     $("#nombreErrorMensaje").text(aux[1]);
                 }
             });
-            $( "#dialog-form" ).dialog( "open" );
+            
+            if(idClienteEliminar == 'null' || idClienteEliminar == ""){
+                $("#ErrorEliminarCliente").text("No existe tu cliente");
+                $("#rfcClienteEliminar").val("");
+            }else{
+                $( "#dialog-form" ).dialog( "open" );
+            }
         }
     });
                         
                 
 });
 
+function BorrarErrorBaja(){
+    $("#ErrorEliminarCliente").text("");
+    $("#ConfirmacionEliminarCliente").text("");
+    $("#ResultadoModificarCliente").text("");
+    $("#ErrorRFCMoficiarCliente").text("");
+}
+
 function BuscarCodigo(){
-    var codigoPostal= $("#codigoPostalCliente").val();
-    $("#ErrorCodigoPostalCliente").text("");
-    obtenerEstado(codigoPostal,"ErrorCodigoPostal","estadoCliente","municipioCliente","localidadCliente","codigoPostalCliente","../");
+    if(Actualizacion == "actualizar"){
+        var codigo = $("#codigoClienteModificar").val();
+        $("#ErrorCodigoPostalModificarCliente").text("");
+        obtenerEstado(codigo,"ErrorCodigoPostalModificarCliente","EstadoClienteModificar","delegacionClienteModificar","localidadClienteModificar","codigoClienteModificar","../");
+    }else{
+        var codigoPostal= $("#codigoPostalCliente").val();
+        $("#ErrorCodigoPostalCliente").text("");
+        obtenerEstado(codigoPostal,"ErrorCodigoPostalCliente","estadoCliente","municipioCliente","localidadCliente","codigoPostalCliente","../");
+    }
 }
