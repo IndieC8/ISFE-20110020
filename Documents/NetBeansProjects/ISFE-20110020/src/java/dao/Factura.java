@@ -52,10 +52,39 @@ public class Factura extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         PrintWriter out = response.getWriter();
-        String idFolioPDF=null;
-        String idUsuario=null;
+        String idFolioPDF = null;
+        String idUsuario = null;
+        
+        if ("Clientes".equals(request.getParameter("Factura"))) {
 
-        if ("Factura".equals(request.getParameter("Factura"))) {
+            try {
+                String aux = request.getParameter("idUsuario");
+                aux = Cifrado.decodificarBase64(aux);
+                Sql s = new Sql();
+                String sql = "select idCliente, tipoPersona,nombreCliente,APaternoCliente,AMaternoCliente,razonCliente from cliente where idUsuario= " + aux + ";";
+                ResultSet rs;
+                rs = s.consulta(sql);
+
+                while (rs.next()) {
+                    if (rs.getBoolean("tipoPersona") == false) {
+                        out.println("<option value=\"" + rs.getInt("idCliente") + "\">" + rs.getString("nombreCliente") + " " + rs.getString("APaternoCliente") + " " + rs.getString("AMaternoCliente") + "</option>");
+                    } else {
+                        out.println("<option value=\"" + rs.getInt("idCliente") + "\">" + rs.getString("razonCliente") + "</option>");
+                    }
+
+                }
+
+
+            } catch (InstantiationException ex) {
+                Logger.getLogger(Factura.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (IllegalAccessException ex) {
+                Logger.getLogger(Factura.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (SQLException ex) {
+                Logger.getLogger(Factura.class.getName()).log(Level.SEVERE, null, ex);
+            } finally {
+                out.close();
+            }
+        } else if ("Factura".equals(request.getParameter("Factura"))) {
             try {
                 String aux = request.getParameter("idUsuaio");
                 aux = Cifrado.decodificarBase64(aux);
@@ -68,19 +97,21 @@ public class Factura extends HttpServlet {
                 Direccion d = new Direccion();
                 Direccion dReceptor = new Direccion();
 
-                /*Datos del Emisor*/
+                /*
+                 * Datos del Emisor
+                 */
                 String sql = "select u.tipoPersona,u.nombre,u.apellidoMaterno,u.apellidoPaterno,u.razonSocial,u.curp,u.rfc,u.mail, f.archivoFiel, c.noCertificado, c.archivoCSD, d.codigoPostal, d.calle ,d.nombreLocalidad,d.nombreMunicipio, d.nombreEstado from usuario u, csd c, fiel f, direccionUsuario d where idUsuario = " + aux + " and c.idCSD = u.idCSD and f.idFiel = u.idFiel and d.idUsuario = u.idUsuario;";
                 ResultSet rs;
                 rs = s.consulta(sql);
-                while(rs.next()){
+                while (rs.next()) {
                     emisor.setTipoPersona(rs.getBoolean("tipoPersona"));
 
-                    if( rs.getBoolean("tipoPersona") == false ){
+                    if (rs.getBoolean("tipoPersona") == false) {
                         emisor.setNombre(rs.getString("nombre"));
                         emisor.setApMaterno(rs.getString("apellidoMaterno"));
                         emisor.setApPaterno(rs.getString("apellidoPaterno"));
                         emisor.setCurp(rs.getString("curp"));
-                    }else{
+                    } else {
                         emisor.setRazonSocial(rs.getString("razonSocial"));
                     }
 
@@ -104,18 +135,20 @@ public class Factura extends HttpServlet {
 
                 }
 
-                /*Datos receptor*/
+                /*
+                 * Datos receptor
+                 */
                 String sqlRec = "select c.tipoPersona,c.nombre,c.apellidoMaterno,c.apellidoPaterno,c.razonSocial,c.rfc, d.codigoPostal, d.calle ,d.nombreLocalidad,d.nombreMunicipio, d.nombreEstado from cliente c, direccionCliente d where idUsuario = " + aux + " and d.idCliente = c.idCliente;";
                 ResultSet rsRec;
                 rsRec = s.consulta(sql);
-                while(rsRec.next()){
+                while (rsRec.next()) {
                     receptor.setTipoPersona(rsRec.getBoolean("tipoPersona"));
 
-                    if( rsRec.getBoolean("tipoPersona") == false ){
+                    if (rsRec.getBoolean("tipoPersona") == false) {
                         receptor.setNombre(rsRec.getString("nombre"));
                         receptor.setApMaterno(rsRec.getString("apellidoMaterno"));
                         receptor.setApPaterno(rsRec.getString("apellidoPaterno"));
-                    }else{
+                    } else {
                         receptor.setRazonSocial(rsRec.getString("razonSocial"));
                     }
 
@@ -129,7 +162,9 @@ public class Factura extends HttpServlet {
                     receptor.setDireccion(dReceptor);
                 }
 
-                /*Parametros del Formulario*/
+                /*
+                 * Parametros del Formulario
+                 */
 
                 Datos.Factura f = new Datos.Factura();
                 Datos.Concepto conceptos = new Datos.Concepto();
@@ -139,7 +174,7 @@ public class Factura extends HttpServlet {
                 conceptos.setnombreProducto(request.getParameter("nombre"));
                 conceptos.setValorUnitario(Double.parseDouble(request.getParameter("unitario")));
                 conceptos.setImporte(Double.parseDouble(request.getParameter("total")));
-                conceptos.setDescripcion(conceptos.getnombreProducto()+": "+request.getParameter("descripcion"));
+                conceptos.setDescripcion(conceptos.getnombreProducto() + ": " + request.getParameter("descripcion"));
 
 
                 ArrayList<Datos.Concepto> productos = new ArrayList<Datos.Concepto>();
@@ -158,16 +193,16 @@ public class Factura extends HttpServlet {
                 String sqlFolio = "select idFolio, numFolio from folios where usado=0 limit 1;";
                 ResultSet rsFolio;
                 rsFolio = s.consulta(sql);
-                String idFolio=rsFolio.getString("idfolio");
-                String numFolio=rsFolio.getString("numfolio");
+                String idFolio = rsFolio.getString("idfolio");
+                String numFolio = rsFolio.getString("numfolio");
                 Folio folio = new Folio();
                 folio.setNoFolio(Long.parseLong(numFolio));
                 folio.setUUID(Long.parseLong(idFolio));
                 f.setFolio(folio);
-                String actualizaEstadoFolio="update folios set usado=1 where usado=0 and idFolio = "+idFolio+"limit 1";
+                String actualizaEstadoFolio = "update folios set usado=1 where usado=0 and idFolio = " + idFolio + "limit 1";
                 s.consulta(actualizaEstadoFolio);
 
-                String pawsswordISFE ="a0123456789";
+                String pawsswordISFE = "a0123456789";
                 Direccion expedidoEn = new Direccion();
                 expedidoEn.setCalle("JUAN DE DIOS BATIZ");
                 expedidoEn.setCodigoPostal("07738");
@@ -179,12 +214,11 @@ public class Factura extends HttpServlet {
                 XML xml = new XML();
                 Datos.ISFE isfe = new Datos.ISFE();
                 String sqlISFE = "select u.idUsuario,f.archivoFiel,c.noCertificado,c.archivoCSD from fiel f,csd c,usuario u where u.idUsuario=1 and u.idFiel=f.idFiel and u.idCSD=c.idCSD;";
-                ResultSet rsIsfe=s.consulta(sqlISFE);
+                ResultSet rsIsfe = s.consulta(sqlISFE);
                 Fiel fielISFE = new Fiel();
                 CSD csdISFE = new CSD();
 
-                while(rsIsfe.next())
-                {
+                while (rsIsfe.next()) {
                     fielISFE.setArchivoFiel(rsIsfe.getBytes("f.archivoFiel"));
                     csdISFE.setArchivoCSD(rsIsfe.getBytes("c.archivoCSD"));
                     csdISFE.setNoCertificado(rsIsfe.getString("c.noCertificado"));
@@ -196,15 +230,15 @@ public class Factura extends HttpServlet {
 
                 try {
                     Document facturaXML = xml.generarXML(f, isfe, "/ISFE-20110020/resources/xml/");
-                    File fXML = XML.generarArchivoXML(facturaXML,emisor.getRFC()+folio.getNoFolio()+receptor.getRFC()+".xml");
+                    File fXML = XML.generarArchivoXML(facturaXML, emisor.getRFC() + folio.getNoFolio() + receptor.getRFC() + ".xml");
                     EnvioMail mail = new EnvioMail();
-                    mail.EnvioMail(emisor.getCorreo(),"Entrega de Factura Electrónica ISFE "+new Date() ,"ISFE, hace entrega de la factura electrónica en formato XML.\nHacemos de su conocimiento que en este momento el resguardo de la factura\nes responsabilidad de usted.\n\nGracias por utilizar ISFE.", fXML, emisor.getRFC()+folio.getNoFolio()+receptor.getRFC()+".xml");
-                    String sqlFactura="instert into factura (facturaXML,formaPago,idUsuario,idFolio,nombreXML) values ("+fXML+",'"+f.getFormaDePago()+"',"+aux+","+idFolio+",'"+emisor.getRFC()+folio.getNoFolio()+receptor.getRFC()+"');";
+                    mail.EnvioMail(emisor.getCorreo(), "Entrega de Factura Electrónica ISFE " + new Date(), "ISFE, hace entrega de la factura electrónica en formato XML.\nHacemos de su conocimiento que en este momento el resguardo de la factura\nes responsabilidad de usted.\n\nGracias por utilizar ISFE.", fXML, emisor.getRFC() + folio.getNoFolio() + receptor.getRFC() + ".xml");
+                    String sqlFactura = "instert into factura (facturaXML,formaPago,idUsuario,idFolio,nombreXML) values (" + fXML + ",'" + f.getFormaDePago() + "'," + aux + "," + idFolio + ",'" + emisor.getRFC() + folio.getNoFolio() + receptor.getRFC() + "');";
                     s.consulta(sqlFactura);
                     fXML.delete();
-                    out.println("Factura generada exitosamente, y se ha enviado al correo:\n "+emisor.getCorreo());
-                    idFolioPDF=idFolio;
-                    idUsuario=aux;
+                    out.println("Factura generada exitosamente, y se ha enviado al correo:\n " + emisor.getCorreo());
+                    idFolioPDF = idFolio;
+                    idUsuario = aux;
                 } catch (SecurityException ex) {
                     Logger.getLogger(Factura.class.getName()).log(Level.SEVERE, null, ex);
                 } catch (UnsupportedEncodingException ex) {
@@ -224,25 +258,21 @@ public class Factura extends HttpServlet {
                 Logger.getLogger(Factura.class.getName()).log(Level.SEVERE, null, ex);
             }
 
-        }
-
-        else if("Impresa".equals(request.getParameter("Factura")))
-        {
+        } else if ("Impresa".equals(request.getParameter("Factura"))) {
             try {
-                String sqlPDF="select nombreXML, facturaXML from factura where idFolio="+idFolioPDF+" and idUsuario="+idUsuario+");";
-                Sql s=new Sql();
-                ResultSet rsPDF=s.consulta(sqlPDF);
+                String sqlPDF = "select nombreXML, facturaXML from factura where idFolio=" + idFolioPDF + " and idUsuario=" + idUsuario + ");";
+                Sql s = new Sql();
+                ResultSet rsPDF = s.consulta(sqlPDF);
                 Blob blob = (Blob) rsPDF.getBlob("facturaXML");
                 InputStream is = blob.getBinaryStream();
-                File xml = new File(rsPDF.getString("nombreXML")+".xml");
+                File xml = new File(rsPDF.getString("nombreXML") + ".xml");
                 FileOutputStream fos = new FileOutputStream(xml);
-                int b=0;
-                while ((b = is.read()) != -1)
-                {
+                int b = 0;
+                while ((b = is.read()) != -1) {
                     fos.write(b);
                 }
                 try {
-                    File pdf = PDF.generarArchivoPDF(xml, "/ISFE-20110020/resources/xslt/", rsPDF.getString("nombreXML")+".pdf");
+                    File pdf = PDF.generarArchivoPDF(xml, "/ISFE-20110020/resources/xslt/", rsPDF.getString("nombreXML") + ".pdf");
                     PDF.visualizarPDF(pdf, response, request);
                 } catch (FileNotFoundException ex) {
                     Logger.getLogger(Factura.class.getName()).log(Level.SEVERE, null, ex);

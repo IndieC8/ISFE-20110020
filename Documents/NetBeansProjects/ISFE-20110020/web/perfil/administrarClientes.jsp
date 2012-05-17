@@ -68,8 +68,8 @@
                                     type:"POST", url:"../Cliente",
                                     data:"Cliente=actualizacion&idCliente="+idClienteActualizar+"&idUsuario=<%=id%>&mail="+mail+"&calle="+calle+"&interior="+interior+"&exterior="+exterior+"&idLocalidad="+colonia+"&referencia="+referencia,
                                     success: function(data){
-                                        //$("#ConfirmacionGuardarCliente").text(data); regresarModificacion(); 
-                                        alert(data);
+                                        $("#ConfirmacionModificarCliente").text("Tu cliente se ha actualizado!"); regresarModificacion(); 
+                                        
                                     }
                                 });
                             }else{
@@ -211,7 +211,7 @@
         </div>
         <!--Aqui termina el dialogo de Eliminar Cliente-->
         <!--Dialogo de Confirmar Datos-->
-        <div id="ConfirmarDatosCliente" title="ISFE- Registro de Clientes">
+        <div id="ConfirmarDatosCliente" title="ISFE- Administración de Clientes">
             <p class="validateTips">
                 <label>
                     <img src="../images/important.gif" />
@@ -401,9 +401,9 @@
                                         </tr>
                                     </table>
                                 </form>
-                                <br><br><br>
+                                <br/><label><h3 id="ConfirmacionModificarCliente"></h3></label>
                                 <div id="ResultadoModificarCliente"></div>
-                                <br><br>
+                                <br>
                             </div>
                             <form id="actualizarCliente">
                                 <div id="formulario_actualizacionModficarCliente" style="display:none"></div>

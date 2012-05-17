@@ -30,13 +30,11 @@
 
         <script type="text/javascript">
             $(document).ready(function(){
-
-                var id= $("#idUsuarioFactura").val();
-
+                
                 $.ajax({
                     type: "POST",
                     url: "../Factura",
-                    data: "idUsuario="+ id,
+                    data: "Factura=Clientes&idUsuario=<%=id%>",
                     success: function(data){
                         $("#UsuariosClienteFactura").html(data);
                     }
@@ -50,13 +48,6 @@
 
 
             });
-        </script>
-
-        <script>
-            $(function() {
-                $( "a", ".demo" ).click(function() { return false; });
-            });
-
         </script>
         <script>
 
@@ -77,11 +68,11 @@
             }
 
             function ValidarSuma(){
-
+                
                 var cantidad = $("#cantidadFactura").val();
                 var descuento = $("#descuentoFactura").val();
 
-
+                
                 if(cantidad == "0"){
                     $("#errorCantidadFactura").text("Indica la cantidad del producto");
                 }
@@ -97,12 +88,19 @@
                     addComas(Importe,document.getElementById("valorUnitario"));
                     addComas(iva,document.getElementById("IVATotal"));
                     addComas(granTotal,document.getElementById("GranTotal"));
+                    
+                    SubTotal = Total;
+                    Iva = iva;
+                    ImporteTotal = granTotal;
 
                 }
 
             }
 
             var Importe = 0;
+            var SubTotal = 0;
+            var Iva = 0;
+            var ImporteTotal = 0;
 
             function OnlyNumber(value,elemnt){
                 if( isNaN(value) ){
@@ -117,6 +115,12 @@
             function BorrarError(id){
                 if(id == "unidadProducto"){
                     $("#errorUnidadProducto").text("");
+                }else if(id == "nombreProducto"){
+                    $("#errorNombreProducto").text("");
+                }else if(id == "descripcionProducto"){
+                    $("#errorDescripcionProducto").text("");
+                }else if(id == "valorUnitario"){
+                    $("#errorValorProducto").text("");
                 }else{
                     $("#errorCantidadFactura").text("");
                     $("#mensajeConfirmacion").text("");
@@ -144,22 +148,22 @@
 
                 var cantidad = $("#cantidadFactura").val();
                 var nombre = $("#nombreProducto").val().toUpperCase();
-                var descripcion = $("#descripcionProducto").val();
+                var descripcion = $("#descripcionProducto").val().toUpperCase();
                 var unidad = $("#unidadProducto").val();
                 var unitario = $("#valorUnitario").val();
                 var descuento = $("#descuentoFactura").val();
                 descuento = descuento / 100;
                 var importe = $("#importeTotal").val();
                 var iva = $("#IVATotal").val();
-                var Total = $("#GranTotal").val();
+                var total = $("#GranTotal").val();
 
-
+                
                 var strHtml1 = "<td class=\"TablaTitulo\">" + cantidad + "<input type=\"hidden\" id=\"tbDetalleCantidad_" + oId + "\" value=\" " + cantidad + "\"/></td>";
                 var strHtml2 = "<td class=\"TablaTitulo\">" + nombre + "<input type=\"hidden\" id=\"tbDetalleNombre_" + oId + "\" value=\" " + nombre + "\"/></td>";
-                var strHtml3 = "<td class=\"TablaTitulo\"> $ " + unitario + "<input type=\"hidden\" id=\"tbDetalleUnitario_" + oId + "\" value=\" " + unitario + "\"/></td>";
-                var strHtml4 = "<td class=\"TablaTitulo\"> $ " + importe + "<input type=\"hidden\" id=\"tbDetalleImporte_" + oId + "\" value=\" " + importe + "\"/></td>";
-                var strHtml5 = "<td class=\"TablaTitulo\"> $ " + iva + "<input type=\"hidden\" id=\"tbDetalleIVA_" + oId + "\" value=\" " + iva + "\"/></td>";
-                var strHtml6 = "<td class=\"TablaTitulo\"> $ " + Total + "<input type=\"hidden\" id=\"tbDetalleTotal_" + oId + "\" value=\" " + Total + "\"/></td>";
+                var strHtml3 = "<td class=\"TablaTitulo\"> $ " + unitario + "<input type=\"hidden\" id=\"tbDetalleImporte_" + oId + "\" value=\" " + Importe + "\"/></td>";
+                var strHtml4 = "<td class=\"TablaTitulo\"> $ " + importe + "<input type=\"hidden\" id=\"tbDetalleSubtotal_" + oId + "\" value=\" " + SubTotal + "\"/></td>";
+                var strHtml5 = "<td class=\"TablaTitulo\"> $ " + iva + "<input type=\"hidden\" id=\"tbDetalleIVA_" + oId + "\" value=\" " + Iva + "\"/></td>";
+                var strHtml6 = "<td class=\"TablaTitulo\"> $ " + total + "<input type=\"hidden\" id=\"tbDetalleTotal_" + oId + "\" value=\" " + ImporteTotal + "\"/></td>";
 
                 var strHtml7 = '<td class=\"TablaTitulo\"><img src=\"../images/formularios/delete.png\" width=\"16\" height=\"16\" alt=\"Eliminar\" style=\"cursor:pointer\" onclick=\"eliminarFila('+ oId +')\" />';
                 strHtml7 += '<input type="hidden" id="hdnIdCampos_' + oId +'" name="hdnIdCampos[]" value="' + oId + '" />';
@@ -188,51 +192,78 @@
 
 
 
-            $.validator.setDefaults({
-                submitHandler: function(){
-
-                    if( $("#unidadProducto").val() == "0"){
-                        $("#errorUnidadProducto").text("Indica la unidad del producto");
-                    }else{
-
-                        agregarFila();
-                        borrarProducto();
-                        $("#mensajeConfirmacion").text("Producto Agregado");
-                        $("#confirmacion").show();
-
-                    }
+            function AgregarProducto(){
+                var cantidad = $("#cantidadFactura").val();
+                var nombre = $("#nombreProducto").val();
+                var descripcion = $("#descripcionProducto").val();
+                var unidad = $("#unidadProducto").val();
+                var valor = $("#valorUnitario").val();
+                var subTotal = $("#importeTotal").val();
+                var iva = $("#IVATotal").val();
+                var Total = $("#GranTotal").val();
+                var descuento = $("#descuentoFactura").val();
+                
+                if(descuento == ""){
+                    descuento  = 0;   
                 }
-            });
+
+                if( cantidad == "0"){
+                    $("#errorCantidadFactura").text("Indica la cantidad del producto");
+                    return false;
+                }else if( unidad == "0"){
+                    $("#errorUnidadProducto").text("Indica la unidad del producto");
+                    return false;
+                }else if( nombre == ""){
+                    $("#errorNombreProducto").text("Indica el nombre del producto");
+                    return false;
+                }else if(descripcion == ""){
+                    $("#errorDescripcionProducto").text("Indica la descripción de tu producto");
+                    return false;
+                }else if(valor == ""){
+                    $("#errorValorProducto").text("Indica el valor unitario");
+                    return false;
+                }else{
+                    //Importe = valor;
+                    //ValidarSuma();
+                    agregarFila();
+                    borrarProducto();
+                    $("#mensajeConfirmacion").text("Producto Agregado");
+                    $("#confirmacion").show();
+
+                }
+            }
+            
 
 
             function lookup(nombreProducto) {
+                BorrarError("nombreProducto");
                 if($("#cantidadFactura").val() == 0){
                     $("#errorCantidadFactura").text("Indica la cantidad del producto");
                     $("#cantidadFactura").focus();
                     $("#nombreProducto").val("");
-                }
+                }               
                 if(nombreProducto.length == 0) {
                     //Esconde el dialogo de sugerencia.
                     $('#suggestions').hide();
                 } else
-                    //var nombreProducto= $("#nombreProducto").val();
-                $.ajax({
-                    type: "POST",
-                    url: "../Producto",
-                    data: "idUsuario=<%=id%>&nombreProducto="+ nombreProducto,
-                    success: function(data){
-                        if(data.length >0) {
-                            $('#suggestions').show();
-                            $('#autoSuggestionsList').html(data);
+                //var nombreProducto= $("#nombreProducto").val();
+                    $.ajax({
+                        type: "POST",
+                        url: "../Producto",
+                        data: "idUsuario=<%=id%>&nombreProducto="+ nombreProducto,
+                        success: function(data){
+                            if(data.length >0) {
+                                $('#suggestions').show();
+                                $('#autoSuggestionsList').html(data);
+                            }
                         }
-                    }
                 });
 
                 //}
             } // lookup
 
             function fill(nombreProducto,descripcionProducto,unidadProducto,valorUnitario) {
-
+                 
                 if(nombreProducto != undefined){
                     $('#nombreProducto').val(nombreProducto);
                     $('#descripcionProducto').val(descripcionProducto);
@@ -246,7 +277,7 @@
                     $("#valorUnitario").val("");
                     Importe = 0;
                 }
-
+                
                 /*Validar que existe el importe*/
                 if(Importe == undefined || Importe == 0){
                     $("#importeTotal").val("");
@@ -254,8 +285,8 @@
                     $("#IVATotal").val("");
                     $("#GranTotal").val("");
                 }
-
-                setTimeout("$('#suggestions').hide();", 200);
+                
+                setTimeout("$('#suggestions').hide();", 200);    
             }
         </script>
         <style type="text/css">
@@ -352,6 +383,7 @@
                                             <div>
                                                 <div>
                                                     <input type="text" size="45" minlength="5" name="nombreProducto" id="nombreProducto"  onkeyup="lookup(this.value);" onblur="fill();" style="text-transform:uppercase" maxlength="100" />
+                                                    <label id="errorNombreProducto"></label>
                                                 </div>
                                                 <div class="suggestionsBox" id="suggestions" style="display: none;">
                                                     <img style="position: relative; top: -12px; left: 30px;" src="../images/upArrow.png" alt="upArrow" />
@@ -365,8 +397,9 @@
                                     <tr>
                                         <td colspan="3">
                                             Descripcion:<br>
-                                            <textarea id="descripcionProducto" name="descripcion" minlength="7" rows="3" cols="69" style="text-transform:uppercase" maxlength="140">
+                                            <textarea id="descripcionProducto" onkeypress="BorrarError(this.id)" name="descripcion" minlength="7" rows="3" cols="69" style="text-transform:uppercase" maxlength="140">
                                             </textarea>
+                                            <label id="errorDescripcionProducto"></label>
                                         </td>
                                     </tr>
                                     <tr>
@@ -384,11 +417,12 @@
                                         </td>
                                         <td>
                                             Valor Unitario:<br>
-                                            $<input type="text" id="valorUnitario" name="valorUnitario" maxlength="20" onblur="ValidarSuma()" onkeyup="OnlyNumber(this.value,this)"/>
+                                            $<input type="text" id="valorUnitario" onkeypress="BorrarError(this.id)" name="valorUnitario" maxlength="20" onblur="ValidarSuma()" onkeyup="OnlyNumber(this.value,this)"/>
+                                            <label id="errorValorProducto"></label>
                                         </td>
                                         <td>
                                             Descuento:<br>
-                                            %<input type="text" id="descuentoFactura" value="0" name="descuento" maxlength="2" onblur="ValidarSuma()" onkeypress="OnlyNumber(this.value,this)"/>
+                                            %<input type="text" id="descuentoFactura" value="0" name="descuento" maxlength="2" onblur="ValidarSuma()" onkeypress="OnlyNumber(this.value,this)"/>   
                                         </td>
                                     </tr>
                                     <tr>
@@ -398,8 +432,7 @@
                                         </td>
                                         <td>
                                             IVA:<br>
-                                            $<input type="text" id="IVATotal" name="IVA" maxlength="20" readonly="readonly"/>
-                                        </td>
+                                            $<input type="text" id="IVATotal" name="IVA" maxlength="20" readonly="readonly"/></td>
                                         <td>
                                             Total:<br>
                                             $<input type="text" id="GranTotal" name="importe" maxlength="20" readonly="readonly"/>
@@ -409,7 +442,7 @@
                                 <br />
                                 <label id="mensajeConfirmacion"></label>
                                 <br/>
-                                <input type="submit" width="50" value="Agregar Producto" name="agregar" class="ui-button ui-widget ui-state-default ui-corner-all" role="button" aria-disabled="false"/>
+                                <input type="button" onclick="AgregarProducto()" width="50" value="Agregar Producto" name="agregar" class="ui-button ui-widget ui-state-default ui-corner-all" role="button" aria-disabled="false"/>
                                 &nbsp; &nbsp; &nbsp; <input type="reset" width="50" value="Cancelar" name="cancelar" class="ui-button ui-widget ui-state-default ui-corner-all" role="button" aria-disabled="false"/>
 
                             </form>
@@ -444,7 +477,7 @@
                             </div>
                         </div>
                         <div id="tabs-3">
-                            <iframe src="https://www.consulta.sat.gob.mx/sicofi_web/moduloECFD_plus/ValidadorCFDI/Validador%20cfdi.html" width="770" height="930" frameborder="0"> </iframe>
+                            <iframe src="https://www.consulta.sat.gob.mx/SICOFI_WEB/ModuloECFD_Plus/ValidadorComprobantes/Validador.asp" width="770" height="930" frameborder="0"> </iframe>
                         </div>
                     </div>
                     <br><br>

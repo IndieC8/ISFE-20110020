@@ -13,6 +13,7 @@ var idClienteActualizar = "";
 /*Busqueda del cliente por su RFC*/
 function ModificarCliente(){
     $("#ErrorRFCMoficiarCliente").text("");
+    BorrarErrorBaja();
     var rfcBuscar = $("#rfcClienteModificar").val().toUpperCase();
     if(rfcBuscar == ""){
         $("#ErrorRFCMoficiarCliente").text("Debes ingresar el R.F.C");
@@ -106,9 +107,11 @@ function ActualizarCliente(idCliente){
             var aux = data.split("**");
             Tipo = aux[0];
             $("#formulario_actualizacionModficarCliente").html(aux[1]);
+            $("#formulario_actualizacionModficarCliente").show();
             Actualizacion = "actualizar";
         }
     });
+    return false;
 }
 
 /*
@@ -116,7 +119,8 @@ function ActualizarCliente(idCliente){
  */
 function regresarModificacion(){
     $("#formulario_busquedaModificacionCliente").show();
-    $("#formulario_actualizacionModficarCliente").remove();
+    $("#formulario_actualizacionModficarCliente").html("");
+    return false;
 }
 
 
@@ -256,6 +260,7 @@ function BorrarErrorBaja(){
     $("#ConfirmacionEliminarCliente").text("");
     $("#ResultadoModificarCliente").text("");
     $("#ErrorRFCMoficiarCliente").text("");
+    $("#ConfirmacionModificarCliente").text("");
 }
 
 function BuscarCodigo(){
