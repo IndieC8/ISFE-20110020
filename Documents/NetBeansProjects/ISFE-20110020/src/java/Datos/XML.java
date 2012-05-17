@@ -10,8 +10,6 @@ import java.security.NoSuchProviderException;
 import java.security.PrivateKey;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.codec.binary.Base64;
@@ -41,15 +39,17 @@ public class XML extends Formato{
      * @throws IOException
      * @throws NoSuchProviderException
      */
-    public Document generarXML(Factura f,ISFE isfe)throws SecurityException, UnsupportedEncodingException,IOException, NoSuchProviderException, Exception{
+    public Document generarXML(Factura f,ISFE isfe,String path)throws SecurityException, UnsupportedEncodingException,IOException, NoSuchProviderException, Exception{
         Document xml=null;
         CFDI cfdi=new CFDI(f);
-        xml=crearXML(f,cfdi);
-        xml=timbrarCFDI(f,cfdi,isfe);
+        xml=crearXML(f,cfdi,path);
+        xml=timbrarCFDI(f,cfdi,isfe,path);
         return xml;
     }
-    private Document crearXML(Factura factura,CFDI cfdi) throws SecurityException, UnsupportedEncodingException, NoSuchProviderException, IOException, Exception{
-        String cadOriginal = CadenaOriginal.generarCadenaOriginal("cadOriginalCFDI_3.xslt",cfdi.generarCFDI());
+    private Document crearXML(Factura factura,CFDI cfdi,String path) throws IOException, SecurityException, NoSuchProviderException{
+        System.out.println("PATH XSLT:    "+path+"cadOriginalCFDI_3.xslt");
+        
+        String cadOriginal = CadenaOriginal.generarCadenaOriginal(path+"cadOriginalCFDI_3.xslt",cfdi.generarCFDI());
         System.out.println(cadOriginal);
         SAT sat=new SAT();
         //System.out.println(sat.ValidarCadenaOriginal(cadOriginal));
@@ -61,9 +61,9 @@ public class XML extends Formato{
         factura.setCadenaCSD(sello);
         return cfdi.agregarSello(sello);
     }
-    private Document timbrarCFDI(Factura factura,CFDI cfdi,ISFE isfe) throws SecurityException, UnsupportedEncodingException, NoSuchProviderException, IOException, Exception{
+    private Document timbrarCFDI(Factura factura,CFDI cfdi,ISFE isfe,String path) throws SecurityException, UnsupportedEncodingException, NoSuchProviderException, IOException, Exception{
         Timbre timbre=new Timbre();
-        String cadTimbre = CadenaOriginal.generarCadenaOriginal("cadOriginalTFD_1.xslt", timbre.agregarTimbre(factura, isfe));
+        String cadTimbre = CadenaOriginal.generarCadenaOriginal(path+"cadOriginalTFD_1.xslt", timbre.agregarTimbre(factura, isfe));
         //System.out.println(cadTimbre);
         PrivateKey key;
         key = Cifrado.getLlavePrivada(isfe.getFiel().getArchivoFiel(), isfe.getFiel().getPassword());

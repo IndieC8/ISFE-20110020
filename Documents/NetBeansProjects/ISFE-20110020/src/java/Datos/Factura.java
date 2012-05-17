@@ -28,7 +28,6 @@ public class Factura {
     private Fiel fiel=null;
     private CSD csd=null;
     private String formaDePago=null;
-    private String metodoDePago=null;
     private String tipoDeComprobante=null;
     /**
      * Constructor vacío.
@@ -38,6 +37,7 @@ public class Factura {
     /**
      * Obtiene la fecha de la factura
      * @return Fecha en que se generó la factura
+     * @deprecated Sustituido por una instancia de clase anónima de java.util.Date 
      */
     public Date getFecha(){
         return this.Fecha;
@@ -45,6 +45,7 @@ public class Factura {
     /**
      * Ingresa la fecha de la factura
      * @param Fecha de la factura
+     * @deprecated Sustituido por una instancia de clase anónima de java.util.Date
      */
     public void setFecha(Date Fecha){
         this.Fecha=Fecha;
@@ -239,20 +240,6 @@ public class Factura {
      */
     public void setFormaDePago(String formaDePago){
         this.formaDePago=formaDePago;
-    }
-    /**
-     * Obtiene el método de pago de la factura electrónica
-     * @return método de pago de la factura electrónica
-     */
-    public String getMetodoDePago(){
-        return this.metodoDePago;
-    }
-    /**
-     * Ingresa el método de pago de la factura electrónica
-     * @param metodoDePago de la factura electrónica
-     */
-    public void setMetodoDePago(String metodoDePago){
-        this.metodoDePago=metodoDePago;
     }
     /**
      * Obtiene el tipo de comprobante de la factura electrónica

@@ -115,6 +115,7 @@ public class Folio {
     /**
      * Obtiene el estado del folio si esta usado o no
      * @return estado del folio
+     * @deprecated Se realiza dentro de una consulta
      */
     public boolean getUsado(){
         return this.usado;
@@ -122,6 +123,7 @@ public class Folio {
     /**
      * Ingresa el estado del folio de la factura
      * @param usado
+     * @deprecated Se realiza dentro de una consulta
      */
     public void setUsado(boolean usado){
         this.usado=usado;

@@ -52,6 +52,10 @@
         <servlet-name>Producto</servlet-name>
         <servlet-class>dao.Producto</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>Generador</servlet-name>
+        <servlet-class>dao.Generador</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>ObtenerEstado</servlet-name>
         <url-pattern>/ObtenerEstado</url-pattern>
@@ -103,6 +107,10 @@
     <servlet-mapping>
         <servlet-name>Producto</servlet-name>
         <url-pattern>/Producto</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>Generador</servlet-name>
+        <url-pattern>/Generador</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

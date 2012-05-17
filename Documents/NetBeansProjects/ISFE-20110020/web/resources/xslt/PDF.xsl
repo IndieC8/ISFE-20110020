@@ -38,9 +38,9 @@
 				<fo:static-content flow-name="xsl-region-after" font-size="11pt">
 					<fo:block text-align-last="justify">
 						Este documento es una representación impresa de un CFDI
-						<fo:leader leader-pattern="space"/>
-						<fo:page-number/> de
-						<fo:page-number-citation ref-id="last-page"/>
+						<!--<fo:leader leader-pattern="space"/>-->
+						<!--<fo:page-number/> de-->
+						<!--<fo:page-number-citation ref-id="last-page"/>-->
 					</fo:block>
 				</fo:static-content>
 				<fo:static-content flow-name="xsl-region-before" font-size="14pt" font-weight="bold">
@@ -63,8 +63,8 @@
 				<fo:table-body>
 					<fo:table-row>
 						<fo:table-cell>
-							<fo:block font-weight="bold" font-size="12pt" color="#ffffff" border="solid 1pt #212A3B" background-color="#212A3B">Emisor:</fo:block>
-							<fo:block id="Emisor" border="solid 1pt #212A3B">
+							<fo:block font-weight="bold" font-size="12pt" color="#ffffff" border="solid 1pt #C0C0C0" background-color="#C0C0C0">Emisor:</fo:block>
+							<fo:block id="Emisor" border="solid 1pt #C0C0C0">
 								<fo:block font-size="12pt" wrap-option="wrap" font-weight="bold">
 									<xsl:value-of select="@nombre"/>
 								</fo:block>
@@ -149,27 +149,27 @@
 	<xsl:template match="cfdi:Conceptos">
 		<fo:block space-after="0.5cm">
 			<fo:block id="Conceptos">
-				<fo:table wrap-option="wrap" border="solid 1pt #C0C0C0" display-align="center" table-layout="fixed">
+				<fo:table wrap-option="wrap" border="solid 1pt #000080" display-align="center" table-layout="fixed">
 					<fo:table-column column-width="proportional-column-width(1)" />
 					<fo:table-column column-width="proportional-column-width(1.5)" />
 					<fo:table-column column-width="proportional-column-width(4)" />
 					<fo:table-column column-width="proportional-column-width(1.5)" />
 					<fo:table-column column-width="proportional-column-width(1.5)" />
 					<fo:table-header table-omit-header-at-break="false">
-						<fo:table-row font-weight="bold" background-color="#212A3B" color="#ffffff" text-align="center">
-							<fo:table-cell border="solid 1pt #c0c0c0">
+						<fo:table-row font-weight="bold" background-color="#C0C0C0" color="#ffffff" text-align="center">
+							<fo:table-cell border="solid 1pt #000080">
 								<fo:block>Cantidad</fo:block>
 							</fo:table-cell>
-							<fo:table-cell border="solid 1pt #c0c0c0">
+							<fo:table-cell border="solid 1pt #000080">
 								<fo:block>U. de Medida</fo:block>
 							</fo:table-cell>
-							<fo:table-cell border="solid 1pt #c0c0c0">
+							<fo:table-cell border="solid 1pt #000080">
 								<fo:block>Descripción</fo:block>
 							</fo:table-cell>
-							<fo:table-cell border="solid 1pt #c0c0c0">
+							<fo:table-cell border="solid 1pt #000080">
 								<fo:block>Precio Unitario</fo:block>
 							</fo:table-cell>
-							<fo:table-cell border="solid 1pt #c0c0c0">
+							<fo:table-cell border="solid 1pt #000080">
 								<fo:block>Importe</fo:block>
 							</fo:table-cell>
 						</fo:table-row>
@@ -177,28 +177,28 @@
 					<fo:table-body text-align="center">
 						<xsl:for-each select="cfdi:Concepto">
 							<fo:table-row >
-								<fo:table-cell border="solid 1pt #c0c0c0">
+								<fo:table-cell border="solid 1pt #000080">
 									<fo:block>
 										<xsl:value-of select="@cantidad"/>
 									</fo:block>
 								</fo:table-cell>
-								<fo:table-cell border="solid 1pt #c0c0c0">
+								<fo:table-cell border="solid 1pt #000080">
 									<fo:block>
 										<xsl:value-of select="@unidad"/>
 									</fo:block>
 								</fo:table-cell>
-								<fo:table-cell border="solid 1pt #c0c0c0">
+								<fo:table-cell border="solid 1pt #000080">
 									<fo:block font-weight="bold">
 										<xsl:value-of select="@descripcion"/>
 									</fo:block>
 								</fo:table-cell>
-								<fo:table-cell border="solid 1pt #c0c0c0">
+								<fo:table-cell border="solid 1pt #000080">
 									<fo:block>
 										$
 										<xsl:value-of select="@valorUnitario"/>
 									</fo:block>
 								</fo:table-cell>
-								<fo:table-cell border="solid 1pt #c0c0c0">
+								<fo:table-cell border="solid 1pt #000080">
 									<fo:block>
 										$
 										<xsl:value-of select="@importe"/>
@@ -208,30 +208,30 @@
 						</xsl:for-each>
 
 						<fo:table-row font-weight="bold">
-							<fo:table-cell column-number="4" border="solid 1pt #c0c0c0">
+							<fo:table-cell column-number="4" border="solid 1pt #000080">
 								<fo:block  text-align="right">Subtotal:&#0160;</fo:block>
 							</fo:table-cell>
-							<fo:table-cell border="solid 1pt #c0c0c0">
+							<fo:table-cell border="solid 1pt #000080">
 								<fo:block >&#0160;$
 									<xsl:value-of select="../../cfdi:Comprobante/@subTotal"/>
 								</fo:block>
 							</fo:table-cell>
 						</fo:table-row>
 						<fo:table-row font-weight="bold">
-							<fo:table-cell column-number="4" border="solid 1pt #c0c0c0">
+							<fo:table-cell column-number="4" border="solid 1pt #000080">
 								<fo:block  text-align="right"> I.V.A.:&#0160;</fo:block>
 							</fo:table-cell>
-							<fo:table-cell border="solid 1pt #c0c0c0">
+							<fo:table-cell border="solid 1pt #000080">
 								<fo:block >&#0160;$
 									<xsl:value-of select="../cfdi:Impuestos/cfdi:Traslados/cfdi:Traslado[1]/@importe"/>
 								</fo:block>
 							</fo:table-cell>
 						</fo:table-row>
-						<fo:table-row font-weight="bold" color="#212A3B">
-							<fo:table-cell column-number="4" border="solid 1pt #c0c0c0">
+						<fo:table-row font-weight="bold" color="#2a364b">
+							<fo:table-cell column-number="4" border="solid 1pt #000080">
 								<fo:block  text-align="right">Total:&#0160;</fo:block>
 							</fo:table-cell>
-							<fo:table-cell border="solid 1pt #c0c0c0">
+							<fo:table-cell border="solid 1pt #000080">
 								<fo:block >&#0160;$
 									<xsl:value-of select="../../cfdi:Comprobante/@total"/>
 								</fo:block>
@@ -251,10 +251,23 @@
 				<fo:table-column />
 				<fo:table-body>
 					<fo:table-row>
-						<fo:table-cell>
-							<fo:block>
-								<!--<fo:external-graphic src="url('http://localhost:8084/ISFE/resources/QR.gif')" content-height="40" content-width="40"/>-->
-							</fo:block>
+						<fo:table-cell space-start="0.25cm">
+                                                    <fo:block font-weight="bold">
+							Barra Bidimensional
+                                                    </fo:block>
+                                                    <fo:block space-after="0.25cm">
+                                                        <xsl:call-template name="QRCode">
+                                                            <xsl:with-param name="str" select="intersperse-with-zero-spaces"/>
+                                                        </xsl:call-template>
+                                                    </fo:block>
+							<!--<fo:block>
+								<fo:external-graphic src="url('http://localhost:8084/ISFE/resources/QR.gif')" content-height="40" content-width="40"/>
+                                                                <fo:instream-foreign-object>
+                                                                    <qr:qrcode xmlns:qr="http://code.google.com/p/fop-qrcode" 
+                                                                        length="40" cellsize="8" margin="5" type="9" correction="H" message='{$str}'>
+                                                                    </qr:qrcode>
+                                                                </fo:instream-foreign-object>
+                                                        </fo:block>-->
 						</fo:table-cell>
 						<fo:table-cell space-start="0.25cm">
 							<fo:block font-weight="bold">
@@ -301,11 +314,8 @@
 		<xsl:if test="string-length($str) &gt; 0">
 			<xsl:variable name="c1" select="substring($str, 1, 1)"/>
 			<xsl:variable name="c2" select="substring($str, 2, 1)"/>
-
 			<xsl:value-of select="$c1"/>
-			<xsl:if test="$c2 != '' and
-            not(contains($spacechars, $c1) or
-            contains($spacechars, $c2))">
+			<xsl:if test="$c2 != '' and not(contains($spacechars, $c1) or contains($spacechars, $c2))">
 				<xsl:text>&#x200B;</xsl:text>
 			</xsl:if>
 

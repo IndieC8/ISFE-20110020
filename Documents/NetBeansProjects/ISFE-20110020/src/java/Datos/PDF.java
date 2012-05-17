@@ -30,14 +30,14 @@ public class PDF extends Formato{
      * @throws TransformerException
      * @throws IOException 
      */
-    public static File generarArchivoPDF(File xml,String xsl,String nombre) throws FileNotFoundException, FOPException, TransformerConfigurationException, TransformerException, IOException{
+    public static File generarArchivoPDF(File xml,String path,String nombre) throws FileNotFoundException, FOPException, TransformerConfigurationException, TransformerException, IOException{
         FopFactory fopFactory = FopFactory.newInstance();
         File fPDF=new File(nombre);
         OutputStream out = new java.io.BufferedOutputStream(new java.io.FileOutputStream(fPDF));
         try{
             Fop fop = fopFactory.newFop(MimeConstants.MIME_PDF, out);
             TransformerFactory factory = TransformerFactory.newInstance();
-            javax.xml.transform.Transformer transformer = factory.newTransformer(new StreamSource(new File(xsl)));
+            javax.xml.transform.Transformer transformer = factory.newTransformer(new StreamSource(new File(path+"PDF.xsl")));
             Source src = new StreamSource(xml);
             Result res = new SAXResult(fop.getDefaultHandler());
             transformer.transform(src, res);

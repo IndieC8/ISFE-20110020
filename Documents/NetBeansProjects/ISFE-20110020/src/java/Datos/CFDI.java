@@ -65,7 +65,6 @@ public class CFDI{
                 if(factura.getDescuento()!=0)
                     comprobante.setAttribute("descuento", XML.codificarNumero(factura.getDescuento()) + "");
                 comprobante.setAttribute("total", XML.codificarNumero(factura.getTotal()) + "")
-                    .setAttribute("metodoDePago", factura.getMetodoDePago())
                     .setAttribute("tipoDeComprobante", factura.getTipoDeComprobante())
                     .addContent(generarEmisor())
                     .addContent(generarReceptor())
