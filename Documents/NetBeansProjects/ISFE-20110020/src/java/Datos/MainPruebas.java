@@ -61,7 +61,7 @@ public class MainPruebas {
             u.setCSD(new CSD(bCSD,nCSD));
             u.setCURP("PRUEBA");
             u.setCorreo("PRUEBA");
-            u.setDirecction(d);
+            u.setDireccion(d);
             u.setFiel(new Fiel(bFIEL,password));
             u.setNombre("RAUL");
             u.setRFC("PAM660606ER9");

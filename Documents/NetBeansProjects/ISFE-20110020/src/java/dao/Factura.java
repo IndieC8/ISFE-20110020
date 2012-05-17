@@ -6,26 +6,31 @@ package dao;
 
 import Datos.Contribuyente;
 import Datos.Direccion;
+import Datos.PDF;
 import Datos.Usuario;
 import Datos.XML;
 import Integracion.ConexionSAT.CSD;
 import Negocios.Cifrado.Cifrado;
 import Negocios.ObtenerFiel.Fiel;
 import Negocios.ObtenerFolios.Folio;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.io.UnsupportedEncodingException;
+import com.mysql.jdbc.Blob;
+import java.io.*;
 import java.security.NoSuchProviderException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.xml.transform.TransformerConfigurationException;
+import javax.xml.transform.TransformerException;
+import org.apache.fop.apps.FOPException;
 import org.jdom.Document;
+import subsistemaISFE.EnvioMail;
 
 /**
  *
@@ -47,6 +52,8 @@ public class Factura extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         PrintWriter out = response.getWriter();
+        String idFolioPDF=null;
+        String idUsuario=null;
 
         if ("Factura".equals(request.getParameter("Factura"))) {
             try {
@@ -188,8 +195,16 @@ public class Factura extends HttpServlet {
                 isfe.setCSD(csdISFE);
 
                 try {
-                    Document facturaXML = xml.generarXML(f, isfe);
-
+                    Document facturaXML = xml.generarXML(f, isfe, "/ISFE-20110020/resources/xml/");
+                    File fXML = XML.generarArchivoXML(facturaXML,emisor.getRFC()+folio.getNoFolio()+receptor.getRFC()+".xml");
+                    EnvioMail mail = new EnvioMail();
+                    mail.EnvioMail(emisor.getCorreo(),"Entrega de Factura Electrónica ISFE "+new Date() ,"ISFE, hace entrega de la factura electrónica en formato XML.\nHacemos de su conocimiento que en este momento el resguardo de la factura\nes responsabilidad de usted.\n\nGracias por utilizar ISFE.", fXML, emisor.getRFC()+folio.getNoFolio()+receptor.getRFC()+".xml");
+                    String sqlFactura="instert into factura (facturaXML,formaPago,idUsuario,idFolio,nombreXML) values ("+fXML+",'"+f.getFormaDePago()+"',"+aux+","+idFolio+",'"+emisor.getRFC()+folio.getNoFolio()+receptor.getRFC()+"');";
+                    s.consulta(sqlFactura);
+                    fXML.delete();
+                    out.println("Factura generada exitosamente, y se ha enviado al correo:\n "+emisor.getCorreo());
+                    idFolioPDF=idFolio;
+                    idUsuario=aux;
                 } catch (SecurityException ex) {
                     Logger.getLogger(Factura.class.getName()).log(Level.SEVERE, null, ex);
                 } catch (UnsupportedEncodingException ex) {
@@ -206,6 +221,43 @@ public class Factura extends HttpServlet {
                 Logger.getLogger(Factura.class.getName()).log(Level.SEVERE, null, ex);
             } catch (SQLException ex) {
                 out.println(ex);
+                Logger.getLogger(Factura.class.getName()).log(Level.SEVERE, null, ex);
+            }
+
+        }
+
+        else if("Impresa".equals(request.getParameter("Factura")))
+        {
+            try {
+                String sqlPDF="select nombreXML, facturaXML from factura where idFolio="+idFolioPDF+" and idUsuario="+idUsuario+");";
+                Sql s=new Sql();
+                ResultSet rsPDF=s.consulta(sqlPDF);
+                Blob blob = (Blob) rsPDF.getBlob("facturaXML");
+                InputStream is = blob.getBinaryStream();
+                File xml = new File(rsPDF.getString("nombreXML")+".xml");
+                FileOutputStream fos = new FileOutputStream(xml);
+                int b=0;
+                while ((b = is.read()) != -1)
+                {
+                    fos.write(b);
+                }
+                try {
+                    File pdf = PDF.generarArchivoPDF(xml, "/ISFE-20110020/resources/xslt/", rsPDF.getString("nombreXML")+".pdf");
+                    PDF.visualizarPDF(pdf, response, request);
+                } catch (FileNotFoundException ex) {
+                    Logger.getLogger(Factura.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (FOPException ex) {
+                    Logger.getLogger(Factura.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (TransformerConfigurationException ex) {
+                    Logger.getLogger(Factura.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (TransformerException ex) {
+                    Logger.getLogger(Factura.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            } catch (InstantiationException ex) {
+                Logger.getLogger(Factura.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (IllegalAccessException ex) {
+                Logger.getLogger(Factura.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (SQLException ex) {
                 Logger.getLogger(Factura.class.getName()).log(Level.SEVERE, null, ex);
             }
 
