@@ -1,7 +1,7 @@
 package Datos;
 
 /**
- * Clase que representa al concepto (articulo) de la factura electrónica de 
+ * Clase que representa al concepto (articulo) de la factura electrónica de
  * acuerdo a la version 3 que establece el SAT
  * @author Trabajo Terminal 20110020 Implementación del Servicio de Facturación Electrónica acorde a la reforma de enero de 2011
  */
@@ -11,21 +11,21 @@ public class Concepto {
     private String descripcion=null;
     private double valorUnitario=0;
     private double importe=0;
-    private String noIdentificacion=null;
+    private String nombreProducto=null;
     /**
      * Constructor vacío
      */
     public Concepto(){
     }
     /**
-     * Constructor del concepto que recibe como parametros a los datos 
-     * obligatorios de acuerdo a la versión 3 de la factura eletrónica como lo 
+     * Constructor del concepto que recibe como parametros a los datos
+     * obligatorios de acuerdo a la versión 3 de la factura eletrónica como lo
      * establece el SAT.
      * @param cantidad del concepto.
      * @param unidad especificando como se mide el concepto (kg., g., etc.)
      * @param descripcion del concepto.
      * @param valorUnitario un articulo del concepto.
-     * @param importe se calcula multiplicando el Valor Unitario por la cantidad 
+     * @param importe se calcula multiplicando el Valor Unitario por la cantidad
      * del concepto.
      */
     @SuppressWarnings("OverridableMethodCallInConstructor")
@@ -37,21 +37,21 @@ public class Concepto {
         this.setImporte(importe);
     }
     /**
-     * Constructor del concepto que recibe como parametros a los datos 
-     * obligatorios y opcionales de acuerdo a la version 3 de la factura 
+     * Constructor del concepto que recibe como parametros a los datos
+     * obligatorios y opcionales de acuerdo a la version 3 de la factura
      * electrónica como lo estable el SAT
      * @param cantidad
      * @param unidad
-     * @param noIdentificacion
+     * @param nombreProducto
      * @param descripcion
      * @param valorUnitario
-     * @param importe 
+     * @param importe
      */
     @SuppressWarnings("OverridableMethodCallInConstructor")
-    public Concepto(double cantidad, String unidad,String noIdentificacion, String descripcion, double valorUnitario, double importe){
+    public Concepto(double cantidad, String unidad,String nombreProducto, String descripcion, double valorUnitario, double importe){
         this.setCantidad(cantidad);
         this.setUnidad(unidad);
-        this.setNoIdentifiacion(noIdentificacion);
+        this.setnombreProducto(nombreProducto);
         this.setDescripcion(descripcion);
         this.setValorUnitario(valorUnitario);
         this.setImporte(importe);
@@ -72,7 +72,7 @@ public class Concepto {
     }
     /**
      * Obtiene la cantidad del concepto de la factura a generar
-     * @return Descripcion del concepto 
+     * @return Descripcion del concepto
      */
     public String getDescripcion(){
         return this.descripcion;
@@ -118,11 +118,11 @@ public class Concepto {
     public void setUnidad(String unidad){
         this.unidad=unidad;
     }
-    public String getNoIdentificacion(){
-        return this.noIdentificacion;
+    public String getnombreProducto(){
+        return this.nombreProducto;
     }
-    public void setNoIdentifiacion(String noIdentificacion){
-        this.noIdentificacion=noIdentificacion;
+    public void setnombreProducto(String nombreProducto){
+        this.nombreProducto=nombreProducto;
     }
     /**
      * Agrega un concepto nuevo a la factura

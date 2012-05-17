@@ -1,5 +1,6 @@
 package Datos;
 
+import Negocios.Cifrado.Cifrado;
 import dao.Sql;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -7,7 +8,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * Clase padre que representa los datos básicos que tienen las entidades 
+ * Clase padre que representa los datos básicos que tienen las entidades
  * clientes y usuarios como Contribuyentes registrados en el SAT.
  * @author Trabajo Terminal 20110020 Implementación del Servicio de Facturación Electrónica acorde a la reforma de enero de 2011
  */
@@ -22,6 +23,7 @@ public class Contribuyente {
     private String Correo = "";
     private Direccion direccion = null;
     private String Referencia = "";
+    private String idUsuario = "";
     Sql sql;
     /**
      * Constructor vacio
@@ -29,8 +31,8 @@ public class Contribuyente {
     public Contribuyente(){
     }
     /**
-     * Método que se encarga de inicializar los datos del contribuyente de 
-     * acuerdo a los datos requeridos para la generación y emisión de facturas 
+     * Método que se encarga de inicializar los datos del contribuyente de
+     * acuerdo a los datos requeridos para la generación y emisión de facturas
      * electrónicas en ISFE.
      * @param TipoPersona si es moral o física.
      * @param RFC del Contribuyente
@@ -49,7 +51,7 @@ public class Contribuyente {
      * @param estado de la dirección del Contribuyente
      * @param codigoPostal de la dirección del Contribuyente
      */
-    public void inicializar(boolean TipoPersona, String RFC, String Nombre, String Paterno, String Materno, String Razon, String Correo, String calle, String interior, String exterior, String colonia, String localidad, String municipio, String referencia, String estado, String codigoPostal) {
+    public void inicializar(boolean TipoPersona, String RFC, String Nombre, String Paterno, String Materno, String Razon, String Correo, String calle, String interior, String exterior, String colonia, String localidad, String municipio, String referencia, String estado, String codigoPostal,String usuario) {
         this.setTipoPersona(TipoPersona);
         this.setRFC(RFC);
         this.setNombre(Nombre);
@@ -59,6 +61,7 @@ public class Contribuyente {
         this.setCorreo(Correo);
         direccion = new Direccion(calle, interior, exterior, colonia, localidad, municipio, referencia, estado, codigoPostal);
         this.setReferencia(referencia);
+        this.idUsuario = Cifrado.decodificarBase64(usuario);
         sql = new Sql();
     }
     /**
@@ -83,19 +86,19 @@ public class Contribuyente {
         return ApMaterno;
     }
     /**
-     * Método que se encarga de insertar en la base de datos a un cliente de 
+     * Método que se encarga de insertar en la base de datos a un cliente de
      * acuerdo a los datos establecidos del contribuyente,
      * @return el mensaje de error al ejecutar la consulta
      */
     public String Insertar(){
         sql = new Sql();
         String consulta= "INSERT INTO cliente VALUES(0,"+this.isTipoPersona()+",'"+this.getNombre()+"','"+this.getApPaterno()+"','"+this.getApMaterno()+"','"+this.getRazonSocial()+"','"+this.getRFC()+"',"
-                + "'"+this.getCorreo()+"','"+direccion.getCalle()+"','"+direccion.getNoInterior()+"','"+direccion.getNoExterior()+"',"+direccion.getColonia()+",'"+direccion.getReferencia()+"',0)";
+                + "'"+this.getCorreo()+"','"+direccion.getCalle()+"','"+direccion.getNoInterior()+"','"+direccion.getNoExterior()+"',"+direccion.getColonia()+",'"+direccion.getReferencia()+"',"+Integer.parseInt(this.idUsuario) +")";
         return sql.ejecuta(consulta);
     }
     /**
      * Ingresa el apellido materno del contribuyente
-     * @param ApMaterno 
+     * @param ApMaterno
      */
     public void setApMaterno(String ApMaterno) {
         this.ApMaterno = ApMaterno;
@@ -209,12 +212,12 @@ public class Contribuyente {
      * Ingresa la dirección del contribuyente
      * @param direccion del contribuyente
      */
-    public void setDirecction(Direccion direccion){
+    public void setDireccion(Direccion direccion){
         this.direccion=direccion;
     }
     /**
-     * Método encargado de validar el RFC del contribuyente realizando una 
-     * consulta a la base de datos verificando el IdCliente, el tipo de persona 
+     * Método encargado de validar el RFC del contribuyente realizando una
+     * consulta a la base de datos verificando el IdCliente, el tipo de persona
      * y su razón social.
      * @param consulta que válida el RFC del contribuyente
      * @return el Id del Cliente y su RFC de acuerdo a la razón social del mismo
@@ -223,17 +226,17 @@ public class Contribuyente {
     public String[] ValidarRFC(String consulta){
        sql = new Sql();
        String []resultado = new String[2];
-       
+
        try {
             ResultSet rs = sql.consulta(consulta);
             while(rs.next()){
                 resultado[0] = String.valueOf( rs.getInt("idCliente") );
                 if( rs.getBoolean("tipoPersona") == false){
-                    resultado[1] = rs.getString("nombreCliente") + rs.getString("APaternoCliente") + rs.getString("AMaternoCliente");
+                    resultado[1] = rs.getString("nombreCliente") +" "+ rs.getString("APaternoCliente")+" "+ rs.getString("AMaternoCliente");
                 }else{
                     resultado[1] = rs.getString("razonCliente");
                 }
-                
+
             }
         } catch (InstantiationException ex) {
             Logger.getLogger(Contribuyente.class.getName()).log(Level.SEVERE, null, ex);
@@ -242,24 +245,24 @@ public class Contribuyente {
         } catch (SQLException ex) {
             Logger.getLogger(Contribuyente.class.getName()).log(Level.SEVERE, null, ex);
         }
-       
+
        return resultado;
     }
     /**
      * Válida el RFC del contribuyente realizando la consulta a la base de datos
      * @param consulta para validar el RFC  del contribuyente
-     * @param elemento de la consulta para devolver el resultado de la 
+     * @param elemento de la consulta para devolver el resultado de la
      * validación
      * @return entero de la columna del nombre elemento de la consulta realizada
      * si existe; En caso contrario devuelve un cero
      */
     public int ValidarRFC(String consulta,String elemento){
         sql = new Sql();
-        int resultado = 0; 
+        int resultado = 0;
         try {
             ResultSet rs = sql.consulta(consulta);
             while(rs.next()){
-                resultado =  rs.getInt(elemento);  
+                resultado =  rs.getInt(elemento);
             }
         } catch (InstantiationException ex) {
             Logger.getLogger(Contribuyente.class.getName()).log(Level.SEVERE, null, ex);
@@ -271,7 +274,7 @@ public class Contribuyente {
        return resultado;
     }
     /**
-     * Método encargado de validar los datos del contribuyente de acuerdo al 
+     * Método encargado de validar los datos del contribuyente de acuerdo al
      * tipo de persona (true es persona moral, false es persona física)
      * @return mensaje para solicitar los datos pertinente del contribuyente en
      * base al tipo de persona
@@ -307,8 +310,6 @@ public class Contribuyente {
             return "Ingresa el RFC";
         } else if ("".equals(Correo)) {
             return "Ingresa el E-mail";
-        } else if ("".equals(Referencia)) {
-            return "Ingresa la Referencia";
         }
 
         return null;

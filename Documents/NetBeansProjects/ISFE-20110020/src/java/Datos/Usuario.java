@@ -136,8 +136,8 @@ public class Usuario extends Contribuyente{
      * @param curp del usuario.
      * @param telefono del usuario.
      */
-    public void inicializarDatos (boolean TipoPersona,String RFC, String Nombre, String ApPaterno, String ApMaterno,String Razon, String Correo,String calle, String interior, String exterior, String colonia, String localidad, String municipio,String referencia, String estado, String codigoPostal, String password, String curp, String telefono){
-        super.inicializar(TipoPersona, RFC, Nombre, ApPaterno, ApMaterno, Razon, Correo, calle, interior, exterior, colonia, localidad, municipio, referencia, estado, codigoPostal);
+    public void inicializarDatos (boolean TipoPersona,String RFC, String Nombre, String ApPaterno, String ApMaterno,String Razon, String Correo,String calle, String interior, String exterior, String colonia, String localidad, String municipio,String referencia, String estado, String codigoPostal, String password, String curp, String telefono,String id){
+        super.inicializar(TipoPersona, RFC, Nombre, ApPaterno, ApMaterno, Razon, Correo, calle, interior, exterior, colonia, localidad, municipio, referencia, estado, codigoPostal,id);
         this.setCurp(curp);
         this.setPassword(password);
         this.setTelefono(telefono);
