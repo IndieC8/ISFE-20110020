@@ -28,7 +28,7 @@
         <script type="text/javascript" src="../js/jquery-ui-1.8.17.custom.min.js"></script>
         <script src="../js/ui/jquery.ui.autocomplete.js"></script> <!--Realiza el autocomplete de los productos-->
         <script src="../js/jquery.factura.js"></script>
-        
+
         <script type="text/javascript">
             $(document).ready(function(){
                 
@@ -71,7 +71,20 @@
 
                 //}
             } // lookup
-   
+            
+            //Generación del XML
+            function GenerarXML(campos,cantidad,nombre,unitario,totalProducto,descripcion,sub,iva,total){
+            
+                $.ajax({
+                    url:"../Factura",
+                    type: "POST",
+                    data: "Factura=Generar&idUsuaio=<%=id%>&cant_campos="+campos+"&cantidad="+cantidad+"&nombre="+nombre+"&unitario="+unitario+"&total="+totalProducto+"&descripcion="+descripcion+"formaDePago=Efectivo&subTotal="+sub+
+                        "iva="+iva+"&descuento=0&GranTotal="+total+"tipoComprobante=Egreso",
+                    success: function(data){
+                        alert(data);
+                    }
+                });
+            }
         </script>
         <style type="text/css">
 
@@ -118,20 +131,20 @@
             <input type="hidden" id="auxConfirmacion"/>
             Los totales de la Factura son:
         </p>
-            <br/>
-            <center><table class="table1">
-                    <tbody>
-                        <tr>
-                            <th scope="row">SubTotal</th>
-                            <td id="confirmarSubTotalFactura"><span class="check"></span></td>
+        <br/>
+        <center><table class="table1">
+                <tbody>
+                    <tr>
+                        <th scope="row">SubTotal</th>
+                        <td id="confirmarSubTotalFactura"><span class="check"></span></td>
 
-                            <th scope="row">IVA</th>
-                            <td id="confirmarIVAFactura"><span class="check"></span></td>
-                            
-                            <th scope="row">Total</th>
-                            <td id="confirmarTotalFactura"><span class="check"></span></td>
-                        </tr>
-                    </tbody> </table></center>
+                        <th scope="row">IVA</th>
+                        <td id="confirmarIVAFactura"><span class="check"></span></td>
+
+                        <th scope="row">Total</th>
+                        <td id="confirmarTotalFactura"><span class="check"></span></td>
+                    </tr>
+                </tbody> </table></center>
         <form>
             <fieldset>  
                 Cliente: &nbsp; &nbsp;
@@ -140,6 +153,13 @@
             <fieldset>  
                 Forma de Pago: &nbsp; &nbsp;
                 <input type="text"/>
+            </fieldset>
+            <fieldset>  
+                <label class="texto">
+                    Tipo de Comprobante: &nbsp;
+                    <input type="radio" name="Comprobante" value="Egreso">Egreso
+                    <input type="radio" name="Comprobante" value="Ingreso">Ingreso
+                </label>
             </fieldset>
         </form>
     </div>
@@ -287,8 +307,8 @@
                             </table>
                             <br/><br/>
                             <div align="right">
-                                    <input  type="button" onclick="GenerarFactura()" width="50" value="Confirmar Factura" class="ui-button ui-widget ui-state-default ui-corner-all" role="button" aria-disabled="false"/>
-                           </div>
+                                <input  type="button" onclick="GenerarFactura()" width="50" value="Confirmar Factura" class="ui-button ui-widget ui-state-default ui-corner-all" role="button" aria-disabled="false"/>
+                            </div>
                         </div>
                         <div id="tabs-3">
                             <iframe src="https://www.consulta.sat.gob.mx/SICOFI_WEB/ModuloECFD_Plus/ValidadorComprobantes/Validador.asp" width="770" height="930" frameborder="0"> </iframe>

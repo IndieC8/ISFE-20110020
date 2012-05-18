@@ -1,3 +1,9 @@
+/*Variables Globales*/
+var col;
+var Total = 0;
+var Iva = 0;
+var Sub = 0;
+
 $(function(){
     // Tabs
     $('#tabs').tabs();
@@ -29,7 +35,12 @@ $(function() {
         modal: true,
         buttons: {
             "Aceptar": function() {
-                alert("Generando XML");
+                var cantidad = $("#tbDetalleCantidad_0").val();
+                var nombre = $("#tbDetalleNombre_0").val();
+                var unitario = $("#tbDetalleImporte_0").val();
+                var totalProducto = $("#tbDetalleTotal_0").val();
+                var descripcion = $("#tbDetalleDescripcion_0").val();
+                GenerarXML(col,cantidad,nombre,unitario,totalProducto,descripcion,Sub,Iva,Total);
                 $( this ).dialog("close");
                                         
             },
@@ -254,10 +265,10 @@ function fill(nombreProducto,descripcionProducto,unidadProducto,valorUnitario) {
 
 function GenerarFactura(){
     
-    var col = parseInt($("#cant_campos").val() );
-    var Total = 0;
-    var Iva = 0;
-    var Sub = 0;
+    col = parseInt($("#cant_campos").val() );
+    Total = 0;
+    Iva = 0;
+    Sub = 0;
     
     
     
@@ -269,26 +280,15 @@ function GenerarFactura(){
     
        
     addComas(Total,document.getElementById("auxConfirmacion"));
-    $("#confirmarTotalFactura").text("$"+$("#auxConfirmacion").val());
+    $("#confirmarTotalFactura").text("$ "+$("#auxConfirmacion").val());
     $("#auxConfirmacion").val("");
     
     addComas(Iva,document.getElementById("auxConfirmacion"));
-    $("#confirmarIVAFactura").text("$"+$("#auxConfirmacion").val());
+    $("#confirmarIVAFactura").text("$ "+$("#auxConfirmacion").val());
     $("#auxConfirmacion").val("");
     
     addComas(Sub,document.getElementById("auxConfirmacion"));
-    $("#confirmarSubTotalFactura").text("$"+$("#auxConfirmacion").val());
+    $("#confirmarSubTotalFactura").text("$ "+$("#auxConfirmacion").val());
         
     $("#confirmacionFactura").dialog("open"); 
-}
-
-function GenerarXML(){
-    $.ajax({
-        url:"../Factura",
-        type: "POST",
-        data: "Factura=Factua",
-        success: function(data){
-            alert(data);
-        }
-    });
 }
