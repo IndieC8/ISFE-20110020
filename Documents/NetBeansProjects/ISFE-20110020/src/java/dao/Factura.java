@@ -29,7 +29,7 @@ import org.jdom.Document;
 import subsistemaISFE.EnvioMail;
 
 /**
- *
+ * Servlet encargada de la generación de la factura electrónica
  * @author lupe
  */
 public class Factura extends HttpServlet {
