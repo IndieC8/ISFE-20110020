@@ -6,7 +6,7 @@
 /*Variables Globales*/
 var nombre ,paterno, materno, rfcCliente, razon, mail, calle , exterior , interior , colonia , municipio , referencia;
 var idClienteEliminar = "";
-var Atualizacion = null;
+var Actualizacion = "Nuevo";
 var idClienteActualizar = "";
 
 
@@ -264,13 +264,16 @@ function BorrarErrorBaja(){
 }
 
 function BuscarCodigo(){
+    
     if(Actualizacion == "actualizar"){
         var codigo = $("#codigoClienteModificar").val();
         $("#ErrorCodigoPostalModificarCliente").text("");
         obtenerEstado(codigo,"ErrorCodigoPostalModificarCliente","EstadoClienteModificar","delegacionClienteModificar","localidadClienteModificar","codigoClienteModificar","../");
     }else{
         var codigoPostal= $("#codigoPostalCliente").val();
+       
         $("#ErrorCodigoPostalCliente").text("");
         obtenerEstado(codigoPostal,"ErrorCodigoPostalCliente","estadoCliente","municipioCliente","localidadCliente","codigoPostalCliente","../");
     }
+    
 }

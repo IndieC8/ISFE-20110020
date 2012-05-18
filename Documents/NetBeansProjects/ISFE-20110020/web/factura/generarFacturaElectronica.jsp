@@ -85,6 +85,13 @@
                     }
                 });
             }
+            
+            function NuevoProducto(nombre,descripcion,unidad,valor){
+                $.ajax({
+                    url: "../Producto", type: "POST",
+                    data:"idUsuario=<%=id%>&Producto=Agregar&nombreProducto="+nombre+"&descripcion="+descripcion+"&unidad="+unidad+"&valorUnitario="+valor
+                });
+            }
         </script>
         <style type="text/css">
 
@@ -126,11 +133,11 @@
     <!--Aqui va el dialogo de Modificar Password-->
     <div id="confirmacionFactura" title="ISFE- Generación de Factura">
         <p class="validateTips">
-            <img src="../images/important.gif" />
+            <img src="../images/xml.png" />
             &nbsp;
-            <input type="hidden" id="auxConfirmacion"/>
             Los totales de la Factura son:
         </p>
+        <input type="hidden" id="auxConfirmacion"/>
         <br/>
         <center><table class="table1">
                 <tbody>
@@ -209,6 +216,7 @@
                         </ul>
                         <div id="tabs-1">
                             <form id="descripcionFactura">
+                                <input type="hidden" id="idProductoFactura" value="0"/>
                                 <table>
                                     <tr>
                                         <td>

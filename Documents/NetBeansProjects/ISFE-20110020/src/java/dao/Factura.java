@@ -81,7 +81,7 @@ public class Factura extends HttpServlet {
                 out.close();
             }
         } else if ("Generar".equals(request.getParameter("Factura"))) {
-            try {
+             try {
                 String aux = request.getParameter("idUsuaio");
                 aux = Cifrado.decodificarBase64(aux);
                 //INSTANCIAS DE LAS CLASES A UTILIZAR DURANTE EL PROCESO DE LA GENERACIÓN DE LA FACTURA
@@ -294,35 +294,6 @@ public class Factura extends HttpServlet {
             } catch (TransformerException ex) {
                 Logger.getLogger(Factura.class.getName()).log(Level.SEVERE, null, ex);
             }
-        }
-
-        try {
-            String aux = request.getParameter("idUsuaio");
-            aux = Cifrado.decodificarBase64(aux);
-            Sql s = new Sql();
-            String sql = "select idCliente, tipoPersona,nombreCliente,APaternoCliente,AMaternoCliente,razonCliente from cliente where idUsuario= " + aux + ";";
-            ResultSet rs;
-            rs = s.consulta(sql);
-
-            while (rs.next()) {
-                if (rs.getBoolean("tipoPersona") == false) {
-                    out.println("<option value=\"" + rs.getInt("idCliente") + "\">" + rs.getString("nombreCliente") + " " + rs.getString("APaternoCliente") + " " + rs.getString("AMaternoCliente") + "</option>");
-                } else {
-                    out.println("<option value=\"" + rs.getInt("idCliente") + "\">" + rs.getString("razonCliente") + "</option>");
-                }
-
-            }
-
-
-        } catch (InstantiationException ex) {
-            Logger.getLogger(Factura.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            Logger.getLogger(Factura.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (SQLException ex) {
-            out.println(ex);
-            Logger.getLogger(Factura.class.getName()).log(Level.SEVERE, null, ex);
-        } finally {
-            out.close();
         }
     }
 
