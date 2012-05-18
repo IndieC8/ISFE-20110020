@@ -80,7 +80,7 @@ public class Factura extends HttpServlet {
             } finally {
                 out.close();
             }
-        } else if ("Factura".equals(request.getParameter("Factura"))) {
+        } else if ("Generar".equals(request.getParameter("Factura"))) {
             try {
                 String aux = request.getParameter("idUsuaio");
                 aux = Cifrado.decodificarBase64(aux);
@@ -92,7 +92,7 @@ public class Factura extends HttpServlet {
                 Fiel fiel = new Fiel();
                 Direccion d = new Direccion();
                 Direccion dReceptor = new Direccion();
-
+                
                 //DATOS DEL EMISOR (USUARIO)
                 String sql = "select u.tipoPersona,u.nombre,u.apellidoMaterno,u.apellidoPaterno,u.razonSocial,u.curp,u.rfc,u.mail, f.archivoFiel, c.noCertificado, c.archivoCSD, d.codigoPostal, d.calle ,d.nombreLocalidad,d.nombreMunicipio, d.nombreEstado from usuario u, csd c, fiel f, direccionUsuario d where idUsuario = " + aux + " and c.idCSD = u.idCSD and f.idFiel = u.idFiel and d.idUsuario = u.idUsuario;";
                 ResultSet rs;

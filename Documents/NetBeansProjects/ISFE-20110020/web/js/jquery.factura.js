@@ -1,15 +1,59 @@
-/* 
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
+/*Variables Globales*/
+var col;
+var Total = 0;
+var Iva = 0;
+var Sub = 0;
 
-            
-$(function() {
-    $( "a", ".demo" ).click(function() {
-        return false;
+$(function(){
+    // Tabs
+    $('#tabs').tabs();
+    
+    // Dialog			
+    $('#dialog').dialog({
+        autoOpen: false,
+        width: 600,
+        buttons: {
+            "Ok": function() { 
+                $(this).dialog("close"); 
+            }, 
+            "Cancel": function() { 
+                $(this).dialog("close"); 
+            } 
+        }
     });
+
 });
 
+$(function() {
+    // a workaround for a flaw in the demo system (http://dev.jqueryui.com/ticket/4375), ignore!
+    $( "#dialog:ui-dialog" ).dialog( "destroy" );
+    
+    $("#confirmacionFactura").dialog({
+        autoOpen: false,
+        height: 400,
+        width: 650,
+        modal: true,
+        buttons: {
+            "Aceptar": function() {
+                var cantidad = $("#tbDetalleCantidad_0").val();
+                var nombre = $("#tbDetalleNombre_0").val();
+                var unitario = $("#tbDetalleImporte_0").val();
+                var totalProducto = $("#tbDetalleTotal_0").val();
+                var descripcion = $("#tbDetalleDescripcion_0").val();
+                GenerarXML(col,cantidad,nombre,unitario,totalProducto,descripcion,Sub,Iva,Total);
+                $( this ).dialog("close");
+                                        
+            },
+            Cancelar: function() {
+                $( this ).dialog( "close" );
+            }
+        },
+        close: function() {
+            allFields.val( "" ).removeClass( "ui-state-error" );
+        }
+    });
+});
+            
 function addComas(nStr,elemnt){
     nStr = Math.round(nStr*100)/100;
     nStr += '';
@@ -25,7 +69,7 @@ function addComas(nStr,elemnt){
     elemnt.value = nStr;
 
 }
-
+            
 function ValidarSuma(){
                 
     var cantidad = $("#cantidadFactura").val();
@@ -47,12 +91,19 @@ function ValidarSuma(){
         addComas(Importe,document.getElementById("valorUnitario"));
         addComas(iva,document.getElementById("IVATotal"));
         addComas(granTotal,document.getElementById("GranTotal"));
+                    
+        SubTotal = Total;
+        Iva = iva;
+        ImporteTotal = granTotal;
 
     }
 
 }
 
 var Importe = 0;
+var SubTotal = 0;
+var Iva = 0;
+var ImporteTotal = 0;
 
 function OnlyNumber(value,elemnt){
     if( isNaN(value) ){
@@ -67,6 +118,12 @@ function OnlyNumber(value,elemnt){
 function BorrarError(id){
     if(id == "unidadProducto"){
         $("#errorUnidadProducto").text("");
+    }else if(id == "nombreProducto"){
+        $("#errorNombreProducto").text("");
+    }else if(id == "descripcionProducto"){
+        $("#errorDescripcionProducto").text("");
+    }else if(id == "valorUnitario"){
+        $("#errorValorProducto").text("");
     }else{
         $("#errorCantidadFactura").text("");
         $("#mensajeConfirmacion").text("");
@@ -94,22 +151,22 @@ function agregarFila(){
 
     var cantidad = $("#cantidadFactura").val();
     var nombre = $("#nombreProducto").val().toUpperCase();
-    var descripcion = $("#descripcionProducto").val();
+    var descripcion = $("#descripcionProducto").val().toUpperCase();
     var unidad = $("#unidadProducto").val();
     var unitario = $("#valorUnitario").val();
     var descuento = $("#descuentoFactura").val();
     descuento = descuento / 100;
     var importe = $("#importeTotal").val();
     var iva = $("#IVATotal").val();
-    var Total = $("#GranTotal").val();
+    var total = $("#GranTotal").val();
 
-
+                
     var strHtml1 = "<td class=\"TablaTitulo\">" + cantidad + "<input type=\"hidden\" id=\"tbDetalleCantidad_" + oId + "\" value=\" " + cantidad + "\"/></td>";
     var strHtml2 = "<td class=\"TablaTitulo\">" + nombre + "<input type=\"hidden\" id=\"tbDetalleNombre_" + oId + "\" value=\" " + nombre + "\"/></td>";
-    var strHtml3 = "<td class=\"TablaTitulo\"> $ " + unitario + "<input type=\"hidden\" id=\"tbDetalleUnitario_" + oId + "\" value=\" " + unitario + "\"/></td>";
-    var strHtml4 = "<td class=\"TablaTitulo\"> $ " + importe + "<input type=\"hidden\" id=\"tbDetalleImporte_" + oId + "\" value=\" " + importe + "\"/></td>";
-    var strHtml5 = "<td class=\"TablaTitulo\"> $ " + iva + "<input type=\"hidden\" id=\"tbDetalleIVA_" + oId + "\" value=\" " + iva + "\"/></td>";
-    var strHtml6 = "<td class=\"TablaTitulo\"> $ " + Total + "<input type=\"hidden\" id=\"tbDetalleTotal_" + oId + "\" value=\" " + Total + "\"/></td>";
+    var strHtml3 = "<td class=\"TablaTitulo\"> $ " + unitario + "<input type=\"hidden\" id=\"tbDetalleImporte_" + oId + "\" value=\" " + Importe + "\"/></td>";
+    var strHtml4 = "<td class=\"TablaTitulo\"> $ " + importe + "<input type=\"hidden\" id=\"tbDetalleSubtotal_" + oId + "\" value=\" " + SubTotal + "\"/></td>";
+    var strHtml5 = "<td class=\"TablaTitulo\"> $ " + iva + "<input type=\"hidden\" id=\"tbDetalleIVA_" + oId + "\" value=\" " + Iva + "\"/></td>";
+    var strHtml6 = "<td class=\"TablaTitulo\"> $ " + total + "<input type=\"hidden\" id=\"tbDetalleTotal_" + oId + "\" value=\" " + ImporteTotal + "\"/></td>";
 
     var strHtml7 = '<td class=\"TablaTitulo\"><img src=\"../images/formularios/delete.png\" width=\"16\" height=\"16\" alt=\"Eliminar\" style=\"cursor:pointer\" onclick=\"eliminarFila('+ oId +')\" />';
     strHtml7 += '<input type="hidden" id="hdnIdCampos_' + oId +'" name="hdnIdCampos[]" value="' + oId + '" />';
@@ -138,63 +195,100 @@ function eliminarFila(oId){
 
 
 
-$.validator.setDefaults({
-    submitHandler: function(){
-
-        if( $("#unidadProducto").val() == "0"){
-            $("#errorUnidadProducto").text("Indica la unidad del producto");
-        }else{
-
-            agregarFila();
-            borrarProducto();
-            $("#mensajeConfirmacion").text("Producto Agregado");
-            $("#confirmacion").show();
-
-        }
+function AgregarProducto(){
+    var cantidad = $("#cantidadFactura").val();
+    var nombre = $("#nombreProducto").val();
+    var descripcion = $("#descripcionProducto").val();
+    var unidad = $("#unidadProducto").val();
+    var valor = $("#valorUnitario").val();
+    var subTotal = $("#importeTotal").val();
+    var iva = $("#IVATotal").val();
+    var Total = $("#GranTotal").val();
+    var descuento = $("#descuentoFactura").val();
+                
+    if(descuento == ""){
+        descuento  = 0;   
     }
-});
 
+    if( cantidad == "0"){
+        $("#errorCantidadFactura").text("Indica la cantidad del producto");
+        return false;
+    }else if( unidad == "0"){
+        $("#errorUnidadProducto").text("Indica la unidad del producto");
+        return false;
+    }else if( nombre == ""){
+        $("#errorNombreProducto").text("Indica el nombre del producto");
+        return false;
+    }else if(descripcion == ""){
+        $("#errorDescripcionProducto").text("Indica la descripción de tu producto");
+        return false;
+    }else if(valor == ""){
+        $("#errorValorProducto").text("Indica el valor unitario");
+        return false;
+    }else{
+        //Importe = valor;
+        //ValidarSuma();
+        agregarFila();
+        borrarProducto();
+        $("#mensajeConfirmacion").text("Producto Agregado");
+        $("#confirmacion").show();
 
-function lookup(nombreProducto) {
-    if(nombreProducto.length == 0) {
-        //Validar cantidad Factura
-        if($("#cantidadFactura").val() == 0){
-            $("#errorCantidadFactura").text("Indica la cantidad del producto");
-        }
-        //Esconde el dialogo de sugerencia.
-        $('#suggestions').hide();
-    } else
-        var nombreProducto= $("#nombreProducto").val();
-        $.ajax({
-        type: "POST",
-        url: "../Producto",
-        data: "idUsuario=<%=id%>&nombreProducto="+ nombreProducto,
-        success: function(data){
-            if(data.length >0) {
-                $('#suggestions').show();
-                $('#autoSuggestionsList').html(data);
-            }
-        }
-    });
-
-//}
-} // lookup
+    }
+}
 
 function fill(nombreProducto,descripcionProducto,unidadProducto,valorUnitario) {
-    $('#nombreProducto').val(nombreProducto);
-    $('#descripcionProducto').val(descripcionProducto);
-    $('#unidadProducto').val(unidadProducto);
-    $("#valorUnitario").val(valorUnitario);
-    Importe = valorUnitario;
-    setTimeout("$('#suggestions').hide();", 200);
-    ValidarSuma();
+                 
+    if(nombreProducto != undefined){
+        $('#nombreProducto').val(nombreProducto);
+        $('#descripcionProducto').val(descripcionProducto);
+        $('#unidadProducto').val(unidadProducto);
+        $("#valorUnitario").val(valorUnitario);
+        Importe = valorUnitario;
+        ValidarSuma();
+    }else{
+        $('#descripcionProducto').val("");
+        $('#unidadProducto').val("");
+        $("#valorUnitario").val("");
+        Importe = 0;
+    }
                 
     /*Validar que existe el importe*/
-    if(Importe == undefined){
+    if(Importe == undefined || Importe == 0){
         $("#importeTotal").val("");
         $("#valorUnitario").val("");
         $("#IVATotal").val("");
         $("#GranTotal").val("");
     }
-                    
+                
+    setTimeout("$('#suggestions').hide();", 200);    
+}
+
+function GenerarFactura(){
+    
+    col = parseInt($("#cant_campos").val() );
+    Total = 0;
+    Iva = 0;
+    Sub = 0;
+    
+    
+    
+    for(i=0; i<col;i++){
+        Total = Total + parseFloat($("#tbDetalleTotal_"+i).val());
+        Iva = Iva + parseFloat($("#tbDetalleIVA_"+i).val());
+        Sub = Sub + parseFloat($("#tbDetalleSubtotal_"+i).val());
+    }
+    
+       
+    addComas(Total,document.getElementById("auxConfirmacion"));
+    $("#confirmarTotalFactura").text("$ "+$("#auxConfirmacion").val());
+    $("#auxConfirmacion").val("");
+    
+    addComas(Iva,document.getElementById("auxConfirmacion"));
+    $("#confirmarIVAFactura").text("$ "+$("#auxConfirmacion").val());
+    $("#auxConfirmacion").val("");
+    
+    addComas(Sub,document.getElementById("auxConfirmacion"));
+    $("#confirmarSubTotalFactura").text("$ "+$("#auxConfirmacion").val());
+        
+    $("#confirmacionFactura").dialog("open"); 
 }

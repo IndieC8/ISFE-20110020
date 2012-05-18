@@ -286,7 +286,7 @@
                             <br>
                             <br>
                             <table width="60%">
-                                <form method="post" enctype="multipart/form-data" id="subirCSD">
+                                <form method="post" action="uploadFichero" enctype="multipart/form-data" id="subirCSD">
                                     <tr>
                                         <td width="30%">
                                             Archivo .CER del CSD
@@ -296,7 +296,7 @@
 
                                         <td>
                                             
-                                            <input type="button" value=" &nbsp; &nbsp; Subir CSD &nbsp; &nbsp;" name="subirCSD" onclick="SubirCSD()" class="ui-button ui-widget ui-state-default ui-corner-all" role="button" aria-disabled="false"/>
+                                            <input type="submit" value=" &nbsp; &nbsp; Subir CSD &nbsp; &nbsp;" name="subirCSD" class="ui-button ui-widget ui-state-default ui-corner-all" role="button" aria-disabled="false"/>
                                         </td>
 
                                     </tr>
