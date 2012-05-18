@@ -48,7 +48,7 @@ public class Producto extends HttpServlet {
 
             while(busqueda.next())
             {
-                out.println("<li onclick=\"fill('"+busqueda.getString("nombreProducto")+"','"+busqueda.getString("descripcionProducto")+"','"+busqueda.getString("unidad")+"','"+busqueda.getString("valorUnitario") +"');\">"+busqueda.getString("nombreProducto")+"</li>");
+                out.println("<li onclick=\"fill('"+busqueda.getString("nombreProducto")+"','"+busqueda.getString("descripcionProducto")+"','"+busqueda.getString("unidad")+"',"+busqueda.getDouble("valorUnitario")+");\">"+busqueda.getString("nombreProducto")+"</li>");
             }
 
         }

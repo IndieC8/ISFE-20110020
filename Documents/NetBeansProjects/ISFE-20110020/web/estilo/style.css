@@ -1,7 +1,7 @@
 /* Table 1 Style */
 table.table1{
     font-family: "Trebuchet MS", sans-serif;
-    font-size: 10px;
+    font-size: 11px;
     font-weight: bold;
     line-height: 1.4em;
     font-style: normal;
@@ -91,13 +91,13 @@ table.table1{
 
 /*Empieza el estilo de las tablas*/
 a {
-	color: #c75f3e;
+    color: #c75f3e;
 }
 
 #mytable {
-	width: 700px;
-	padding: 0;
-	margin: 0;
+    width: 700px;
+    padding: 0;
+    margin: 0;
 }
 
 .Instrucciones{
@@ -111,59 +111,59 @@ a {
 }
 
 caption {
-	padding: 0 0 5px 0;
-	width: 700px;	 
-	font: italic 11px "Trebuchet MS", Verdana, Arial, Helvetica, sans-serif;
-	text-align: right;
+    padding: 0 0 5px 0;
+    width: 700px;	 
+    font: italic 11px "Trebuchet MS", Verdana, Arial, Helvetica, sans-serif;
+    text-align: right;
 }
 
 th {
-	font: bold 11px "Trebuchet MS", Verdana, Arial, Helvetica, sans-serif;
-	color: #4f6b72;
-	border-right: 1px solid #C1DAD7;
-	border-bottom: 1px solid #C1DAD7;
-	border-top: 1px solid #C1DAD7;
-	letter-spacing: 2px;
-	text-transform: uppercase;
-	text-align: left;
-	padding: 6px 6px 6px 12px;
-	background: #CAE8EA url(images/bg_header.jpg) no-repeat;
+    font: bold 11px "Trebuchet MS", Verdana, Arial, Helvetica, sans-serif;
+    color: #4f6b72;
+    border-right: 1px solid #C1DAD7;
+    border-bottom: 1px solid #C1DAD7;
+    border-top: 1px solid #C1DAD7;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    text-align: left;
+    padding: 6px 6px 6px 12px;
+    background: #CAE8EA url(images/bg_header.jpg) no-repeat;
 }
 
 th.nobg {
-	border-top: 0;
-	border-left: 0;
-	border-right: 1px solid #C1DAD7;
-	background: none;
+    border-top: 0;
+    border-left: 0;
+    border-right: 1px solid #C1DAD7;
+    background: none;
 }
 
 td {
-	border-right: 1px solid #C1DAD7;
-	border-bottom: 1px solid #C1DAD7;
-	background: #fff;
-	padding: 6px 6px 6px 12px;
-	color: #4f6b72;
+    border-right: 1px solid #C1DAD7;
+    border-bottom: 1px solid #C1DAD7;
+    background: #fff;
+    padding: 6px 6px 6px 12px;
+    color: #4f6b72;
 }
 
 
 td.alt {
-	background: #F5FAFA;
-	color: #797268;
+    background: #F5FAFA;
+    color: #797268;
 }
 
 th.spec {
-	border-left: 1px solid #C1DAD7;
-	border-top: 0;
-	background: #fff url(images/bullet1.gif) no-repeat;
-	font: bold 10px "Trebuchet MS", Verdana, Arial, Helvetica, sans-serif;
+    border-left: 1px solid #C1DAD7;
+    border-top: 0;
+    background: #fff url(images/bullet1.gif) no-repeat;
+    font: bold 10px "Trebuchet MS", Verdana, Arial, Helvetica, sans-serif;
 }
 
 th.specalt {
-	border-left: 1px solid #C1DAD7;
-	border-top: 0;
-	background: #f5fafa url(images/bullet2.gif) no-repeat;
-	font: bold 10px "Trebuchet MS", Verdana, Arial, Helvetica, sans-serif;
-	color: #797268;
+    border-left: 1px solid #C1DAD7;
+    border-top: 0;
+    background: #f5fafa url(images/bullet2.gif) no-repeat;
+    font: bold 10px "Trebuchet MS", Verdana, Arial, Helvetica, sans-serif;
+    color: #797268;
 }
 
 /*Temrina el estilo de las tablas*/
@@ -176,7 +176,7 @@ th.specalt {
  * http://jquery.org/license
  *
  * http://docs.jquery.com/UI/Theming/API
- */
+*/
 
 /* Layout helpers
 ----------------------------------*/
@@ -218,7 +218,7 @@ th.specalt {
  * http://docs.jquery.com/UI/Theming/API
  *
  * To view and modify this theme, visit http://jqueryui.com/themeroller/?ffDefault=Verdana,Arial,sans-serif&fwDefault=normal&fsDefault=1.1em&cornerRadius=5px&bgColorHeader=2191c0&bgTextureHeader=12_gloss_wave.png&bgImgOpacityHeader=75&borderColorHeader=4297d7&fcHeader=eaf5f7&iconColorHeader=d8e7f3&bgColorContent=fcfdfd&bgTextureContent=06_inset_hard.png&bgImgOpacityContent=100&borderColorContent=a6c9e2&fcContent=222222&iconColorContent=0078ae&bgColorDefault=0078ae&bgTextureDefault=02_glass.png&bgImgOpacityDefault=45&borderColorDefault=77d5f7&fcDefault=ffffff&iconColorDefault=e0fdff&bgColorHover=79c9ec&bgTextureHover=02_glass.png&bgImgOpacityHover=75&borderColorHover=448dae&fcHover=026890&iconColorHover=056b93&bgColorActive=6eac2c&bgTextureActive=12_gloss_wave.png&bgImgOpacityActive=50&borderColorActive=acdd4a&fcActive=ffffff&iconColorActive=f5e175&bgColorHighlight=f8da4e&bgTextureHighlight=02_glass.png&bgImgOpacityHighlight=55&borderColorHighlight=fcd113&fcHighlight=915608&iconColorHighlight=f7a50d&bgColorError=e14f1c&bgTextureError=12_gloss_wave.png&bgImgOpacityError=45&borderColorError=cd0a0a&fcError=ffffff&iconColorError=fcd113&bgColorOverlay=aaaaaa&bgTextureOverlay=01_flat.png&bgImgOpacityOverlay=75&opacityOverlay=30&bgColorShadow=999999&bgTextureShadow=01_flat.png&bgImgOpacityShadow=55&opacityShadow=45&thicknessShadow=0px&offsetTopShadow=5px&offsetLeftShadow=5px&cornerRadiusShadow=5px
- */
+*/
 
 
 /* Component containers
@@ -462,7 +462,7 @@ th.specalt {
  * http://jquery.org/license
  *
  * http://docs.jquery.com/UI/Resizable#theming
- */
+*/
 .ui-resizable { position: relative;}
 .ui-resizable-handle { position: absolute;font-size: 0.1px;z-index: 99999; display: block; }
 .ui-resizable-disabled .ui-resizable-handle, .ui-resizable-autohide .ui-resizable-handle { display: none; }
@@ -481,7 +481,7 @@ th.specalt {
  * http://jquery.org/license
  *
  * http://docs.jquery.com/UI/Selectable#theming
- */
+*/
 .ui-selectable-helper { position: absolute; z-index: 100; border:1px dotted black; }
 /*
  * jQuery UI Accordion 1.8.17
@@ -491,7 +491,7 @@ th.specalt {
  * http://jquery.org/license
  *
  * http://docs.jquery.com/UI/Accordion#theming
- */
+*/
 /* IE/Win - Fix animation bug - #4615 */
 .ui-accordion { width: 100%; }
 .ui-accordion .ui-accordion-header { cursor: pointer; position: relative; margin-top: 1px; zoom: 1; }
@@ -510,7 +510,7 @@ th.specalt {
  * http://jquery.org/license
  *
  * http://docs.jquery.com/UI/Autocomplete#theming
- */
+*/
 .ui-autocomplete { position: absolute; cursor: default; }	
 
 /* workarounds */
@@ -524,36 +524,36 @@ th.specalt {
  * http://jquery.org/license
  *
  * http://docs.jquery.com/UI/Menu#theming
- */
+*/
 .ui-menu {
-	list-style:none;
-	padding: 2px;
-	margin: 0;
-	display:block;
-	float: left;
+    list-style:none;
+    padding: 2px;
+    margin: 0;
+    display:block;
+    float: left;
 }
 .ui-menu .ui-menu {
-	margin-top: -3px;
+    margin-top: -3px;
 }
 .ui-menu .ui-menu-item {
-	margin:0;
-	padding: 0;
-	zoom: 1;
-	float: left;
-	clear: left;
-	width: 100%;
+    margin:0;
+    padding: 0;
+    zoom: 1;
+    float: left;
+    clear: left;
+    width: 100%;
 }
 .ui-menu .ui-menu-item a {
-	text-decoration:none;
-	display:block;
-	padding:.2em .4em;
-	line-height:1.5;
-	zoom:1;
+    text-decoration:none;
+    display:block;
+    padding:.2em .4em;
+    line-height:1.5;
+    zoom:1;
 }
 .ui-menu .ui-menu-item a.ui-state-hover,
 .ui-menu .ui-menu-item a.ui-state-active {
-	font-weight: normal;
-	margin: -1px;
+    font-weight: normal;
+    margin: -1px;
 }
 /*
  * jQuery UI Button 1.8.17
@@ -563,7 +563,7 @@ th.specalt {
  * http://jquery.org/license
  *
  * http://docs.jquery.com/UI/Button#theming
- */
+*/
 .ui-button { display: inline-block; position: relative; padding: 0; margin-right: .1em; text-decoration: none !important; cursor: pointer; text-align: center; zoom: 1; overflow: visible; } /* the overflow property removes extra width in IE */
 .ui-button-icon-only { width: 2.2em; } /* to make room for the icon, a width needs to be set here */
 button.ui-button-icon-only { width: 2.4em; } /* button elements seem to need a little more width */
@@ -601,7 +601,7 @@ button.ui-button::-moz-focus-inner { border: 0; padding: 0; } /* reset extra pad
  * http://jquery.org/license
  *
  * http://docs.jquery.com/UI/Dialog#theming
- */
+*/
 .ui-dialog { position: absolute; padding: .2em; width: 300px; overflow: hidden; }
 .ui-dialog .ui-dialog-titlebar { padding: .4em 1em; position: relative;  }
 .ui-dialog .ui-dialog-title { float: left; margin: .1em 16px .1em 0; } 
@@ -622,7 +622,7 @@ button.ui-button::-moz-focus-inner { border: 0; padding: 0; } /* reset extra pad
  * http://jquery.org/license
  *
  * http://docs.jquery.com/UI/Slider#theming
- */
+*/
 .ui-slider { position: relative; text-align: left; }
 .ui-slider .ui-slider-handle { position: absolute; z-index: 2; width: 1.2em; height: 1.2em; cursor: default; }
 .ui-slider .ui-slider-range { position: absolute; z-index: 1; font-size: .7em; display: block; border: 0; background-position: 0 0; }
@@ -645,7 +645,7 @@ button.ui-button::-moz-focus-inner { border: 0; padding: 0; } /* reset extra pad
  * http://jquery.org/license
  *
  * http://docs.jquery.com/UI/Tabs#theming
- */
+*/
 .ui-tabs { position: relative; padding: .2em; zoom: 1; width: 800px;} /* position: relative prevents IE scroll bug (element with position: relative inside container with overflow: auto appear as "fixed") */
 .ui-tabs .ui-tabs-nav { margin: 0; padding: .2em .2em 0; }
 .ui-tabs .ui-tabs-nav li { list-style: none; float: left; position: relative; top: 1px; margin: 0 .2em 1px 0; border-bottom: 0 !important; padding: 0; white-space: nowrap; }
@@ -663,7 +663,7 @@ button.ui-button::-moz-focus-inner { border: 0; padding: 0; } /* reset extra pad
  * http://jquery.org/license
  *
  * http://docs.jquery.com/UI/Datepicker#theming
- */
+*/
 .ui-datepicker { width: 17em; padding: .2em .2em 0; display: none; }
 .ui-datepicker .ui-datepicker-header { position:relative; padding:.2em 0; }
 .ui-datepicker .ui-datepicker-prev, .ui-datepicker .ui-datepicker-next { position:absolute; top: 2px; width: 1.8em; height: 1.8em; }
@@ -717,7 +717,7 @@ button.ui-button::-moz-focus-inner { border: 0; padding: 0; } /* reset extra pad
     display/**/: block; /*sorry for IE5*/
     position: absolute; /*must have*/
     z-index: -1; /*must have*/
-/*    filter: mask(); /*must have*/
+    /*    filter: mask(); /*must have*/
     top: -4px; /*must have*/
     left: -4px; /*must have*/
     width: 200px; /*must have*/
@@ -730,26 +730,26 @@ button.ui-button::-moz-focus-inner { border: 0; padding: 0; } /* reset extra pad
  * http://jquery.org/license
  *
  * http://docs.jquery.com/UI/Progressbar#theming
- */
+*/
 .ui-progressbar { height:2em; text-align: left; overflow: hidden; }
 .ui-progressbar .ui-progressbar-value {margin: -1px; height:100%; }
 /*------------------------------------------*/
 body
 {
-	color: white;
-	background-image: url(../images/back.jpg);
-        font: 75% "Trebuchet MS", sans-serif;
+    color: white;
+    background-image: url(../images/back.jpg);
+    font: 75% "Trebuchet MS", sans-serif;
 }
 
 .TablaTitulo{
-   font-family: "Trebuchet MS", sans-serif;
-   font-size: 9.5px;
-    
+    font-family: "Trebuchet MS", sans-serif;
+    font-size: 9.5px;
+
 }
 
 .estiloLink{
-       color: #2191c0;
-       text-decoration: none;        
+    color: #2191c0;
+    text-decoration: none;        
 }
 
 .demoHeaders { margin-top: 2em; }
@@ -772,12 +772,12 @@ div#users-contain table td, div#users-contain table th { border: 1px solid #eee;
 
 .titulo_pagina
 {
-	text-align: center;
-	float: inherit;
-	position: static;
-	height: 50px;
-	font-size: 25px;
-	color: #2580A2;
+    text-align: center;
+    float: inherit;
+    position: static;
+    height: 50px;
+    font-size: 25px;
+    color: #2580A2;
 }
 
 .titulo_bienvenida{
@@ -788,177 +788,177 @@ div#users-contain table td, div#users-contain table th { border: 1px solid #eee;
 
 .header
 {
-	height: 164px;
-	text-align: right;
-	font-family: arial;
-	float: inherit;
-	width: 100%;
-	background-image: url("../images/banner1.png");
+    height: 164px;
+    text-align: right;
+    font-family: arial;
+    float: inherit;
+    width: 100%;
+    background-image: url("../images/banner1.png");
 }
 
 .logo
 {
-	height: 180px;
-	width: 10%;
+    height: 180px;
+    width: 10%;
 }
-	
+
 .footer
 {
-	height: 100px;
-	background-color: #2580A2;
-	color: black;	
-	font-size: 11px;
-	font-family: arial;
-	text-align: center;
+    height: 100px;
+    background-color: #2580A2;
+    color: black;	
+    font-size: 11px;
+    font-family: arial;
+    text-align: center;
 }
 
 .principal
 {
-	position: relative;
-	width: 1000px;
-	font-family: arial;
-	color: black;
-	text-align:justify;
+    position: relative;
+    width: 1000px;
+    font-family: arial;
+    color: black;
+    text-align:justify;
 }
 
 .contenido_principal
 {
-	background-color: white;
-	height: 100%;
-	color: black;
+    background-color: white;
+    height: 100%;
+    color: black;
 }
 
 table
 {
-	color: black;
+    color: black;
 }
 
 /*Menu*/
 .menu{
-	border:none;
-	border:0px;
-	margin:0px;
-	padding:0px;
-	font: 67.5% "Lucida Sans Unicode", "Bitstream Vera Sans", "Trebuchet Unicode MS", "Lucida Grande", Verdana, Helvetica, sans-serif;
-	font-size:14px;
-	font-weight:bold;
-	}
+    border:none;
+    border:0px;
+    margin:0px;
+    padding:0px;
+    font: 67.5% "Lucida Sans Unicode", "Bitstream Vera Sans", "Trebuchet Unicode MS", "Lucida Grande", Verdana, Helvetica, sans-serif;
+    font-size:14px;
+    font-weight:bold;
+}
 .menu ul{
-	background:#333333;
-	height:35px;
-	list-style:none;
-	margin:0;
-	padding:0;
-	}
-	.menu li{
-		float:left;
-		padding:0px;
-		}
-	.menu li a{
-		background:#333333 url("../images/seperator.gif") bottom right no-repeat;
-		color:#cccccc;
-		display:block;
-		font-weight:normal;
-		line-height:35px;
-		margin:0px;
-		padding:0px 25px;
-		text-align:center;
-		text-decoration:none;
-		}
-		.menu li a:hover, .menu ul li:hover a{
-			background: #2580a2 url("../images/hover.gif") bottom center no-repeat;
-			color:#FFFFFF;
-			text-decoration:none;
-			}
-	.menu li ul{
-		background:#333333;
-		display:none;
-		height:auto;
-		padding:0px;
-		margin:0px;
-		border:0px;
-		position:absolute;
-		width:225px;
-		z-index:200;
-		/*top:1em;
-		/*left:0;*/
-		}
-	.menu li:hover ul{
-		display:block;
-		
-		}
-	.menu li li {
-		background:url('../images/sub_sep.gif') bottom left no-repeat;
-		display:block;
-		float:none;
-		margin:0px;
-		padding:0px;
-		width:225px;
-		}
-	.menu li:hover li a{
-		background:none;
-		
-		}
-	.menu li ul a{
-		display:block;
-		height:35px;
-		font-size:12px;
-		font-style:normal;
-		margin:0px;
-		padding:0px 10px 0px 15px;
-		text-align:left;
-		}
-		.menu li ul a:hover, .menu li ul li:hover a{
-			background:#2580a2 url('../images/hover_sub.gif') center left no-repeat;
-			border:0px;
-			color:#ffffff;
-			text-decoration:none;
-			}
-	.menu p{
-		clear:left;
-		}
-		
+    background:#333333;
+    height:35px;
+    list-style:none;
+    margin:0;
+    padding:0;
+}
+.menu li{
+    float:left;
+    padding:0px;
+}
+.menu li a{
+    background:#333333 url("../images/seperator.gif") bottom right no-repeat;
+    color:#cccccc;
+    display:block;
+    font-weight:normal;
+    line-height:35px;
+    margin:0px;
+    padding:0px 25px;
+    text-align:center;
+    text-decoration:none;
+}
+.menu li a:hover, .menu ul li:hover a{
+    background: #2580a2 url("../images/hover.gif") bottom center no-repeat;
+    color:#FFFFFF;
+    text-decoration:none;
+}
+.menu li ul{
+    background:#333333;
+    display:none;
+    height:auto;
+    padding:0px;
+    margin:0px;
+    border:0px;
+    position:absolute;
+    width:225px;
+    z-index:200;
+    /*top:1em;
+    /*left:0;*/
+}
+.menu li:hover ul{
+    display:block;
+
+}
+.menu li li {
+    background:url('../images/sub_sep.gif') bottom left no-repeat;
+    display:block;
+    float:none;
+    margin:0px;
+    padding:0px;
+    width:225px;
+}
+.menu li:hover li a{
+    background:none;
+
+}
+.menu li ul a{
+    display:block;
+    height:35px;
+    font-size:12px;
+    font-style:normal;
+    margin:0px;
+    padding:0px 10px 0px 15px;
+    text-align:left;
+}
+.menu li ul a:hover, .menu li ul li:hover a{
+    background:#2580a2 url('../images/hover_sub.gif') center left no-repeat;
+    border:0px;
+    color:#ffffff;
+    text-decoration:none;
+}
+.menu p{
+    clear:left;
+}
+
 /*--Main Container--*/
 .main_view {
-	float: left;
-	position: relative;
-	margin-left: 10%;
+    float: left;
+    position: relative;
+    margin-left: 10%;
 }
 /*--Window/Masking Styles--*/
 .window {
-	height:286px;	width: 790px;
-	overflow: hidden; /*--Hides anything outside of the set width/height--*/
-	position: relative;
+    height:286px;	width: 790px;
+    overflow: hidden; /*--Hides anything outside of the set width/height--*/
+    position: relative;
 }
 .image_reel {
-	position: absolute;
-	top: 0; left: 0;
+    position: absolute;
+    top: 0; left: 0;
 }
 .image_reel img {float: left;}
 
 /*--Paging Styles--*/
 .paging {
-	position: absolute;
-	bottom: 40px; right: -7px;
-	width: 178px; height:47px;
-	z-index: 100; /*--Assures the paging stays on the top layer--*/
-	text-align: center;
-	line-height: 40px;
-	background: url("../images/paging_bg2.png") no-repeat;
-	display: none; /*--Hidden by default, will be later shown with jQuery--*/
+    position: absolute;
+    bottom: 40px; right: -7px;
+    width: 178px; height:47px;
+    z-index: 100; /*--Assures the paging stays on the top layer--*/
+    text-align: center;
+    line-height: 40px;
+    background: url("../images/paging_bg2.png") no-repeat;
+    display: none; /*--Hidden by default, will be later shown with jQuery--*/
 }
 .paging a {
-	padding: 5px;
-	text-decoration: none;
-	color: #fff;
+    padding: 5px;
+    text-decoration: none;
+    color: #fff;
 }
 .paging a.active {
-	font-weight: bold;
-	background: #920000;
-	border: 1px solid #610000;
-	-moz-border-radius: 3px;
-	-khtml-border-radius: 3px;
-	-webkit-border-radius: 3px;
+    font-weight: bold;
+    background: #920000;
+    border: 1px solid #610000;
+    -moz-border-radius: 3px;
+    -khtml-border-radius: 3px;
+    -webkit-border-radius: 3px;
 }
 .paging a:hover {font-weight: bold;}
 
