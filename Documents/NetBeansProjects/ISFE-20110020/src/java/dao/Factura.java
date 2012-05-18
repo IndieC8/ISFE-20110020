@@ -81,7 +81,7 @@ public class Factura extends HttpServlet {
                 out.close();
             }
         } else if ("Generar".equals(request.getParameter("Factura"))) {
-            try {
+             try {
                 String aux = request.getParameter("idUsuaio");
                 aux = Cifrado.decodificarBase64(aux);
                 //INSTANCIAS DE LAS CLASES A UTILIZAR DURANTE EL PROCESO DE LA GENERACIÓN DE LA FACTURA

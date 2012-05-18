@@ -36,24 +36,30 @@ public class Producto extends HttpServlet {
             throws ServletException, IOException, SQLException, InstantiationException, IllegalAccessException {
         response.setContentType("text/html;charset=UTF-8");
         PrintWriter out = response.getWriter();
-        try
-        {
+        try {
             Sql sql = new Sql();
             String aux = request.getParameter("idUsuario");
             aux = Cifrado.decodificarBase64(aux);
-            
-            String nombreProducto = request.getParameter("nombreProducto");
-            
-            ResultSet busqueda=sql.consulta("select nombreProducto,descripcionProducto,unidad,valorUnitario from producto where nombreProducto LIKE '"+nombreProducto+"%' AND idUsuario = "+Integer.parseInt(aux) +"");
 
-            while(busqueda.next())
-            {
-                out.println("<li onclick=\"fill('"+busqueda.getString("nombreProducto")+"','"+busqueda.getString("descripcionProducto")+"','"+busqueda.getString("unidad")+"',"+busqueda.getDouble("valorUnitario")+");\">"+busqueda.getString("nombreProducto")+"</li>");
+            if ("Agregar".equals(request.getParameter("Producto"))) {
+                String nombreProducto = request.getParameter("nombreProducto");
+                String descripcion = request.getParameter("descripcion");
+                String unidad = request.getParameter("unidad");
+                String Valor = request.getParameter("valorUnitario");
+                String sentencia = "INSERT INTO producto VALUES(0,'"+nombreProducto+"','"+descripcion+"','"+unidad+"',"+Double.parseDouble(Valor) +","+Integer.parseInt(aux) +")";
+                sql.ejecuta(sentencia);
+                
+            } else {
+                String nombreProducto = request.getParameter("nombreProducto");
+
+                ResultSet busqueda = sql.consulta("select idProducto,nombreProducto,descripcionProducto,unidad,valorUnitario from producto where nombreProducto LIKE '" + nombreProducto + "%' AND idUsuario = " + Integer.parseInt(aux) + "");
+
+                while (busqueda.next()) {
+                    out.println("<li onclick=\"fill('" + busqueda.getString("nombreProducto") + "','" + busqueda.getString("descripcionProducto") + "','" + busqueda.getString("unidad") + "'," + busqueda.getDouble("valorUnitario") + "," + busqueda.getInt("idProducto") + ");\">" + busqueda.getString("nombreProducto") + "</li>");
+                }
             }
 
-        }
-        finally
-        {
+        } finally {
             out.close();
         }
     }

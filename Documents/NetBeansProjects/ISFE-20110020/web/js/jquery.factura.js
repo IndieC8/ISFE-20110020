@@ -141,6 +141,7 @@ function borrarProducto(){
     $("#IVATotal").val("");
     $("#GranTotal").val("");
     $("#descuentoFactura").val("0");
+    $("#idProductoFactura").val("0");
     Importe = 0;
     return false;
 }
@@ -197,8 +198,8 @@ function eliminarFila(oId){
 
 function AgregarProducto(){
     var cantidad = $("#cantidadFactura").val();
-    var nombre = $("#nombreProducto").val();
-    var descripcion = $("#descripcionProducto").val();
+    var nombre = $("#nombreProducto").val().toUpperCase();
+    var descripcion = $("#descripcionProducto").val().toUpperCase();
     var unidad = $("#unidadProducto").val();
     var valor = $("#valorUnitario").val();
     var subTotal = $("#importeTotal").val();
@@ -226,17 +227,19 @@ function AgregarProducto(){
         $("#errorValorProducto").text("Indica el valor unitario");
         return false;
     }else{
-        //Importe = valor;
-        //ValidarSuma();
         agregarFila();
+        if($("#idProductoFactura").val() == "0"){
+            NuevoProducto(nombre,descripcion,unidad,Importe);
+        }
         borrarProducto();
         $("#mensajeConfirmacion").text("Producto Agregado");
         $("#confirmacion").show();
 
     }
+    return false;
 }
 
-function fill(nombreProducto,descripcionProducto,unidadProducto,valorUnitario) {
+function fill(nombreProducto,descripcionProducto,unidadProducto,valorUnitario,id) {
                  
     if(nombreProducto != undefined){
         $('#nombreProducto').val(nombreProducto);
@@ -245,6 +248,7 @@ function fill(nombreProducto,descripcionProducto,unidadProducto,valorUnitario) {
         $("#valorUnitario").val(valorUnitario);
         Importe = valorUnitario;
         ValidarSuma();
+        $("#idProductoFactura").val(id);
     }else{
         $('#descripcionProducto').val("");
         $('#unidadProducto').val("");
