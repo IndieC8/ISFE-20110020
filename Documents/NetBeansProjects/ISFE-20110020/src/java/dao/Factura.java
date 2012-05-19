@@ -29,7 +29,7 @@ import org.jdom.Document;
 import subsistemaISFE.EnvioMail;
 
 /**
- *
+ * Servlet encargada de la generación de la factura electrónica
  * @author lupe
  */
 public class Factura extends HttpServlet {
@@ -94,9 +94,11 @@ public class Factura extends HttpServlet {
                 Direccion dReceptor = new Direccion();
                 
                 //DATOS DEL EMISOR (USUARIO)
-                String sql = "select u.tipoPersona,u.nombre,u.apellidoMaterno,u.apellidoPaterno,u.razonSocial,u.curp,u.rfc,u.mail, f.archivoFiel, c.noCertificado, c.archivoCSD, d.codigoPostal, d.calle ,d.nombreLocalidad,d.nombreMunicipio, d.nombreEstado from usuario u, csd c, fiel f, direccionUsuario d where idUsuario = " + aux + " and c.idCSD = u.idCSD and f.idFiel = u.idFiel and d.idUsuario = u.idUsuario;";
+                out.println("a");
+                String sql = "select u.tipoPersona,u.nombre,u.apellidoMaterno,u.apellidoPaterno,u.razonSocial,u.curp,u.rfc,u.mail, f.archivoFiel, c.noCertificado, c.archivoCSD, d.codigoPostal, d.calle ,d.nombreLocalidad,d.nombreMunicipio, d.nombreEstado from usuario u, csd c, fiel f, direccionusuario d where u.idUsuario = " + aux + " and c.idCSD = u.idCSD and f.idFiel = u.idFiel and d.idUsuario = u.idUsuario;";
                 ResultSet rs;
                 rs = s.consulta(sql);
+                out.println("1");
                 while (rs.next()) {
                     emisor.setTipoPersona(rs.getBoolean("tipoPersona"));
                     if (rs.getBoolean("tipoPersona") == false) {
@@ -124,19 +126,21 @@ public class Factura extends HttpServlet {
                     d.setCalle(rs.getString("calle"));
                     emisor.setDireccion(d);
                 }
-
+                
                 //DATOS DEL RECEPTOR (CLIENTE)
-                String sqlRec = "select c.tipoPersona,c.nombre,c.apellidoMaterno,c.apellidoPaterno,c.razonSocial,c.rfc, d.codigoPostal, d.calle ,d.nombreLocalidad,d.nombreMunicipio, d.nombreEstado from cliente c, direccionCliente d where idUsuario = " + aux + " and d.idCliente = c.idCliente;";
+                out.println("b");
+                String sqlRec = "select c.tipoPersona,c.nombreCliente,c.APaternoCliente,c.AMaternoCliente,c.razonCliente,c.rfc, d.codigoPostal, d.calleCliente,d.nombreLocalidad,d.nombreMunicipio, d.nombreEstado from cliente c, direccioncliente d where c.idUsuario = " + aux + " and d.idCliente = c.idCliente;";
                 ResultSet rsRec;
                 rsRec = s.consulta(sqlRec);
+                out.println("2");
                 while (rsRec.next()) {
                     receptor.setTipoPersona(rsRec.getBoolean("tipoPersona"));
                     if (rsRec.getBoolean("tipoPersona") == false) {
-                        receptor.setNombre(rsRec.getString("nombre"));
-                        receptor.setApMaterno(rsRec.getString("apellidoMaterno"));
-                        receptor.setApPaterno(rsRec.getString("apellidoPaterno"));
+                        receptor.setNombre(rsRec.getString("nombreCliente"));
+                        receptor.setApMaterno(rsRec.getString("APaternoCliente"));
+                        receptor.setApPaterno(rsRec.getString("AMaternoCliente"));
                     } else {
-                        receptor.setRazonSocial(rsRec.getString("razonSocial"));
+                        receptor.setRazonSocial(rsRec.getString("razonCliente"));
                     }
 
                     receptor.setRFC(rs.getString("rfc"));
@@ -185,9 +189,11 @@ public class Factura extends HttpServlet {
                 f.setEmisor(emisor);
                 f.setReceptor(receptor);
                 //FOLIO DE LA FACTURA
+                out.println("c");
                 String sqlFolio = "select idFolio, numFolio from folios where usado=0 limit 1;";
                 ResultSet rsFolio;
                 rsFolio = s.consulta(sqlFolio);
+                out.println("2.5");
                 rsFolio.next();
                 String idFolio = rsFolio.getString("idfolio");
                 String numFolio = rsFolio.getString("numfolio");
@@ -197,9 +203,10 @@ public class Factura extends HttpServlet {
                 folio.setUUID(Long.parseLong(idFolio));
                 f.setFolio(folio);
                 //ESTABLECIENDO EL ESTADO DEL FOLIO USADO
-                String actualizaEstadoFolio = "update folios set usado=1 where usado=0 and idFolio = " + idFolio + "limit 1";
+                out.println("d");
+                String actualizaEstadoFolio = "update folios set usado=1 where usado=0 and idFolio = " + idFolio + " limit 1";
                 s.consulta(actualizaEstadoFolio);
-                
+                out.println("3");
                 //DATOS DEL LUGAR DE EXPEDCIÓN DE LA FACTURA
                 Direccion expedidoEn = new Direccion();
                 expedidoEn.setCalle("JUAN DE DIOS BATIZ");
@@ -211,8 +218,10 @@ public class Factura extends HttpServlet {
                 //DATOS DE ISFE COMO PAC 
                 XML xml = new XML();
                 Datos.ISFE isfe = new Datos.ISFE();
+                out.println("d");
                 String sqlISFE = "select u.idUsuario,f.archivoFiel,c.noCertificado,c.archivoCSD from fiel f,csd c,usuario u where u.idUsuario=1 and u.idFiel=f.idFiel and u.idCSD=c.idCSD;";
                 ResultSet rsIsfe = s.consulta(sqlISFE);
+                out.println("4");
                 Fiel fielISFE = new Fiel();
                 CSD csdISFE = new CSD();
                 while (rsIsfe.next()) {
