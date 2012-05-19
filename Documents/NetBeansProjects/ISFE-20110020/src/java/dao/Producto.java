@@ -38,18 +38,29 @@ public class Producto extends HttpServlet {
         PrintWriter out = response.getWriter();
         try {
             Sql sql = new Sql();
-            String aux = request.getParameter("idUsuario");
-            aux = Cifrado.decodificarBase64(aux);
-
-            if ("Agregar".equals(request.getParameter("Producto"))) {
+            
+            if("Actualizar".equals(request.getParameter("Producto"))){
                 String nombreProducto = request.getParameter("nombreProducto");
                 String descripcion = request.getParameter("descripcion");
                 String unidad = request.getParameter("unidad");
                 String Valor = request.getParameter("valorUnitario");
-                String sentencia = "INSERT INTO producto VALUES(0,'"+nombreProducto+"','"+descripcion+"','"+unidad+"',"+Double.parseDouble(Valor) +","+Integer.parseInt(aux) +")";
+                String idProducto = request.getParameter("idProducto");
+                String sentencia = "UPDATE producto SET nombreProducto='" + nombreProducto + "',descripcionProducto='" + descripcion + "',unidad='" + unidad + "',valorUnitario=" + Double.parseDouble(Valor) + "WHERE idProducto="+ Integer.parseInt(idProducto) +";";
                 sql.ejecuta(sentencia);
                 
+            }else if ("Agregar".equals(request.getParameter("Producto"))) {
+                String aux = request.getParameter("idUsuario");
+                aux = Cifrado.decodificarBase64(aux);
+                String nombreProducto = request.getParameter("nombreProducto");
+                String descripcion = request.getParameter("descripcion");
+                String unidad = request.getParameter("unidad");
+                String Valor = request.getParameter("valorUnitario");
+                String sentencia = "INSERT INTO producto VALUES(0,'" + nombreProducto + "','" + descripcion + "','" + unidad + "'," + Double.parseDouble(Valor) + "," + Integer.parseInt(aux) + ")";
+                sql.ejecuta(sentencia);
+
             } else {
+                String aux = request.getParameter("idUsuario");
+                aux = Cifrado.decodificarBase64(aux);
                 String nombreProducto = request.getParameter("nombreProducto");
 
                 ResultSet busqueda = sql.consulta("select idProducto,nombreProducto,descripcionProducto,unidad,valorUnitario from producto where nombreProducto LIKE '" + nombreProducto + "%' AND idUsuario = " + Integer.parseInt(aux) + "");

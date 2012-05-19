@@ -231,6 +231,10 @@ function AgregarProducto(){
         if($("#idProductoFactura").val() == "0"){
             NuevoProducto(nombre,descripcion,unidad,Importe);
         }
+        $.ajax({
+            url: "../Producto", type: "POST",
+            data: "Producto=Actualizar&nombreProducto="+nombre+"&descripcion="+descripcion+"&unidad="+unidad+"&valorUnitario="+Importe+"&idProducto="+$("#idProductoFactura").val()
+        });
         borrarProducto();
         $("#mensajeConfirmacion").text("Producto Agregado");
         $("#confirmacion").show();

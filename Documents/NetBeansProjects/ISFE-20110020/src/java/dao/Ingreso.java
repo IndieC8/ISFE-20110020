@@ -63,14 +63,21 @@ public class Ingreso extends HttpServlet {
 
         } else {
             String nombre = request.getParameter("RFCLogin").toUpperCase();
-            String iD = Cifrado.codificarBase64( String.valueOf(idUsuario) );
             //creamos nuestra sesion
             HttpSession session = request.getSession(true);
-            //Obtenemos los obejtos a guardar en session
-            session.setAttribute("contribuyente", nombre);
-            session.setAttribute("identificador", iD);
-            //pagina a donde se enviara si se encuentra el usuario autenticado
-            response.sendRedirect("index-user.jsp");
+            String page = null;
+            if (idUsuario == 1) {
+                page = "index-admin.jsp";
+                session.setAttribute("contribuyente", nombre);
+            } else {
+                String iD = Cifrado.codificarBase64(String.valueOf(idUsuario));
+                //Obtenemos los obejtos a guardar en session
+                session.setAttribute("contribuyente", nombre);
+                session.setAttribute("identificador", iD);
+                //pagina a donde se enviara si se encuentra el usuario autenticado
+                page = "index-user.jsp";
+            }
+            response.sendRedirect(page);
         }
     }
 

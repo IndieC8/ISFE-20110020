@@ -286,16 +286,16 @@
                             <br>
                             <br>
                             <table width="60%">
-                                <form method="post" action="uploadFichero" enctype="multipart/form-data" id="subirCSD">
-                                    <tr>
+                                <form method="post" action="SubirArchivo.jsp" name="upform" enctype="multipart/form-data">
+                                 <tr>
                                         <td width="30%">
                                             Archivo .CER del CSD
-                                            <input type="file" id="archivoCER" onclick="LimpiarError()">
+                                            <input type="file" name="uploadfile" value="upload"  id="archivoCER" onclick="LimpiarError()">
                                             <label id="ErrorArchivoCER"></label>
                                         </td>
 
                                         <td>
-                                            
+                                            <input type="hidden" name="todo" value="upload"/>
                                             <input type="submit" value=" &nbsp; &nbsp; Subir CSD &nbsp; &nbsp;" name="subirCSD" class="ui-button ui-widget ui-state-default ui-corner-all" role="button" aria-disabled="false"/>
                                         </td>
 

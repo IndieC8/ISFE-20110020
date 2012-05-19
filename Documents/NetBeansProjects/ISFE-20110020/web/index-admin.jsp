@@ -5,12 +5,11 @@
 --%>
 
 <%@page import="java.util.Calendar"%>
-<%@page import="subsistemaAutomatico.ReportesMensuales"%>
+<%@page import="subsistemaISFE.ReportesMensuales"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <% Calendar fechaActual = Calendar.getInstance();%>
-<%--
-    String contribuyente = "";
-    int id = 0 ;
+<%!  String contribuyente = ""; %>
+<%
     HttpSession sesionOk = request.getSession();
     if (sesionOk.getAttribute("contribuyente") == null) {
         %>
@@ -20,9 +19,7 @@
         <%
     } else {
         contribuyente = (String) sesionOk.getAttribute("contribuyente");//Recoge la session
-        id = (Integer) sesionOk.getAttribute("identificador");//Recoge la session
-        out.println(id);
- --%>
+ %>
 <!DOCTYPE html>
 <html>
 	<head>
@@ -78,7 +75,7 @@
 		<!-- Comienza Menu -->
                 <div class="menu">
                     <ul>
-                        <li><a href="cerrar.jsp" id="cerrarSesion"><img src="images/icons/ingreso_ico.png"/> Cerrar Sesión</a>
+                        <li><a href="cerrar.jsp" id="cerrarSesion"><img src="images/icons/ingreso_ico.png"/> Cerrar Sesión &nbsp; &nbsp; <% out.println(contribuyente); %></a>
                     </ul>
                 </div>
 		<!-- Termina Menu -->
@@ -158,3 +155,4 @@
     </center>
     </body>
 </html>
+<%}%>
