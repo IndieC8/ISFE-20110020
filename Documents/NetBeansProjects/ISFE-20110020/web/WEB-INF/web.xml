@@ -53,12 +53,12 @@
         <servlet-class>dao.Producto</servlet-class>
     </servlet>
     <servlet>
-        <servlet-name>Generador</servlet-name>
-        <servlet-class>dao.Generador</servlet-class>
-    </servlet>
-    <servlet>
         <servlet-name>uploadFichero</servlet-name>
         <servlet-class>dao.uploadFichero</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>FacturaImprimible</servlet-name>
+        <servlet-class>dao.FacturaImprimible</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>SubirArchivo</servlet-name>
@@ -115,10 +115,6 @@
     <servlet-mapping>
         <servlet-name>Producto</servlet-name>
         <url-pattern>/Producto</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
-        <servlet-name>Generador</servlet-name>
-        <url-pattern>/Generador</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>uploadFichero</servlet-name>

@@ -94,11 +94,11 @@ public class Factura extends HttpServlet {
                 Direccion dReceptor = new Direccion();
                 
                 //DATOS DEL EMISOR (USUARIO)
-                out.println("a");
+                //out.println("a");
                 String sql = "select u.tipoPersona,u.nombre,u.apellidoMaterno,u.apellidoPaterno,u.razonSocial,u.curp,u.rfc,u.mail, f.archivoFiel, c.noCertificado, c.archivoCSD, d.codigoPostal, d.calle ,d.nombreLocalidad,d.nombreMunicipio, d.nombreEstado from usuario u, csd c, fiel f, direccionusuario d where u.idUsuario = " + aux + " and c.idCSD = u.idCSD and f.idFiel = u.idFiel and d.idUsuario = u.idUsuario;";
                 ResultSet rs;
                 rs = s.consulta(sql);
-                out.println("1");
+                //out.println("1");
                 while (rs.next()) {
                     emisor.setTipoPersona(rs.getBoolean("tipoPersona"));
                     if (rs.getBoolean("tipoPersona") == false) {
@@ -128,11 +128,11 @@ public class Factura extends HttpServlet {
                 }
                 
                 //DATOS DEL RECEPTOR (CLIENTE)
-                out.println("b");
+                //out.println("b");
                 String sqlRec = "select c.tipoPersona,c.nombreCliente,c.APaternoCliente,c.AMaternoCliente,c.razonCliente,c.rfc, d.codigoPostal, d.calleCliente,d.nombreLocalidad,d.nombreMunicipio, d.nombreEstado from cliente c, direccioncliente d where c.idUsuario = " + aux + " and d.idCliente = c.idCliente;";
-                ResultSet rsRec;
+                ResultSet rsRec;//SQLException after end of result set
                 rsRec = s.consulta(sqlRec);
-                out.println("2");
+                //out.println("2");
                 while (rsRec.next()) {
                     receptor.setTipoPersona(rsRec.getBoolean("tipoPersona"));
                     if (rsRec.getBoolean("tipoPersona") == false) {
