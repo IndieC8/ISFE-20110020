@@ -123,6 +123,7 @@ public class Factura extends HttpServlet {
                     d.setCodigoPostal(rs.getString("codigoPostal"));
                     d.setLocalidad(rs.getString("nombreLocalidad"));
                     d.setMunicipio(rs.getString("nombreMunicipio"));
+                    d.setEstado(rs.getString("nombreEstado"));
                     d.setCalle(rs.getString("calle"));
                     emisor.setDireccion(d);
                 }
@@ -145,8 +146,8 @@ public class Factura extends HttpServlet {
                         receptor.setRazonSocial(rsRec.getString("razonCliente"));
                         out.println("d");
                     }
-                    out.println(rs.getString("rfc"));
-                    receptor.setRFC(rs.getString("rfc"));out.println("1");
+                    out.println(rsRec.getString("rfc"));
+                    receptor.setRFC(rsRec.getString("rfc"));out.println("1");
                     //DIRECCION DEL RECEPTOR
                     dReceptor.setCodigoPostal(rsRec.getString("codigoPostal"));out.println("2");
                     dReceptor.setLocalidad(rsRec.getString("nombreLocalidad"));out.println("3");
@@ -158,7 +159,7 @@ public class Factura extends HttpServlet {
                 
                 //DATOS DE LA FACTURA (CONCEPTOS,SUBTOTAL,IVA,DESCUENTO,TOTAL,EXPEDICIÓN,ETC)
                 Datos.Factura f = new Datos.Factura();
-                int numProductos=Integer.parseInt(request.getParameter(""));//numero de productos que se recibiran
+                //int numProductos=Integer.parseInt(request.getParameter("cantcampos"));//numero de productos que se recibiran
                 ArrayList<Datos.Concepto> productos = new ArrayList<Datos.Concepto>();
                 //DATOS DE LOS CONCEPTOS DE LA FACTURA
                 
@@ -193,11 +194,9 @@ public class Factura extends HttpServlet {
                 f.setEmisor(emisor);
                 f.setReceptor(receptor);
                 //FOLIO DE LA FACTURA
-                out.println("c");
                 String sqlFolio = "select idFolio, numFolio from folios where usado=0 limit 1;";
                 ResultSet rsFolio;
                 rsFolio = s.consulta(sqlFolio);
-                out.println("2.5");
                 rsFolio.next();
                 String idFolio = rsFolio.getString("idfolio");
                 String numFolio = rsFolio.getString("numfolio");
@@ -207,10 +206,8 @@ public class Factura extends HttpServlet {
                 folio.setUUID(Long.parseLong(idFolio));
                 f.setFolio(folio);
                 //ESTABLECIENDO EL ESTADO DEL FOLIO USADO
-                out.println("d");
                 String actualizaEstadoFolio = "update folios set usado=1 where usado=0 and idFolio = " + idFolio + " limit 1";
-                s.consulta(actualizaEstadoFolio);
-                out.println("3");
+                s.ejecuta(actualizaEstadoFolio);
                 //DATOS DEL LUGAR DE EXPEDCIÓN DE LA FACTURA
                 Direccion expedidoEn = new Direccion();
                 expedidoEn.setCalle("JUAN DE DIOS BATIZ");
@@ -225,7 +222,6 @@ public class Factura extends HttpServlet {
                 out.println("d");
                 String sqlISFE = "select u.idUsuario,f.archivoFiel,c.noCertificado,c.archivoCSD from fiel f,csd c,usuario u where u.idUsuario=1 and u.idFiel=f.idFiel and u.idCSD=c.idCSD;";
                 ResultSet rsIsfe = s.consulta(sqlISFE);
-                out.println("4");
                 Fiel fielISFE = new Fiel();
                 CSD csdISFE = new CSD();
                 while (rsIsfe.next()) {
@@ -238,7 +234,7 @@ public class Factura extends HttpServlet {
                 isfe.setCSD(csdISFE);
                 
                 //GENERACION DEL XML 
-                Document facturaXML = xml.generarXML(f, isfe, "/ISFE-20110020/resources/xml/");
+                Document facturaXML = xml.generarXML(f, isfe, "\\ISFE-20110020\\resources\\xml\\");
                 File fXML = XML.generarArchivoXML(facturaXML, emisor.getRFC() + folio.getNoFolio() + receptor.getRFC() + ".xml");
                 
                 //ENVIO DEL XML AL CORREO DEL USUARIO 
