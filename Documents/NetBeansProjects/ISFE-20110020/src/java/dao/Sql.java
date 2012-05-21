@@ -1,9 +1,6 @@
 package dao;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
+import java.io.*;
 import java.sql.*;
 
 
@@ -93,10 +90,13 @@ public class Sql {
         this.conectar();
         PreparedStatement pst=conn.prepareStatement(sql);
         pst.setString(1, null);
-        FileInputStream fis=new FileInputStream(fiel);
-        pst.setBinaryStream(2, fis, fiel.length());
+        //
+        ByteArrayOutputStream baos=new ByteArrayOutputStream();
+        ObjectOutputStream oos=new ObjectOutputStream(baos);
+        oos.writeObject(fiel);
+        pst.setBytes(2,baos.toByteArray());
+        //
         pst.execute();
-        fis.close();
     }
     /**
      * Método encargado de subir el CSD a la base de datos 

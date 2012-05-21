@@ -47,7 +47,6 @@ public class XML extends Formato{
         return xml;
     }
     private Document crearXML(Factura factura,CFDI cfdi,String path) throws IOException, SecurityException, NoSuchProviderException{
-        System.out.println("PATH XSLT:    "+path+"cadOriginalCFDI_3.xslt");
         
         String cadOriginal = CadenaOriginal.generarCadenaOriginal(path+"cadOriginalCFDI_3.xslt",cfdi.generarCFDI());
         System.out.println(cadOriginal);
@@ -64,7 +63,7 @@ public class XML extends Formato{
     private Document timbrarCFDI(Factura factura,CFDI cfdi,ISFE isfe,String path) throws SecurityException, UnsupportedEncodingException, NoSuchProviderException, IOException, Exception{
         Timbre timbre=new Timbre();
         String cadTimbre = CadenaOriginal.generarCadenaOriginal(path+"cadOriginalTFD_1.xslt", timbre.agregarTimbre(factura, isfe));
-        //System.out.println(cadTimbre);
+        System.out.println(cadTimbre);
         PrivateKey key;
         key = Cifrado.getLlavePrivada(isfe.getFiel().getArchivoFiel(), isfe.getFiel().getPassword());
         String sello = Cifrado.firmar(key, cadTimbre.getBytes("UTF-8"));

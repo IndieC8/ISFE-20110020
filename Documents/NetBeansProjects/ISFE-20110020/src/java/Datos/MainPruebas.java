@@ -41,7 +41,7 @@ public class MainPruebas {
             while(offset<bFIEL.length && (numRead=isFIEL.read(bFIEL, offset, bFIEL.length-offset))>=0){
                 offset+=numRead;
             }
-            String password="a0123456789";
+                String password="a0123456789";
             //PrivateKey key=Cifrado.getLlavePrivada(bFIEL, password);
             //
             Direccion d=new Direccion();

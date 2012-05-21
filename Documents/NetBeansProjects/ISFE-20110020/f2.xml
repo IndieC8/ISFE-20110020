@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<cfdi:Comprobante xmlns:cfdi="http://www.sat.gob.mx/cfd/3" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.sat.gob.mx/cfd/3 http://www.sat.gob.mx/sitio_internet/cfd/3/cfdv3.xsd" version="3.0" folio="123456789" fecha="2012-05-21T14:15:06" sello="qkKYfsDRoCM6b5b27tTheZgpMqlU7yZ2VMa09LsDx+j1pmJuzl99bs+D+B1O0PdYGBIKeluUVm55kyshdsjPl+zj87yKgwngU4XejDSrinyBVqQ95oEXyiC45jOdXPPojlwKofE8Se+nU1f663y8GLh7tofjMY445VxNrdgNqVQ=" formaDePago="UNA SOLA EXIBICION" noCertificado="30001000000100000800" certificado="MIIE/TCCA+WgAwIBAgIUMzAwMDEwMDAwMDAxMDAwMDA4MDAwDQYJKoZIhvcNAQEFBQAwggFvMRgwFgYDVQQDDA9BLkMuIGRlIHBydWViYXMxLzAtBgNVBAoMJlNlcnZpY2lvIGRlIEFkbWluaXN0cmFjacOzbiBUcmlidXRhcmlhMTgwNgYDVQQLDC9BZG1pbmlzdHJhY2nDs24gZGUgU2VndXJpZGFkIGRlIGxhIEluZm9ybWFjacOzbjEpMCcGCSqGSIb3DQEJARYaYXNpc25ldEBwcnVlYmFzLnNhdC5nb2IubXgxJjAkBgNVBAkMHUF2LiBIaWRhbGdvIDc3LCBDb2wuIEd1ZXJyZXJvMQ4wDAYDVQQRDAUwNjMwMDELMAkGA1UEBhMCTVgxGTAXBgNVBAgMEERpc3RyaXRvIEZlZGVyYWwxEjAQBgNVBAcMCUNveW9hY8OhbjEVMBMGA1UELRMMU0FUOTcwNzAxTk4zMTIwMAYJKoZIhvcNAQkCDCNSZXNwb25zYWJsZTogSMOpY3RvciBPcm5lbGFzIEFyY2lnYTAeFw0xMDA3MzAxNjU4NDBaFw0xMjA3MjkxNjU4NDBaMIGWMRIwEAYDVQQDDAlNYXRyaXogU0ExEjAQBgNVBCkMCU1hdHJpeiBTQTESMBAGA1UECgwJTWF0cml6IFNBMSUwIwYDVQQtExxBQUEwMTAxMDFBQUEgLyBBQUFBMDEwMTAxQUFBMR4wHAYDVQQFExUgLyBBQUFBMDEwMTAxSERGUlhYMDExETAPBgNVBAsMCFVuaWRhZCAxMIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDD0ltQNthUNUfzq0t1GpIyapjzOn1W5fGM5G/pQyMluCzP9YlVAgBjGgzwYp9Z0J9gadg3y2ZrYDwvv8b72goyRnhnv3bkjVRKlus6LDc00K7Jl23UYzNGlXn5+i0HxxuWonc2GYKFGsN4rFWKVy3Fnpv8Z2D7dNqsVyT5HapEqwIDAQABo4HqMIHnMAwGA1UdEwEB/wQCMAAwCwYDVR0PBAQDAgbAMB0GA1UdDgQWBBSYodSwRczzj5H7mcO3+mAyXz+y0DAuBgNVHR8EJzAlMCOgIaAfhh1odHRwOi8vcGtpLnNhdC5nb2IubXgvc2F0LmNybDAzBggrBgEFBQcBAQQnMCUwIwYIKwYBBQUHMAGGF2h0dHA6Ly9vY3NwLnNhdC5nb2IubXgvMB8GA1UdIwQYMBaAFOtZfQQimlONnnEaoFiWKfU54KDFMBAGA1UdIAQJMAcwBQYDKgMEMBMGA1UdJQQMMAoGCCsGAQUFBwMCMA0GCSqGSIb3DQEBBQUAA4IBAQArHQEorApwqumSn5EqDOAjbezi8fLco1cYES/PD+LQRM1Vb1g7VLE3hR4S5NNBv0bMwwWAr0WfL9lRRj0PMKLorO8y4TJjRU8MiYXfzSuKYL5Z16kW8zlVHw7CtmjhfjoIMwjQo3prifWxFv7VpfIBstKKShU0qB6KzUUNwg2Ola4t4gg2JJcBmyIAIInHSGoeinR2V1tQ10aRqJdXkGin4WZ75yMbQH4L0NfotqY6bpF2CqIY3aogQyJGhUJji4gYnS2DvHcyoICwgawshjSaX8Y0Xlwnuh6EusqhqlhTgwPNAPrKIXCmOWtqjlDhho/lhkHJMzuTn8AoVapbBUnj" subTotal="466.43" total="541.0588" tipoDeComprobante="INGRESO">
+  <cfdi:Emisor rfc="HEDR900519RRR" nombre="RAUL">
+    <cfdi:DomicilioFiscal calle="ANTONIO ROANOVA VARGAS" localidad="ZONA ESCOLAR" municipio="GUSTAVO A. MADERO" estado="DISTRITO FEDERAL" pais="MÉXICO" codigoPostal="7230" />
+    <cfdi:ExpedidoEn calle="JUAN DE DIOS BATIZ" municipio="GUSTAVO A. MADERO" estado="DISTRIO FEDERAL" pais="MÉXICO" codigoPostal="07738" />
+  </cfdi:Emisor>
+  <cfdi:Receptor rfc="PEPJ900612OOO" nombre="JUAN">
+    <cfdi:Domicilio calle="JUAN DE DIOS BATIZ" localidad="ZONA ESCOLAR" municipio="GUSTAVO A. MADERO" estado="DISTRITO FEDERAL" pais="MÉXICO" codigoPostal="7230" />
+  </cfdi:Receptor>
+  <cfdi:Conceptos>
+    <cfdi:Concepto cantidad="1.0" unidad="CAPSULAS" descripcion="VIBRAMICINA 100MG 10" valorUnitario="244.0" importe="244.0" />
+    <cfdi:Concepto cantidad="1.0" unidad="BOTELLA" descripcion="CLORUTO 500M" valorUnitario="137.93" importe="137.93" />
+    <cfdi:Concepto cantidad="1.0" unidad="TABLETAS" descripcion="SEDEPRON 250MG 10" valorUnitario="84.5" importe="84.5" />
+  </cfdi:Conceptos>
+  <cfdi:Impuestos>
+    <cfdi:Traslados>
+      <cfdi:Traslado impuesto="IVA" tasa="16.0" importe="74.6288" />
+    </cfdi:Traslados>
+  </cfdi:Impuestos>
+  <cfdi:Complemento>
+    <tfd:TimbreFiscalDigital xmlns:tfd="http://www.sat.gob.mx/TimbreFiscalDigital" xsi:schemaLocation="http://www.sat.gob.mx/TimbreFiscalDigital TimbreFiscalDigital.xsd" version="1.0" selloCFD="qkKYfsDRoCM6b5b27tTheZgpMqlU7yZ2VMa09LsDx+j1pmJuzl99bs+D+B1O0PdYGBIKeluUVm55kyshdsjPl+zj87yKgwngU4XejDSrinyBVqQ95oEXyiC45jOdXPPojlwKofE8Se+nU1f663y8GLh7tofjMY445VxNrdgNqVQ=" FechaTimbrado="2012-05-21T14:15:06" UUID="4964420948893066024" noCertificadoSAT="30001000000100000800" selloSAT="GXsgYiRNnKY4eOAnbPJcTsTYI2FrS5cWe0zw/m8YA6BFTp9jzNaf64Co2WubMyxWAqovhO1n051VhKJZSRXCGnhrVP34dRnv5GVZgvKmCwVDPKmaDcH0+5wzR99LoxtgyVY2IQS1EzpCJLx9aP0sehGHR/nYy0lPrSzOuP7eoCg=" />
+  </cfdi:Complemento>
+</cfdi:Comprobante>
+

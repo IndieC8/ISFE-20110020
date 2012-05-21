@@ -4,6 +4,7 @@
  */
 package Datos;
 
+import java.util.Date;
 import org.jdom.Content;
 import org.jdom.Document;
 import org.jdom.Element;
@@ -37,11 +38,10 @@ public class Timbre{
      * @return 
      */
     public Document agregarTimbre(Factura f,ISFE isfe){
-        timbre.getRootElement()
-                .setAttribute("selloCFD", f.getCadenaCSD())
-		.setAttribute("FechaTimbrado", XML.formatearFecha(f.getFecha()))
-		.setAttribute("UUID", f.getFolio().getUUID()+"")
-		.setAttribute("noCertificadoSAT", isfe.getCSD().getNoCertificado());
+        timbre.getRootElement().setAttribute("selloCFD", f.getCadenaCSD());
+        timbre.getRootElement().setAttribute("FechaTimbrado", XML.formatearFecha(f.getFecha()));
+        timbre.getRootElement().setAttribute("UUID", f.getFolio().getUUID()+"");
+        timbre.getRootElement().setAttribute("noCertificadoSAT", isfe.getCSD().getNoCertificado());
         return timbre;
     }
     /**
