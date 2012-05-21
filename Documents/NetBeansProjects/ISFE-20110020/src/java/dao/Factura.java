@@ -50,7 +50,7 @@ public class Factura extends HttpServlet {
         PrintWriter out = response.getWriter();
         String idFolioPDF = null;
         String idUsuario = null;
-        
+
         if ("Clientes".equals(request.getParameter("Factura"))) {
 
             try {
@@ -92,7 +92,7 @@ public class Factura extends HttpServlet {
                 Fiel fiel = new Fiel();
                 Direccion d = new Direccion();
                 Direccion dReceptor = new Direccion();
-                
+
                 //DATOS DEL EMISOR (USUARIO)
                 //out.println("a");
                 String sql = "select u.tipoPersona,u.nombre,u.apellidoMaterno,u.apellidoPaterno,u.razonSocial,u.curp,u.rfc,u.mail, f.archivoFiel, c.noCertificado, c.archivoCSD, d.codigoPostal, d.calle ,d.nombreLocalidad,d.nombreMunicipio, d.nombreEstado from usuario u, csd c, fiel f, direccionusuario d where u.idUsuario = " + aux + " and c.idCSD = u.idCSD and f.idFiel = u.idFiel and d.idUsuario = u.idUsuario;";
@@ -127,7 +127,7 @@ public class Factura extends HttpServlet {
                     d.setCalle(rs.getString("calle"));
                     emisor.setDireccion(d);
                 }
-                
+
                 //DATOS DEL RECEPTOR (CLIENTE)
                 //out.println("b");
                 String sqlRec = "select c.tipoPersona,c.nombreCliente,c.APaternoCliente,c.AMaternoCliente,c.razonCliente,c.rfc, d.codigoPostal, d.calleCliente,d.nombreLocalidad,d.nombreMunicipio, d.nombreEstado from cliente c, direccioncliente d where c.idUsuario = " + aux + " and d.idCliente = c.idCliente;";
@@ -156,13 +156,13 @@ public class Factura extends HttpServlet {
                     dReceptor.setCalle(rsRec.getString("calleCliente"));out.println("6");
                     receptor.setDireccion(dReceptor);
                 }
-                
+
                 //DATOS DE LA FACTURA (CONCEPTOS,SUBTOTAL,IVA,DESCUENTO,TOTAL,EXPEDICIÓN,ETC)
                 Datos.Factura f = new Datos.Factura();
                 //int numProductos=Integer.parseInt(request.getParameter("cantcampos"));//numero de productos que se recibiran
                 ArrayList<Datos.Concepto> productos = new ArrayList<Datos.Concepto>();
                 //DATOS DE LOS CONCEPTOS DE LA FACTURA
-                
+
                 /**for(int i=0;i<numProductos;i++){
                     Datos.Concepto concepto = new Datos.Concepto();
                     concepto.setCantidad(Double.parseDouble(request.getParameter("cantidad"+i)));
@@ -172,7 +172,7 @@ public class Factura extends HttpServlet {
                     concepto.setDescripcion(concepto.getnombreProducto() + ": " + request.getParameter("descripcion"+i));
                     productos.add(concepto);
                 }*/
-                
+
                 //DATOS DEL CONCEPTO PARA LA VERSION DE PRUEBA
                 Datos.Concepto conceptos = new Datos.Concepto();
                 conceptos.setCantidad(Double.parseDouble(request.getParameter("cantidad")));
@@ -182,7 +182,7 @@ public class Factura extends HttpServlet {
                 conceptos.setDescripcion(conceptos.getnombreProducto() + ": " + request.getParameter("descripcion"));
                 productos.add(conceptos);
                 f.setConceptos(productos);
-                
+
                 //DATOS GENERALES DE LA FACTURA
                 f.setFormaDePago(request.getParameter("formaDePago"));   //CAMPO A AGREGAR EN FORMULARIO
                 f.setSubTotal(Double.parseDouble(request.getParameter("subTotal")));
@@ -207,7 +207,7 @@ public class Factura extends HttpServlet {
                 f.setFolio(folio);
                 //ESTABLECIENDO EL ESTADO DEL FOLIO USADO
                 String actualizaEstadoFolio = "update folios set usado=1 where usado=0 and idFolio = " + idFolio + " limit 1";
-                s.ejecuta(actualizaEstadoFolio);
+                s.ejecutaUpdate(actualizaEstadoFolio);
                 //DATOS DEL LUGAR DE EXPEDCIÓN DE LA FACTURA
                 Direccion expedidoEn = new Direccion();
                 expedidoEn.setCalle("JUAN DE DIOS BATIZ");
@@ -216,7 +216,7 @@ public class Factura extends HttpServlet {
                 expedidoEn.setMunicipio("GUSTAVO A. MADERO");
                 f.setExpedidoEn(expedidoEn);
 
-                //DATOS DE ISFE COMO PAC 
+                //DATOS DE ISFE COMO PAC
                 XML xml = new XML();
                 Datos.ISFE isfe = new Datos.ISFE();
                 out.println("d");
@@ -232,21 +232,21 @@ public class Factura extends HttpServlet {
                 fielISFE.setPassword("a0123456789");
                 isfe.setFiel(fielISFE);
                 isfe.setCSD(csdISFE);
-                
-                //GENERACION DEL XML 
+
+                //GENERACION DEL XML
                 Document facturaXML = xml.generarXML(f, isfe, "\\ISFE-20110020\\resources\\xml\\");
                 File fXML = XML.generarArchivoXML(facturaXML, emisor.getRFC() + folio.getNoFolio() + receptor.getRFC() + ".xml");
-                
-                //ENVIO DEL XML AL CORREO DEL USUARIO 
+
+                //ENVIO DEL XML AL CORREO DEL USUARIO
                 EnvioMail mail = new EnvioMail();
                 mail.EnvioMail(emisor.getCorreo(), "Entrega de Factura Electrónica ISFE " + new Date(), "ISFE, hace entrega de la factura electrónica en formato XML.\nHacemos de su conocimiento que en este momento el resguardo de la factura\nes responsabilidad de usted.\n\nGracias por utilizar ISFE.", fXML, emisor.getRFC() + folio.getNoFolio() + receptor.getRFC() + ".xml");
-                
+
                 //ALMACENAMIENTO DEL XML EN LA BASE DE DATOS DE ISFE
                 String sqlFactura = "instert into factura (facturaXML,formaPago,idUsuario,idFolio,nombreXML) values (" + fXML + ",'" + f.getFormaDePago() + "'," + aux + "," + idFolio + ",'" + emisor.getRFC() + folio.getNoFolio() + receptor.getRFC() + "');";
                 s.consulta(sqlFactura);
                 fXML.delete();
                 out.println("Factura generada exitosamente, y se ha enviado al correo:\n " + emisor.getCorreo());
-                
+
                 //VARIABLES AUXILIARES PARA CONSULTAS SQL
                 idFolioPDF = idFolio;
                 idUsuario = aux;
@@ -283,7 +283,7 @@ public class Factura extends HttpServlet {
                 while ((b = is.read()) != -1) {
                     fos.write(b);
                 }
-                
+
                 //GENERACIÓN DEL PDF (FACTURA IMPRESA) PARA VISUALIZARLO EN LA PAGINA WEB
                 File pdf = PDF.generarArchivoPDF(xml, "/ISFE-20110020/resources/xslt/", rsPDF.getString("nombreXML") + ".pdf");
                 PDF.visualizarPDF(pdf, response, request);
