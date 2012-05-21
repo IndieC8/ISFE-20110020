@@ -48,6 +48,8 @@ public class Cifrado {
      * @throws SecurityException 
      */
     private static byte[] descifrarLlavePrivada(byte[] LlavePrivadaCifrada,String Password) throws IOException,SecurityException{
+        if(Security.getProvider("BC")==null)
+            Security.addProvider(new BouncyCastleProvider());
         ASN1InputStream ais=new ASN1InputStream(new ByteArrayInputStream(LlavePrivadaCifrada));
         ASN1Sequence as=(ASN1Sequence)ais.readObject();
         EncryptedPrivateKeyInfo epki=new EncryptedPrivateKeyInfo(as);
@@ -73,6 +75,8 @@ public class Cifrado {
      * @return Parametros de cifrado necesarias para descifrar la llave privada
      */
     private static CipherParameters getParametrosCifrado(EncryptedPrivateKeyInfo epki, char[] Password){
+        if(Security.getProvider("BC")==null)
+            Security.addProvider(new BouncyCastleProvider());
         ASN1Sequence as=(ASN1Sequence)epki.getEncryptionAlgorithm().getParameters();
         PBES2Parameters pbe2p=new PBES2Parameters(as);
         PBKDF2Params pbkdf2p=PBKDF2Params.getInstance(pbe2p.getKeyDerivationFunc().getParameters());
@@ -94,6 +98,8 @@ public class Cifrado {
      * @throws SecurityException 
      */
     public static PrivateKey getLlavePrivada(byte[] LlavePrivadaCifrada,String Password) throws IOException,SecurityException, NoSuchProviderException{
+        if(Security.getProvider("BC")==null)
+            Security.addProvider(new BouncyCastleProvider());
         try{
             KeyFactory kf=KeyFactory.getInstance("RSA", "BC");
             PKCS8EncodedKeySpec p8ekp=new PKCS8EncodedKeySpec(descifrarLlavePrivada(LlavePrivadaCifrada,Password));
@@ -115,6 +121,8 @@ public class Cifrado {
      * @param LlavePrivada descifrada de la FIEL
      */
     public static void eliminarLlavePrivada(PrivateKey LlavePrivada){
+        if(Security.getProvider("BC")==null)
+            Security.addProvider(new BouncyCastleProvider());
         byte[] datosLlave=LlavePrivada.getEncoded();
         try{
             SecureRandom sr=SecureRandom.getInstance("RSA");
@@ -134,6 +142,8 @@ public class Cifrado {
      * @throws SecurityException 
      */
     public static String firmar(PrivateKey LlavePrivada,byte[] datos) throws SecurityException{
+        if(Security.getProvider("BC")==null)
+            Security.addProvider(new BouncyCastleProvider());
         try{
             Signature s=Signature.getInstance("SHA1withRSA", "BC");
             s.initSign(LlavePrivada);
@@ -160,6 +170,8 @@ public class Cifrado {
      * @return digesto de los datos recibidos
      */
     public static String digerir(byte[] datos){
+        if(Security.getProvider("BC")==null)
+            Security.addProvider(new BouncyCastleProvider());
         try{
             MessageDigest digesto=MessageDigest.getInstance("SHA1","BC");
             digesto.update(datos);
