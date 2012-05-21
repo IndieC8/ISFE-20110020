@@ -7,7 +7,9 @@
 <%@page import="org.w3c.dom.Document"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@ page language="java" import="dao.*" %>
-
+<%
+    String nombre = "";
+%>
 <!DOCTYPE html>
 <html>
     <head>
@@ -54,6 +56,18 @@
                     }
                 });
             });
+            
+            
+            function SubirCer(){
+                $.ajax({
+                    url: "SubirArchivo.jsp",
+                    type: "POST",
+                    data: "",
+                    success: function(data){
+                        alert(data);
+                    }
+                });
+            }
             
         </script>
 
@@ -266,42 +280,30 @@
                         <div id="tabs-2">
                             <label> Selecciona los archivos de FIEL y CSD a subir </label>
                             <br><br>
-                            <table width="60%" >
-                                <form method="post" enctype="multipart/form-data" id="subirFIEL">
+                            <form method="post" action="SubirArchivo" name="upform" enctype="multipart/form-data">
+                                <table width="60%" >
                                     <tr>
-                                        <td width="30%">
+                                        <td width="40%">
                                             Archivo .KEY de la FIEL
-                                            <input type="file" id="archivoREQ" onclick="LimpiarError()" />
+                                            <input type="file" name="fileupload" id="archivoREQ" onclick="LimpiarError()" />
+                                            <input type="hidden" name="mucho" value="upload"/>
                                             <label id="ErrorArchivoREQ"></label>     
                                         </td>
 
-                                        <td>
-                                            <input type="button" value="&nbsp; &nbsp; Subir FIEL &nbsp; &nbsp;" name="subirFIEL" onclick="SubirKEY()" class="ui-button ui-widget ui-state-default ui-corner-all" role="button" aria-disabled="false"/>
-                                        </td>
-                                    </tr>     
-                                </form>
-                            </table>
-                            <br>
-                            <br>
-                            <br>
-                            <br>
-                            <table width="60%">
-                                <form method="post" action="SubirArchivo.jsp" name="upform" enctype="multipart/form-data">
-                                 <tr>
-                                        <td width="30%">
+                                        <td width="40%">
                                             Archivo .CER del CSD
-                                            <input type="file" name="uploadfile" value="upload"  id="archivoCER" onclick="LimpiarError()">
+                                            <input type="file" name="uploadfile" id="archivoCER" onclick="LimpiarError()"/>
+                                            <input type="hidden" name="todo" value="upload"/>
                                             <label id="ErrorArchivoCER"></label>
                                         </td>
-
-                                        <td>
-                                            <input type="hidden" name="todo" value="upload"/>
-                                            <input type="submit" value=" &nbsp; &nbsp; Subir CSD &nbsp; &nbsp;" name="subirCSD" class="ui-button ui-widget ui-state-default ui-corner-all" role="button" aria-disabled="false"/>
-                                        </td>
-
                                     </tr>
-                                </form>
-                            </table>
+                                </table>
+                                <br/><br/>
+                                <div align="right">
+                                    <input type="hidden" name="registro" value="registro"/>
+                                    <input type="submit" value="&nbsp; &nbsp; Subir Archivos &nbsp; &nbsp;" name="subirCSD" class="ui-button ui-widget ui-state-default ui-corner-all" role="button" aria-disabled="false"/>
+                                </div>
+                            </form>
                             <script type="text/javascript">
                                                                                          
                                 $(function(){

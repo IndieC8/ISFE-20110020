@@ -60,6 +60,10 @@
         <servlet-name>FacturaImprimible</servlet-name>
         <servlet-class>dao.FacturaImprimible</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>SubirArchivo</servlet-name>
+        <servlet-class>dao.SubirArchivo</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>ObtenerEstado</servlet-name>
         <url-pattern>/ObtenerEstado</url-pattern>
@@ -117,8 +121,8 @@
         <url-pattern>/uploadFichero</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
-        <servlet-name>FacturaImprimible</servlet-name>
-        <url-pattern>/FacturaImprimible</url-pattern>
+        <servlet-name>SubirArchivo</servlet-name>
+        <url-pattern>/SubirArchivo</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>
