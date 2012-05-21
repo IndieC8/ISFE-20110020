@@ -5,21 +5,19 @@
 --%>
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
-<%!
-    String contribuyente = "";
-    String id = "" ;
+<%!    String contribuyente = "";
+    String id = "";
 %>
 <%
     HttpSession sesionOk = request.getSession();
     if (sesionOk.getAttribute("contribuyente") == null) {
-        %>
-        <jsp:forward page="/index.jsp">
-            <jsp:param name="error" value="Es obligatorio identificarse"></jsp:param>
-        </jsp:forward>
-        <%
-    } else {
-        contribuyente = (String) sesionOk.getAttribute("contribuyente");//Recoge la session
-        id = (String) sesionOk.getAttribute("identificador");//Recoge la session
+%>
+<jsp:forward page="/index.jsp">
+    <jsp:param name="error" value="Es obligatorio identificarse"></jsp:param>
+</jsp:forward>
+<%        } else {
+    contribuyente = (String) sesionOk.getAttribute("contribuyente");//Recoge la session
+    id = (String) sesionOk.getAttribute("identificador");//Recoge la session
 %>
 
 <!DOCTYPE html>
@@ -44,7 +42,7 @@
                                                                            
             $(function(){
                 $("#archivoREQAdministrar").MultiFile({
-                    accept:'req', max:1, STRING: {
+                    accept:'key', max:1, STRING: {
                         remove:'X',
                         selected:'Selecionado: $file',
                         denied:'REQ/Archivo de extención $ext invalido!',
@@ -81,7 +79,7 @@
                         <li><a href="../Usar.jsp"><img src="../images/icons/valida_ico.png" alt=""/>¿C&oacute;mo usar ISFE?</a></li>
                         <li><a href="../perfil.jsp" id="current"><img src="../images/icons/perfil_ico.png" alt=""/> Perfil</a>
                             <ul>
-                               <!-- <li><a href="../perfil/consultarPerfil.jsp">Consultar Perfil</a></li>  -->
+                                <!-- <li><a href="../perfil/consultarPerfil.jsp">Consultar Perfil</a></li>  -->
                                 <li><a href="../perfil/modificarPerfil.jsp">Modificar Perfil</a></li>
                                 <li><a href="../perfil/administrarFIELyCSD.jsp">Administrar FIEL y CSD</a></li>
                                 <li><a href="../perfil/administrarClientes.jsp">Administrar Clientes</a></li>
@@ -93,7 +91,7 @@
                                 <li><a href="../factura/generarFacturaImprimible.jsp">Generar Factura Imprimible</a></li>
                             </ul>
                         </li>                       
-                        <li><a href="../cerrar.jsp"><img src="../images/icons/ingreso_ico.png"/> Cerrar Sesión &nbsp; &nbsp; <% out.println(contribuyente); %></a></li>
+                        <li><a href="../cerrar.jsp"><img src="../images/icons/ingreso_ico.png"/> Cerrar Sesión &nbsp; &nbsp; <% out.println(contribuyente);%></a></li>
                     </ul>
                 </div>
                 <!-- Termina Menu -->
@@ -110,39 +108,43 @@
                             <br/>
                             <label class="Instrucciones"> Selecciona el archivo FIEL</label>
                             <br/>
-                            <table width="60%">
-                                <form method="post" enctype="multipart/form-data" id="subirFIELAdministrar">
+                            <form method="post" action="../SubirArchivo" name="upform" id="subirFIELAdministrar" enctype="multipart/form-data">
+                                <table width="60%">
                                     <tr>
                                         <td width="30%">
-                                            <input type="file" id="archivoREQAdministrar" onclick="LimpiarError()" />
+                                            <input type="file" name="fileupload" id="archivoREQAdministrar" onclick="LimpiarError()" />
+                                            <input type="hidden" name="mucho" value="upload"/>
                                             <label id="ErrorArchivoREQ"></label>
                                         </td>
 
                                         <td>
-                                            <input type="button" value=" &nbsp; Subir FIEL &nbsp;" name="subirFIEL" class="ui-button ui-widget ui-state-default ui-corner-all" role="button" aria-disabled="false"/>
+                                            <input type="hidden" name="registro" value="fiel"/>
+                                            <input type="submit" value="&nbsp; &nbsp; Subir FIEL &nbsp; &nbsp;" name="subirFIEL" class="ui-button ui-widget ui-state-default ui-corner-all" role="button" aria-disabled="false"/>
                                         </td>
                                     </tr>
-                                </form>
-                            </table>
+                                </table>
+                            </form>
                         </div>
                         <div id="tabs-2">
                             <br/>
-                            <label class="Instrucciones"> Selecciona el archivo FIEL</label>
+                            <label class="Instrucciones"> Selecciona el archivo CER</label>
                             <br/>
+                            <form method="post" action="../SubirArchivo" name="upform" id="subirCSDAdministrar" enctype="multipart/form-data">
                             <table width="60%">
-                                <form method="post" enctype="multipart/form-data" id="subirCSDAdministrar">
-                                    <tr>
+                                   <tr>
                                         <td width="30%">
-                                            <input type="file" id="archivoCERAdministrar" onclick="LimpiarError()" />
+                                            <input type="file" name="uploadfile" id="archivoCERAdministrar" onclick="LimpiarError()"/>
+                                            <input type="hidden" name="todo" value="upload"/>
                                             <label id="ErrorArchivoCER"></label>
                                         </td>
 
                                         <td>
-                                            <input type="button" value=" &nbsp; Subir CSD &nbsp;" name="subirCSD" class="ui-button ui-widget ui-state-default ui-corner-all" role="button" aria-disabled="false"/>
+                                            <input type="hidden" name="registro" value="certificado"/>
+                                            <input type="submit" value="&nbsp; &nbsp; Subir CSD &nbsp; &nbsp;" name="subirCSD" class="ui-button ui-widget ui-state-default ui-corner-all" role="button" aria-disabled="false"/>
                                         </td>
                                     </tr>
-                                </form>
                             </table>
+                                </form>
                         </div>
                     </div>
                     <br><br>
