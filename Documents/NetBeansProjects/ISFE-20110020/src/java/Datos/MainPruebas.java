@@ -22,7 +22,7 @@ public class MainPruebas {
     public static void main(String[] args) throws FileNotFoundException, IOException, CertificateException, Exception{
         try {
             //CERTIFICADO
-            File fCSD=new File("CSD-ISFE.cer");
+            /**File fCSD=new File("CSD-ISFE.cer");
             InputStream isCSD=new FileInputStream(fCSD);
             byte[] bCSD=new byte[(int)fCSD.length()];
             int offset=0;
@@ -119,7 +119,7 @@ public class MainPruebas {
                System.out.println(l);
                 l=br.readLine();
             }
-            File fPDF=PDF.generarArchivoPDF(fXML, "", "F.pdf");
+            File fPDF=PDF.generarArchivoPDF(fXML, "", "F.pdf");*/
             /**EnvioMail em=new EnvioMail();
             em.EnvioMail("raul.hernandez.900519@gmail.com","PRUEBA XML","PRUEBA XML",fXML,f.getEmisor().getRFC()+f.getFolio().getNoFolio()+f.getReceptor().getRFC()+".xml");
             BufferedReader br=new BufferedReader(new FileReader(fXML));
@@ -133,6 +133,18 @@ public class MainPruebas {
             System.out.println();
             SAT sat=new SAT();
             System.out.println(sat.ValidarCadenaOriginal(cad));*/
+            String path="C:\\Users\\Natalia Hernández\\Documents\\Google Drive\\Cer_Sellos\\aaa010101aaa_csd_10.cer";
+            File fCSD=new File("CSD-ISFE.cer");
+            InputStream isCSD=new FileInputStream(fCSD);
+            byte[] bCSD=new byte[(int)fCSD.length()];
+            int offset=0;
+            int numRead=0;
+            while(offset<bCSD.length && (numRead=isCSD.read(bCSD, offset, bCSD.length-offset))>=0){
+                offset+=numRead;
+            }
+            String nCSD=Cifrado.obtenerNumeroCertificado(bCSD);
+            isCSD.close();
+            System.out.println(nCSD);
         } catch (Exception ex) {
             throw new Exception("",ex);
         }

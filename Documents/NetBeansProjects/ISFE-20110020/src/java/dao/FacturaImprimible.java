@@ -5,6 +5,7 @@
 package dao;
 
 import Datos.PDF;
+import Negocios.Cifrado.Cifrado;
 import java.io.*;
 import java.sql.Blob;
 import java.sql.ResultSet;
@@ -43,7 +44,8 @@ public class FacturaImprimible extends HttpServlet {
             if("Generar".equals(request.getParameter(""))){
                 try{
                     String idUsuario=request.getParameter("idUsuario");
-                    String nombreXML=request.getParameter("xml");
+                    String nombreXML=request.getParameter("nombreXML");
+                    idUsuario=Cifrado.decodificarBase64(idUsuario);
                     Sql s=new Sql();
                     String sql="select facturaXML from factura where idUsuario="+idUsuario+" and nombreXML='"+nombreXML+"';";
                     ResultSet rs;
@@ -85,6 +87,36 @@ public class FacturaImprimible extends HttpServlet {
                     Logger.getLogger(FacturaImprimible.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
+            else if("Clientes".equals(request.getParameter("Clientes"))){
+                String idUsuario=request.getParameter("idUsuario");
+                idUsuario=Cifrado.decodificarBase64(idUsuario);
+                String idCliente=request.getParameter("idCliente");
+                Sql s=new Sql();
+                String sql="select rfc from clientes where idUsuario="+idUsuario+" and idCliente="+idCliente;
+                ResultSet rs;
+                rs=s.consulta(sql);
+                while(rs.next()){//FORMATO DE VISTA POR DEFINIR
+                    String rfc=rs.getString("rfc");
+                }
+            }
+            else if("Facturas".equals(request.getParameter("Facturas"))){
+                String idUsuario=request.getParameter("idUsuario");
+                idUsuario=Cifrado.decodificarBase64(idUsuario);
+                String rfc=request.getParameter("rfc");
+                Sql s=new Sql();
+                String sql="select nombreXML from factura where idUsuario="+idUsuario+" and nombreXML like '%+"+rfc+"';";
+                ResultSet rs;
+                rs=s.consulta(sql);
+                while(rs.next()){//FORMATO DE VISTA POR DEFINIR
+                    String xml=rs.getString("nombreXML");
+                }
+            }
+        } catch (InstantiationException ex) {
+            Logger.getLogger(FacturaImprimible.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IllegalAccessException ex) {
+            Logger.getLogger(FacturaImprimible.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException ex) {
+            Logger.getLogger(FacturaImprimible.class.getName()).log(Level.SEVERE, null, ex);
         } finally {            
             out.close();
         }

@@ -1,5 +1,9 @@
 package dao;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.sql.*;
 
 
@@ -74,5 +78,45 @@ public class Sql {
             mensaje = e.getMessage();
         }
         return mensaje;
+    }
+    /**
+     * Método encargado de subir la Fiel a la base de datos 
+     * @param sql Instrucción para isnertar el archivo en la base de datos
+     * @param fiel Archivo a subir 
+     * @throws InstantiationException Si hay errores de instancia
+     * @throws IllegalAccessException Si hay errores de accesos ilegales
+     * @throws SQLException Si hay errores con instrucciones SQL
+     * @throws FileNotFoundExceptionSi hay errores con los archivos
+     * @throws IOException Sihay errores de entrada y salida de datos
+     */
+    public void insertarFiel(String sql,File fiel) throws InstantiationException, IllegalAccessException, SQLException, FileNotFoundException, IOException{
+        this.conectar();
+        PreparedStatement pst=conn.prepareStatement(sql);
+        pst.setString(1, null);
+        FileInputStream fis=new FileInputStream(fiel);
+        pst.setBinaryStream(2, fis, fiel.length());
+        pst.execute();
+        fis.close();
+    }
+    /**
+     * Método encargado de subir el CSD a la base de datos 
+     * @param sql Instrucción para isnertar el archivo en la base de datos
+     * @param noCSD Número del certificado a subir
+     * @param csd Archivo a subir 
+     * @throws InstantiationException Si hay errores de instancia
+     * @throws IllegalAccessException Si hay errores de accesos ilegales
+     * @throws SQLException Si hay errores con instrucciones SQL
+     * @throws FileNotFoundExceptionSi hay errores con los archivos
+     * @throws IOException Sihay errores de entrada y salida de datos
+     */
+    public void insertarCsd(String sql,String noCSD,File csd) throws InstantiationException, IllegalAccessException, SQLException, FileNotFoundException, IOException{
+        this.conectar();
+        PreparedStatement pst=conn.prepareStatement(sql);
+        pst.setString(1, null);
+        pst.setString(2, noCSD);
+        FileInputStream fis=new FileInputStream(csd);
+        pst.setBinaryStream(3, fis, csd.length());
+        pst.execute();
+        fis.close();
     }
 }
