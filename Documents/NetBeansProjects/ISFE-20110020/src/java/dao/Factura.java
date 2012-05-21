@@ -132,26 +132,30 @@ public class Factura extends HttpServlet {
                 String sqlRec = "select c.tipoPersona,c.nombreCliente,c.APaternoCliente,c.AMaternoCliente,c.razonCliente,c.rfc, d.codigoPostal, d.calleCliente,d.nombreLocalidad,d.nombreMunicipio, d.nombreEstado from cliente c, direccioncliente d where c.idUsuario = " + aux + " and d.idCliente = c.idCliente;";
                 ResultSet rsRec;//SQLException after end of result set
                 rsRec = s.consulta(sqlRec);
-                //out.println("2");
                 while (rsRec.next()) {
                     receptor.setTipoPersona(rsRec.getBoolean("tipoPersona"));
                     if (rsRec.getBoolean("tipoPersona") == false) {
+                        out.println("a");
                         receptor.setNombre(rsRec.getString("nombreCliente"));
                         receptor.setApMaterno(rsRec.getString("APaternoCliente"));
                         receptor.setApPaterno(rsRec.getString("AMaternoCliente"));
+                        out.println("b");
                     } else {
+                        out.println("c");
                         receptor.setRazonSocial(rsRec.getString("razonCliente"));
+                        out.println("d");
                     }
-
-                    receptor.setRFC(rs.getString("rfc"));
+                    out.println(rs.getString("rfc"));
+                    receptor.setRFC(rs.getString("rfc"));out.println("1");
                     //DIRECCION DEL RECEPTOR
-                    dReceptor.setCodigoPostal(rsRec.getString("codigoPostal"));
-                    dReceptor.setLocalidad(rsRec.getString("nombreLocalidad"));
-                    dReceptor.setMunicipio(rsRec.getString("nombreMunicipio"));
-                    dReceptor.setCalle(rsRec.getString("calle"));
+                    dReceptor.setCodigoPostal(rsRec.getString("codigoPostal"));out.println("2");
+                    dReceptor.setLocalidad(rsRec.getString("nombreLocalidad"));out.println("3");
+                    dReceptor.setMunicipio(rsRec.getString("nombreMunicipio"));out.println("4");
+                    dReceptor.setEstado(rsRec.getString("nombreEstado"));out.println("5");
+                    dReceptor.setCalle(rsRec.getString("calleCliente"));out.println("6");
                     receptor.setDireccion(dReceptor);
                 }
-
+                
                 //DATOS DE LA FACTURA (CONCEPTOS,SUBTOTAL,IVA,DESCUENTO,TOTAL,EXPEDICIÓN,ETC)
                 Datos.Factura f = new Datos.Factura();
                 int numProductos=Integer.parseInt(request.getParameter(""));//numero de productos que se recibiran
