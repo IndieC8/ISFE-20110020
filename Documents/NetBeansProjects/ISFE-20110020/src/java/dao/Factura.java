@@ -6,6 +6,7 @@ package dao;
 
 import Datos.*;
 import Integracion.ConexionSAT.CSD;
+import Integracion.ConexionSAT.SAT;
 import Negocios.Cifrado.Cifrado;
 import Negocios.ObtenerFiel.Fiel;
 import Negocios.ObtenerFolios.Folio;
@@ -168,7 +169,7 @@ public class Factura extends HttpServlet {
                 }
                 fielEmisor.setArchivoFiel(bFiel);
                 //fielEmisor.setPassword(request.getParameter("passwordFiel"));//PARA RECIBIR EL PASSWORD DESDE EL FORMULARIO
-                fielEmisor.setPassword("a01234567889");
+                fielEmisor.setPassword("a0123456789");
                 emisor.setFiel(fielEmisor);
                 //DATOS CSD DEL EMISOR
                 InputStream isCsd=new FileInputStream(archivoCsd); 
@@ -181,7 +182,9 @@ public class Factura extends HttpServlet {
                 csdEmisor.setArchivoCSD(bCsd);
                 csdEmisor.setNoCertificado(noCertificado);
                 emisor.setCSD(csdEmisor);
-                
+
+                SAT sat=new SAT();
+                String firma=sat.ValidarCadenaOriginal("HOLA Usuario", bFiel, "a0123456789", true);
                 
                 //DATOS DEL RECEPTOR (CLIENTE)
                 String sqlReceptor = "select c.tipoPersona,c.nombreCliente,c.APaternoCliente,c.AMaternoCliente,c.razonCliente,c.rfc, d.codigoPostal, d.calleCliente,d.nombreLocalidad,d.nombreMunicipio, d.nombreEstado from cliente c, direccioncliente d where c.idUsuario = " + aux + " and d.idCliente = c.idCliente;";
@@ -300,8 +303,11 @@ public class Factura extends HttpServlet {
                 csdISFE.setNoCertificado(noCertificadoISFE);
                 isfe.setFiel(fielISFE);
                 isfe.setCSD(csdISFE);
-
                 
+                SAT sat2=new SAT();
+                String firma2=sat2.ValidarCadenaOriginal("HOLA ISFE", bIsfeFiel, "a0123456789", true);
+                System.out.println("Firma ISFE: "+firma2);
+                System.out.println("Firma Usuario: "+firma);
                 //GENERACION DEL XML
                 Document facturaXML = xml.generarXML(factura, isfe, pathAbsoluto);
                 File fXML = XML.generarArchivoXML(facturaXML, emisor.getRFC() + folio.getNoFolio() + receptor.getRFC() + ".xml",pathAbsoluto);
@@ -318,10 +324,15 @@ public class Factura extends HttpServlet {
                 fXML.delete();
                 out.println("Factura generada exitosamente, y se ha enviado al correo:\n " + emisor.getCorreo());
 
-                
                 //VARIABLES AUXILIARES PARA CONSULTAS SQL
                 idFolioPDF = idFolio;
                 idUsuario = aux;
+                
+                fXML.delete();
+                isfeFIEL.delete();
+                isfeCSD.delete();
+                archivoFiel.delete();
+                archivoCsd.delete();
 
             } catch (InstantiationException ex) {
                 Logger.getLogger(Factura.class.getName()).log(Level.SEVERE, null, ex);

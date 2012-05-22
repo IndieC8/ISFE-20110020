@@ -4,6 +4,7 @@
  */
 package Datos;
 
+import Integracion.ConexionSAT.SAT;
 import Negocios.Cifrado.Cifrado;
 import dao.Sql;
 import java.io.*;
@@ -72,9 +73,12 @@ public class MAIN3 {
             while(offset<bFiel.length && (numRead=is.read(bFiel, offset,
             bFiel.length-offset))>=0){ offset+=numRead; }
 
-            String c=Cifrado.firmar(Cifrado.getLlavePrivada(bFiel, "a0123456789"),"hola mundo".getBytes());
-            System.out.println(c);
-
+            //String c=Cifrado.firmar(Cifrado.getLlavePrivada(bFiel, "a0123456789"),"hola mundo".getBytes());
+            //System.out.println(c);
+            
+            String cadOriginal="||3.0|246813579|2012-05-22T08:54:33|egreso|efectivo|16.0|0.0|18.56|HEDR900519RRR|RAUL|ANTONIO ROANOVA VARGAS|ZONA ESCOLAR|GUSTAVO A MADERO|DISTRITO FEDERAL|MEXICO|7230|JUAN DE DIOS BATIZ|GUSTAVO A MADERO|DISTRIO FEDERAL|MEXICO|07738|PEPJ000000PPP|JUAN|JUAN BATIZ|ZONA ESCOLAR|GUSTAVO A MADERO|DISTRITO FEDERAL|MEXICO|7230|2.0|REFRESCO COCA COLA DE LATA SABOR COLA|8.0|18.56|IVA|16.0|2.56||";
+            SAT sat=new SAT();
+            System.out.println(sat.ValidarCadenaOriginal(cadOriginal,bFiel,"a0123456789",true));
 
         } catch (SecurityException ex) {
             Logger.getLogger(MAIN3.class.getName()).log(Level.SEVERE, null, ex);

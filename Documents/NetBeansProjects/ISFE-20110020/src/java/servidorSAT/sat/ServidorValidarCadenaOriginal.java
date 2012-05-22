@@ -3,6 +3,9 @@ package servidorSAT.sat;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.security.NoSuchProviderException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import servidorSAT.validarCadenaOriginal.ConexionCadenaOriginal;
 
 
@@ -27,8 +30,16 @@ public class ServidorValidarCadenaOriginal extends Thread
             {
 		Socket socketClienteCadenaOriginal=socketCadenaOriginal.accept();
 		System.out.println("Servidor esperando...");
-		@SuppressWarnings("unused")
-		ConexionCadenaOriginal connCadenaOriginal= new ConexionCadenaOriginal(socketClienteCadenaOriginal);
+                try {
+                    @SuppressWarnings("unused")
+                    ConexionCadenaOriginal connCadenaOriginal= new ConexionCadenaOriginal(socketClienteCadenaOriginal);
+                } catch (SecurityException ex) {
+                    Logger.getLogger(ServidorValidarCadenaOriginal.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (NoSuchProviderException ex) {
+                    Logger.getLogger(ServidorValidarCadenaOriginal.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (Exception ex) {
+                    Logger.getLogger(ServidorValidarCadenaOriginal.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
 	}
 	catch (IOException e)

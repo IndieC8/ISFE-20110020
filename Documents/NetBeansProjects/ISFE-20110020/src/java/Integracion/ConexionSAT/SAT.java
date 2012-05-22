@@ -1,9 +1,7 @@
 package Integracion.ConexionSAT;
 
 import Negocios.ObtenerFolios.Folio;
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-import java.io.IOException;
+import java.io.*;
 import java.net.Socket;
 import java.net.UnknownHostException;
 
@@ -26,21 +24,24 @@ public class SAT{
      * @throws IOException maneja las excepciones de entrada-salida que se puedan
      * presentar al momento del envio de la informacion
      */
-    public boolean ValidarCadenaOriginal(String cadenaOriginal) throws UnknownHostException, IOException
+    public String ValidarCadenaOriginal(String cadenaOriginal, byte[] BytesLlavePrivada, String password, boolean tipo) throws UnknownHostException, IOException, ClassNotFoundException
     {
         int puertoServicio=8090;
         Socket socket = new Socket("localhost", puertoServicio);
-        DataInputStream entrada = new DataInputStream(socket.getInputStream());
-        DataOutputStream salida = new DataOutputStream(socket.getOutputStream());
-        salida.writeUTF(cadenaOriginal);
-        Object datos = entrada.readBoolean();
-        if(datos.equals(datos) ==true)
+        ObjectOutputStream salida = new ObjectOutputStream(socket.getOutputStream());
+        ObjectInputStream entrada = new ObjectInputStream(socket.getInputStream());
+        salida.writeObject(cadenaOriginal);
+        salida.writeObject(BytesLlavePrivada);
+        salida.writeObject(password);
+        salida.writeObject(new Boolean(tipo));
+        Object datos = entrada.readObject();
+        if(datos.toString()!="NOGENERADO")
         {
-            return true;
+            return datos.toString();
         }
         else
         {
-            return false;
+            return datos.toString();
         }
     }
     /**

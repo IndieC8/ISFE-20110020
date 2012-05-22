@@ -49,26 +49,20 @@ public class XML extends Formato{
     private Document crearXML(Factura factura,CFDI cfdi,String path) throws IOException, SecurityException, NoSuchProviderException, Exception{
         
         String cadOriginal = CadenaOriginal.generarCadenaOriginal(path+"cadOriginalCFDI_3.xslt",cfdi.generarCFDI());
-        System.out.println(cadOriginal);
+        System.out.println("CO:"+cadOriginal);
         SAT sat=new SAT();
-        //System.out.println(sat.ValidarCadenaOriginal(cadOriginal));
-        //System.out.println(cadOriginal);
-        //BarraBidimensional.generarBarraDimensional(cadOriginal, "PRUEBA");
-        PrivateKey LlavePrivada;
-        LlavePrivada=Cifrado.getLlavePrivada(factura.getEmisor().getFiel().getArchivoFiel(), factura.getEmisor().getFiel().getPassword());
-        Cifrado.eliminarLlavePrivada(LlavePrivada);
-        String sello = Cifrado.firmar(LlavePrivada, cadOriginal.getBytes("UTF-8"));
+        System.out.println("Fiel:"+factura.getEmisor().getFiel().getArchivoFiel());
+        System.out.println("PSWD:"+factura.getEmisor().getFiel().getPassword());
+        String sello = sat.ValidarCadenaOriginal(cadOriginal,factura.getEmisor().getFiel().getArchivoFiel(),factura.getEmisor().getFiel().getPassword(),true);
+        System.out.println("Sello: "+sello);
         factura.setCadenaCSD(sello);
         return cfdi.agregarSello(sello);
     }
     private Document timbrarCFDI(Factura factura,CFDI cfdi,ISFE isfe,String path) throws SecurityException, UnsupportedEncodingException, NoSuchProviderException, IOException, Exception{
         Timbre timbre=new Timbre();
         String cadTimbre = CadenaOriginal.generarCadenaOriginal(path+"cadOriginalTFD_1.xslt", timbre.agregarTimbre(factura, isfe));
-        System.out.println(cadTimbre);
-        PrivateKey key;
-        key = Cifrado.getLlavePrivada(isfe.getFiel().getArchivoFiel(), isfe.getFiel().getPassword());
-        Cifrado.eliminarLlavePrivada(key);
-        String sello = Cifrado.firmar(key, cadTimbre.getBytes("UTF-8"));
+        SAT sat=new SAT();
+        String sello = sat.ValidarCadenaOriginal(cadTimbre,isfe.getFiel().getArchivoFiel(),isfe.getFiel().getPassword(),false);
 	timbre.agregarSello(sello);
 	return cfdi.agregarTimbre(timbre.obtenerTimbre());
     }

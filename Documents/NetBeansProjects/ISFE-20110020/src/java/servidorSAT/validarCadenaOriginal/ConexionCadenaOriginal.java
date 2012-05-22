@@ -1,10 +1,8 @@
 package servidorSAT.validarCadenaOriginal;
 
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-import java.io.EOFException;
-import java.io.IOException;
+import java.io.*;
 import java.net.Socket;
+import java.security.NoSuchProviderException;
 
 /**
  * Clase que se encarga de la conexion entre cliente y servidor para la validacion de la
@@ -14,8 +12,8 @@ import java.net.Socket;
  */
 public class ConexionCadenaOriginal
 {
-	DataInputStream entrada;
-	DataOutputStream salida;
+	ObjectInputStream entrada;
+	ObjectOutputStream salida;
 	Socket socketCliente;
 
 	/**
@@ -23,13 +21,13 @@ public class ConexionCadenaOriginal
 	 * @param socketCliente parametro que se refiere al socket con el que se realizara la conexion
 	 */
     @SuppressWarnings("OverridableMethodCallInConstructor")
-	public ConexionCadenaOriginal(Socket socketCliente)
+	public ConexionCadenaOriginal(Socket socketCliente) throws SecurityException, NoSuchProviderException, Exception
 	{
 		try
 		{
 			this.socketCliente=socketCliente;
-			entrada = new DataInputStream(socketCliente.getInputStream());
-			salida = new DataOutputStream(socketCliente.getOutputStream());
+			entrada = new ObjectInputStream(socketCliente.getInputStream());
+			salida = new ObjectOutputStream(socketCliente.getOutputStream());
 			this.validar();
 		}
 		catch (IOException e)
@@ -42,24 +40,27 @@ public class ConexionCadenaOriginal
 	 * Metodo que valida la cadena original y envia un booleano indicando si la cadena es valida
 	 * o no
 	 */
-	public void validar()
+	public void validar() throws SecurityException, NoSuchProviderException, Exception
 	{
 		ValidaCadenas valida = new ValidaCadenas();
 		try
 		{
-			Object cadenaOriginal=entrada.readUTF();
-			if(valida.validaCadenaOriginal(cadenaOriginal)==true)
+			Object cadenaOriginal=entrada.readObject();
+                        byte[] llave = (byte[]) entrada.readObject();
+                        String password=(String) entrada.readObject();
+                        Boolean tipo= (Boolean) entrada.readObject();
+			if(!"NOGENERADO".equals(valida.validaCadenaOriginal(cadenaOriginal,llave,password,tipo)))
 			{
-				salida.writeBoolean(true);
+				salida.writeObject(valida.validaCadenaOriginal(cadenaOriginal, llave, password, tipo));
 				System.out.println("La cadena original ingresada ES valida");
 			}
 			else
 			{
-				salida.writeBoolean(false);
+				salida.writeObject("NOGENERADO");
 				System.out.println("La cadena original ingresada NO es valida");
 			}
 
-			salida.writeUTF(cadenaOriginal+"Esta es la cadena original recibida");
+			salida.writeObject(cadenaOriginal+"Esta es la cadena original recibida");
 			socketCliente.close();
 		}
 		catch (EOFException e)
