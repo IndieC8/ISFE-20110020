@@ -1,15 +1,12 @@
 package dao;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
+import java.io.*;
 import java.sql.*;
 
 
 /**
- * Clase que se encarga del manejo de la base de datos de ISFE 
- * (consultas,inserciones, eliminaciones, etc) 
+ * Clase que se encarga del manejo de la base de datos de ISFE
+ * (consultas,inserciones, eliminaciones, etc)
  * @author Trabajo Terminal 20110020 Implementación del Servicio de Facturación Electrónica acorde a la reforma de enero de 2011
  */
 public class Sql {
@@ -24,10 +21,10 @@ public class Sql {
      * @throws InstantiationException si hay errores para crear una instancia
      * @throws IllegalAccessException si hay errores de acceso
      */
-    public void conectar() throws InstantiationException, IllegalAccessException {        
+    public void conectar() throws InstantiationException, IllegalAccessException {
         try {
             Class.forName(driver).newInstance();
-            conn = DriverManager.getConnection(url, usuario, password);            
+            conn = DriverManager.getConnection(url, usuario, password);
         } catch (SQLException e) {
         } catch (ClassNotFoundException ex) {
         }
@@ -63,14 +60,32 @@ public class Sql {
      * contrario, el mensaje de error
      */
     public String ejecuta(String sql) {
-        String mensaje = null;        
+        String mensaje = null;
         try {
-            
+
             this.conectar();
             Statement st = conn.createStatement();
             st.execute(sql);
-            
-        } catch (IllegalAccessException e) {  
+
+        } catch (IllegalAccessException e) {
+            mensaje = e.getMessage();
+        } catch (InstantiationException e) {
+            mensaje = e.getMessage();
+        } catch (SQLException e) {
+            mensaje = e.getMessage();
+        }
+        return mensaje;
+    }
+
+    public String ejecutaUpdate(String sql) {
+        String mensaje = null;
+        try {
+
+            this.conectar();
+            Statement st = conn.createStatement();
+            st.execute(sql);
+
+        } catch (IllegalAccessException e) {
             mensaje = e.getMessage();
         } catch (InstantiationException e) {
             mensaje = e.getMessage();
@@ -80,9 +95,9 @@ public class Sql {
         return mensaje;
     }
     /**
-     * Método encargado de subir la Fiel a la base de datos 
+     * Método encargado de subir la Fiel a la base de datos
      * @param sql Instrucción para isnertar el archivo en la base de datos
-     * @param fiel Archivo a subir 
+     * @param fiel Archivo a subir
      * @throws InstantiationException Si hay errores de instancia
      * @throws IllegalAccessException Si hay errores de accesos ilegales
      * @throws SQLException Si hay errores con instrucciones SQL
@@ -99,10 +114,10 @@ public class Sql {
         pst.execute();
     }
     /**
-     * Método encargado de subir el CSD a la base de datos 
+     * Método encargado de subir el CSD a la base de datos
      * @param sql Instrucción para isnertar el archivo en la base de datos
      * @param noCSD Número del certificado a subir
-     * @param csd Archivo a subir 
+     * @param csd Archivo a subir
      * @throws InstantiationException Si hay errores de instancia
      * @throws IllegalAccessException Si hay errores de accesos ilegales
      * @throws SQLException Si hay errores con instrucciones SQL

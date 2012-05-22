@@ -1,5 +1,6 @@
 package Negocios.GenerarFactura;
 
+import java.io.File;
 import org.jdom.Document;
 import org.jdom.transform.XSLTransformException;
 import org.jdom.transform.XSLTransformer;
@@ -19,7 +20,8 @@ public class CadenaOriginal {
         try {
             System.setProperty("javax.xml.transform.TransformerFactory","net.sf.saxon.TransformerFactoryImpl");   
             XSLTransformer transformer;
-            transformer = new XSLTransformer(xslt);
+            File fXSLT=new File(xslt);
+            transformer = new XSLTransformer(fXSLT);
             return transformer.transform(xml).getRootElement().getText();
         } catch (XSLTransformException ex) {
             System.err.println("ERROR: No se ha podido transformar el documento y el XSLT");

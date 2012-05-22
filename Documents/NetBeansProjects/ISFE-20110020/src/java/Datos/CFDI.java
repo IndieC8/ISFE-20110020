@@ -56,7 +56,7 @@ public class CFDI{
         if (factura.getFolio() != null) {
                 comprobante.setAttribute("folio", factura.getFolio().getNoFolio() + "");
         }
-        comprobante.setAttribute("fecha", XML.formatearFecha(new Date()))
+        comprobante.setAttribute("fecha", XML.formatearFecha(factura.getFecha()))
                     .setAttribute("sello", "selloCFD")
                     .setAttribute("formaDePago", factura.getFormaDePago())
                     .setAttribute("noCertificado", emisor.getCSD().getNoCertificado())

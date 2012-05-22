@@ -46,8 +46,7 @@ public class XML extends Formato{
         xml=timbrarCFDI(f,cfdi,isfe,path);
         return xml;
     }
-    private Document crearXML(Factura factura,CFDI cfdi,String path) throws IOException, SecurityException, NoSuchProviderException{
-        System.out.println("PATH XSLT:    "+path+"cadOriginalCFDI_3.xslt");
+    private Document crearXML(Factura factura,CFDI cfdi,String path) throws IOException, SecurityException, NoSuchProviderException, Exception{
         
         String cadOriginal = CadenaOriginal.generarCadenaOriginal(path+"cadOriginalCFDI_3.xslt",cfdi.generarCFDI());
         System.out.println(cadOriginal);
@@ -57,6 +56,7 @@ public class XML extends Formato{
         //BarraBidimensional.generarBarraDimensional(cadOriginal, "PRUEBA");
         PrivateKey LlavePrivada;
         LlavePrivada=Cifrado.getLlavePrivada(factura.getEmisor().getFiel().getArchivoFiel(), factura.getEmisor().getFiel().getPassword());
+        Cifrado.eliminarLlavePrivada(LlavePrivada);
         String sello = Cifrado.firmar(LlavePrivada, cadOriginal.getBytes("UTF-8"));
         factura.setCadenaCSD(sello);
         return cfdi.agregarSello(sello);
@@ -64,9 +64,10 @@ public class XML extends Formato{
     private Document timbrarCFDI(Factura factura,CFDI cfdi,ISFE isfe,String path) throws SecurityException, UnsupportedEncodingException, NoSuchProviderException, IOException, Exception{
         Timbre timbre=new Timbre();
         String cadTimbre = CadenaOriginal.generarCadenaOriginal(path+"cadOriginalTFD_1.xslt", timbre.agregarTimbre(factura, isfe));
-        //System.out.println(cadTimbre);
+        System.out.println(cadTimbre);
         PrivateKey key;
         key = Cifrado.getLlavePrivada(isfe.getFiel().getArchivoFiel(), isfe.getFiel().getPassword());
+        Cifrado.eliminarLlavePrivada(key);
         String sello = Cifrado.firmar(key, cadTimbre.getBytes("UTF-8"));
 	timbre.agregarSello(sello);
 	return cfdi.agregarTimbre(timbre.obtenerTimbre());
@@ -127,12 +128,12 @@ public class XML extends Formato{
      * @throws Exception
      */
     @SuppressWarnings("CallToThreadDumpStack")
-    public static File generarArchivoXML(Document xml,String nombre){
+    public static File generarArchivoXML(Document xml,String nombre,String path){
         File fXML=null;
         FileOutputStream fos=null;
         try{
             XMLOutputter out=new XMLOutputter(Format.getPrettyFormat());
-            fXML=new File(nombre);
+            fXML=new File(path+nombre);
             fos=new FileOutputStream(fXML);
             out.output(xml, fos);
         }catch(IOException ex){
