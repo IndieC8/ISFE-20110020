@@ -1,7 +1,7 @@
 <%-- 
-    Document   : administrarFIELyCSD
-    Created on : 1/02/2012, 11:13:09 AM
-    Author     : ISFE
+    Document   : Generar Factura Imprimible
+    Created on : 23/01/2012, 03:09:10 PM
+    Author     : Trabajo Terminal 20110020 Implementación del Servicio de Facturación Electrónica acorde a la reforma de enero de 2011
 --%>
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
@@ -19,49 +19,66 @@
     contribuyente = (String) sesionOk.getAttribute("contribuyente");//Recoge la session
     id = (String) sesionOk.getAttribute("identificador");//Recoge la session
 %>
-
 <!DOCTYPE html>
 <html>
     <head>
-        <title>ISFE - Administrar FIEL y CSD</title>
+        <title>ISFE - Estado de la Factura</title>
         <link rel="stylesheet" type="text/css" href="../estilo/style.css" />
         <script type="text/javascript" src="../js/jquery-1.7.1.min.js"></script>
         <script type="text/javascript" src="../js/jquery-ui-1.8.17.custom.min.js"></script>
-        <script type="text/javascript" src="../js/jquery.MultiFile.js"></script> <!-- Validar los archivos a subir -->
-        <script type="text/javascript" src="../js/jquery.menu.js"></script>
+        <script src="../../ui/jquery.ui.core.js"></script>
+        <script src="../../ui/jquery.ui.widget.js"></script>
+        <script src="../../ui/jquery.ui.datepicker.js"></script>
+
+
         <script type="text/javascript">
                 
-                
             $(function(){
+
                 // Tabs
                 $('#tabs').tabs();
 
-							
+				
             });
-                                
-                                                                           
-            $(function(){
-                $("#archivoREQAdministrar").MultiFile({
-                    accept:'key', max:1, STRING: {
-                        remove:'X',
-                        selected:'Selecionado: $file',
-                        denied:'REQ/Archivo de extención $ext invalido!',
-                        duplicate:'Archivo ya selecionado:\n$file!'
-
-                    }
+                        
+            $(function() {
+                $( "#datepicker" ).datepicker();
+                
+                $( "#format" ).change(function() {
+                    $( "#datepicker" ).datepicker( "option", "dateFormat", $( this ).val() );
                 });
-                                    
-                $("#archivoCERAdministrar").MultiFile({
-                    accept:'cer', max:1, STRING: {
-                        remove:'X',
-                        selected:'Selecionado: $file',
-                        denied:'CER/Archivo de extención $ext invalido!',
-                        duplicate:'Archivo ya selecionado:\n$file!'
-
-                    }
-                });
+                
+    
             });
-              
+        
+            function Buscar(){
+                $("#ErrorFechaElaboracion").text("");
+                var fecha = $("#datepicker").val();
+                if(fecha != ""){
+                    var aux = fecha.split("/");
+                    fecha = aux[2]+aux[0]+aux[1];
+                    $.ajax({
+                        url: "../Impresa",
+                        type: "POST",
+                        data: "Factura=Buscar&idUsuario=<%=id%>&Fecha="+fecha,
+                        success: function(data){
+                            if(data == 0){
+                                $("#ErrorFechaElaboracion").text("No hay factura con esa fecha!");
+                            }else{
+                                $("#ResultadoFacturas").html(data);
+                                $("#ResultadoFacturas").show();
+                            }
+                        }
+                    });
+                    
+                }else{
+                    $("#ErrorFechaElaboracion").text("Ingresa la fecha de elaboración");
+                }
+            }
+            
+            function Limpiar(){
+                $("#ErrorFechaElaboracion").text("");
+            }
         </script>
     </head>
     <body>
@@ -79,7 +96,7 @@
                         <li><a href="../Usar.jsp"><img src="../images/icons/valida_ico.png" alt=""/>¿C&oacute;mo usar ISFE?</a></li>
                         <li><a href="../perfil.jsp" id="current"><img src="../images/icons/perfil_ico.png" alt=""/> Perfil</a>
                             <ul>
-                                <!-- <li><a href="../perfil/consultarPerfil.jsp">Consultar Perfil</a></li>  -->
+                                <!--  <li><a href="../perfil/consultarPerfil.jsp">Consultar Perfil</a></li>-->
                                 <li><a href="../perfil/modificarPerfil.jsp">Modificar Perfil</a></li>
                                 <li><a href="../perfil/administrarFIELyCSD.jsp">Administrar FIEL y CSD</a></li>
                                 <li><a href="../perfil/administrarClientes.jsp">Administrar Clientes</a></li>
@@ -96,55 +113,33 @@
                 </div>
                 <!-- Termina Menu -->
                 <br><br>
-                <div class="titulo_pagina">Administrar FIEL y CSD</div>
+                <div class="titulo_pagina">Estado de tus Facturas</div>
                 <center>
                     <!--Comienza el formulario-->	
                     <div id="tabs">
                         <ul>
-                            <li><a href="#tabs-1">Cambiar FIEL</a></li>
-                            <li><a href="#tabs-2">Cambiar CSD</a></li>
+                            <li><a href="#tabs-1">Generar Facutra Impresa</a></li>
+                            <li><a href="#tabs-2">Cancelar Facturas</a></li>
                         </ul>
                         <div id="tabs-1">
-                            <br/>
-                            <label class="Instrucciones"> Selecciona el archivo FIEL</label>
-                            <br/>
-                            <form method="post" action="../SubirArchivo" name="upform" id="subirFIELAdministrar" enctype="multipart/form-data">
-                                <table width="60%">
+                            <form id="buscarFacturasAdministrar">
+                                <font color="red">Ingrese la fecha de Elaboración de tu Factura</font><br>
+                                <table border="0">
                                     <tr>
-                                        <td width="30%">
-                                            <input type="file" name="fileupload" id="archivoREQAdministrar" onclick="LimpiarError()" />
-                                            <input type="hidden" name="mucho" value="upload"/>
-                                            <label id="ErrorArchivoREQ"></label>
-                                        </td>
-
+                                        <td>Fecha de Elaboración: </td>
                                         <td>
-                                            <input type="hidden" name="registro" value="fiel"/>
-                                            <input type="submit" value="&nbsp; &nbsp; Subir FIEL &nbsp; &nbsp;" name="subirFIEL" class="ui-button ui-widget ui-state-default ui-corner-all" role="button" aria-disabled="false"/>
+                                            <input type="text" id="datepicker" onclick="Limpiar()" width="20"/>
+                                            <label id="ErrorFechaElaboracion"></label>
                                         </td>
+                                        <td><input type="button" onclick="Buscar()" value="&nbsp; Buscar Facturas &nbsp;" class="ui-button ui-widget ui-state-default ui-corner-all" role="button" aria-disabled="false"/></td>
                                     </tr>
                                 </table>
                             </form>
+                            <br/><br/>
+                            <div id="ResultadoFacturas" style="display: none"></div>
                         </div>
                         <div id="tabs-2">
-                            <br/>
-                            <label class="Instrucciones"> Selecciona el archivo CER</label>
-                            <br/>
-                            <form method="post" action="../SubirArchivo" name="upform" id="subirCSDAdministrar" enctype="multipart/form-data">
-                            <table width="60%">
-                                   <tr>
-                                        <td width="30%">
-                                            <input type="file" name="uploadfile" id="archivoCERAdministrar" onclick="LimpiarError()"/>
-                                            <input type="hidden" name="todo" value="upload"/>
-                                            <label id="ErrorArchivoCER"></label>
-                                        </td>
 
-                                        <td>
-                                            <input type="hidden" name="registro" value="certificado"/>
-                                            <input type="submit" value="&nbsp; &nbsp; Subir CSD &nbsp; &nbsp;" name="subirCSD" class="ui-button ui-widget ui-state-default ui-corner-all" role="button" aria-disabled="false"/>
-                                        </td>
-                                    </tr>
-                            </table>
-                                </form>
                         </div>
                     </div>
                     <br><br>
@@ -164,7 +159,6 @@
     </center>
 </body>
 </html>
-
 <%
     }
 %>

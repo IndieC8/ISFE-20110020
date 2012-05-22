@@ -89,14 +89,14 @@ public class Sql {
      * @throws FileNotFoundExceptionSi hay errores con los archivos
      * @throws IOException Sihay errores de entrada y salida de datos
      */
-    public void insertarFiel(String sql,File fiel) throws InstantiationException, IllegalAccessException, SQLException, FileNotFoundException, IOException{
+    public void insertarFiel(String sql,File fiel,int idUsuario) throws InstantiationException, IllegalAccessException, SQLException, FileNotFoundException, IOException{
         this.conectar();
         PreparedStatement pst=conn.prepareStatement(sql);
         pst.setString(1, null);
         FileInputStream fis=new FileInputStream(fiel);
         pst.setBinaryStream(2, fis, fiel.length());
+        pst.setInt(3, idUsuario);
         pst.execute();
-        fis.close();
     }
     /**
      * Método encargado de subir el CSD a la base de datos 

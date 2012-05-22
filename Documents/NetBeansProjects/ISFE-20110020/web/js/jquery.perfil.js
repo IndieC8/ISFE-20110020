@@ -7,6 +7,7 @@
 var FIEL, CSD;
 var contribuyente;
 var rfc, tel, calle, exterior, interior, col , mail , referencia, pwd, nombre, paterno, materno , curp,razon;
+var Archivo = "NO";
 
 /*Funciones Generales del Menu del Usuario y Registro*/
 $(function(){
@@ -133,31 +134,12 @@ $(function() {
                     url: "Registrar",
                     data: "usuario=Guardar&Tipo="+contribuyente+"&nombre="+nombre+"&paterno="+paterno+"&materno="+materno+"&razon="+razon+"&rfcUsuario="+rfc+"&curp="+curp+"&telefono="+tel+"&calle="+calle+"&interior="+interior+"&exterior="+exterior+"&localidad="+col+"&mail="+mail+"&referencia="+referencia+"&password="+pwd,
                     success: function(data){
-                        alert("Registro Hecho");
+                        alert(data);
+                        //$("#idUsuarioArchivos").val(data);
                         LimpiarRegistro();
                                 
                     }
                 });
-                $( this ).dialog("close");
-                                        
-            },
-            Cancelar: function() {
-                $( this ).dialog( "close" );
-            }
-        },
-        close: function() {
-            allFields.val( "" ).removeClass( "ui-state-error" );
-        }
-    });
-                
-    $("#dialogPrivadaUsuario").dialog({
-        autoOpen: false,
-        height: 280,
-        width: 350,
-        modal: true,
-        buttons: {
-            "Aceptar": function() {
-                alert("ACEPTANDO");
                 $( this ).dialog("close");
                                         
             },
@@ -284,21 +266,17 @@ function Contribuyente(value){
 }
             
 function SubirKEY(){
-    $("#dialogPrivadaUsuario").dialog("open");
-}
-
-function SubirCSD(){
-    var archivo = $("#archivoCER").val();
-    $.ajax({
-        url: "Perfil",
-        type: "POST",
-        data: "Archivo=CSD&archivo="+archivo,
-        success: function(data){
-            alert(data);
+    $("#ErrorSubirArchivos").text("");
+    if($("#idUsuarioArchivos").val() != ""){
+        if($("#llavePrivada").val() != ""){
+            GuardarArchivo();
+        }else{
+          $("#ErrorSubirArchivos").text("Debes ingresar la clave privada de tu FIEL");  
         }
-    });
-}
-         
+    }else{
+        $("#ErrorSubirArchivos").text("Debes ingresar primero tus datos antes de subir tus archivos");
+    }
+}         
                        
 /*Busca si existe el rfc*/
 function validarRFC(){
