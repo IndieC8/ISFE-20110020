@@ -83,6 +83,7 @@ public class Factura extends HttpServlet {
             }
         } else if ("Generar".equals(request.getParameter("Factura"))) {
             try {
+                out.println(pathAbsoluto);
                 String aux = request.getParameter("idUsuaio");
                 aux = Cifrado.decodificarBase64(aux);
                 Sql s = new Sql();
@@ -99,12 +100,11 @@ public class Factura extends HttpServlet {
                 //EMISOR
                 Usuario emisor = new Usuario();
                 Direccion direccionEmisor=new Direccion();
-                java.sql.Blob blobFiel=null;
                 Random random=new Random();
                 random.setSeed(new Date().getTime());
-                File archivoFiel=new File("FIEL"+random.nextLong()+".key");
+                File archivoFiel=new File(pathAbsoluto+"FIEL"+random.nextLong()+".key");
                 Fiel fielEmisor=new Fiel();
-                File archivoCsd=new File("CSD"+random.nextLong()+".cer");
+                File archivoCsd=new File(pathAbsoluto+"CSD"+random.nextLong()+".cer");
                 String noCertificado=null;
                 CSD csdEmisor=new CSD();
                 
@@ -140,7 +140,7 @@ public class Factura extends HttpServlet {
                     fosFiel.close();
                     
                     //OBTENIENDO .CER DEL CSD
-                    FileOutputStream fosCsd = new FileOutputStream(archivoFiel);
+                    FileOutputStream fosCsd = new FileOutputStream(archivoCsd);
                     byte[] bufferCsd = new byte[1];
                     InputStream isCsd = rsEmisor.getBinaryStream("archivoCSD");
                     while (isCsd.read(bufferCsd) > 0) {
@@ -277,7 +277,7 @@ public class Factura extends HttpServlet {
 
                 
                 //GENERACION DEL XML
-                Document facturaXML = xml.generarXML(factura, isfe, pathAbsoluto+"\\ISFE-20110020\\resources\\xml\\");
+                Document facturaXML = xml.generarXML(factura, isfe, pathAbsoluto+"resources/xml/");
                 File fXML = XML.generarArchivoXML(facturaXML, emisor.getRFC() + folio.getNoFolio() + receptor.getRFC() + ".xml");
 
                 
@@ -320,18 +320,28 @@ public class Factura extends HttpServlet {
                 String sqlPDF = "select nombreXML, facturaXML from factura where idFolio=" + idFolioPDF + " and idUsuario=" + idUsuario + ");";
                 Sql s = new Sql();
                 ResultSet rsPDF = s.consulta(sqlPDF);
-                rsPDF.next();
-                Blob blob = (Blob) rsPDF.getBlob("facturaXML");
-                InputStream is = blob.getBinaryStream();
-                File xml = new File(rsPDF.getString("nombreXML") + ".xml");
-                FileOutputStream fos = new FileOutputStream(xml);
-                int b = 0;
-                while ((b = is.read()) != -1) {
-                    fos.write(b);
+                File xml=null;
+                while(rsPDF.next()){
+                    xml = new File(rsPDF.getString("nombreXML") + ".xml");
+                    FileOutputStream fos = new FileOutputStream(xml);
+                    byte[] buffer = new byte[1];
+                    InputStream isCsd = rsPDF.getBinaryStream("facturaXML");
+                    while (isCsd.read(buffer) > 0) {
+                        fos.write(buffer);
+                    }
+                    fos.close();
+                }
+                
+                InputStream is=new FileInputStream(xml); 
+                byte[] b=new byte[(int)xml.length()]; 
+                int offset=0; 
+                int numRead=0;
+                while(offset<b.length && (numRead=is.read(b, offset, b.length-offset))>=0){ 
+                    offset+=numRead; 
                 }
 
                 //GENERACIÓN DEL PDF (FACTURA IMPRESA) PARA VISUALIZARLO EN LA PAGINA WEB
-                File pdf = PDF.generarArchivoPDF(xml, "/ISFE-20110020/resources/xslt/", rsPDF.getString("nombreXML") + ".pdf");
+                File pdf = PDF.generarArchivoPDF(xml, pathAbsoluto+"/resources/xslt/", rsPDF.getString("nombreXML") + ".pdf");
                 PDF.visualizarPDF(pdf, response, request);
             } catch (InstantiationException ex) {
                 Logger.getLogger(Factura.class.getName()).log(Level.SEVERE, null, ex);
