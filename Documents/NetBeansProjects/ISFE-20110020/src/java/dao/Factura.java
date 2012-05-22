@@ -16,6 +16,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.ServletException;
@@ -50,6 +51,7 @@ public class Factura extends HttpServlet {
         PrintWriter out = response.getWriter();
         String idFolioPDF = null;
         String idUsuario = null;
+        String pathAbsoluto=this.getServletContext().getRealPath("/");
 
         if ("Clientes".equals(request.getParameter("Factura"))) {
 
@@ -70,7 +72,6 @@ public class Factura extends HttpServlet {
 
                 }
 
-
             } catch (InstantiationException ex) {
                 Logger.getLogger(Factura.class.getName()).log(Level.SEVERE, null, ex);
             } catch (IllegalAccessException ex) {
@@ -81,88 +82,133 @@ public class Factura extends HttpServlet {
                 out.close();
             }
         } else if ("Generar".equals(request.getParameter("Factura"))) {
-             try {
+            try {
                 String aux = request.getParameter("idUsuaio");
                 aux = Cifrado.decodificarBase64(aux);
-                //INSTANCIAS DE LAS CLASES A UTILIZAR DURANTE EL PROCESO DE LA GENERACIÓN DE LA FACTURA
                 Sql s = new Sql();
+                XML xml = new XML();
+                Datos.ISFE isfe = new Datos.ISFE();
+                Fiel fielISFE = new Fiel();
+                CSD csdISFE = new CSD();
+                
+                //FACTURA
+                Datos.Factura factura=new Datos.Factura();
+                Folio folio = new Folio();
+                Direccion expedidoEn=new Direccion();
+                
+                //EMISOR
                 Usuario emisor = new Usuario();
+                Direccion direccionEmisor=new Direccion();
+                java.sql.Blob blobFiel=null;
+                Random random=new Random();
+                random.setSeed(new Date().getTime());
+                File archivoFiel=new File("FIEL"+random.nextLong()+".key");
+                Fiel fielEmisor=new Fiel();
+                File archivoCsd=new File("CSD"+random.nextLong()+".cer");
+                String noCertificado=null;
+                CSD csdEmisor=new CSD();
+                
+                //RECEPTOR
                 Contribuyente receptor = new Contribuyente();
-                CSD csd = new CSD();
-                Fiel fiel = new Fiel();
-                Direccion d = new Direccion();
-                Direccion dReceptor = new Direccion();
+                Direccion direccionReceptor=new Direccion();
 
                 //DATOS DEL EMISOR (USUARIO)
-                //out.println("a");
-                String sql = "select u.tipoPersona,u.nombre,u.apellidoMaterno,u.apellidoPaterno,u.razonSocial,u.curp,u.rfc,u.mail, f.archivoFiel, c.noCertificado, c.archivoCSD, d.codigoPostal, d.calle ,d.nombreLocalidad,d.nombreMunicipio, d.nombreEstado from usuario u, csd c, fiel f, direccionusuario d where u.idUsuario = " + aux + " and c.idCSD = u.idCSD and f.idFiel = u.idFiel and d.idUsuario = u.idUsuario;";
-                ResultSet rs;
-                rs = s.consulta(sql);
-                //out.println("1");
-                while (rs.next()) {
-                    emisor.setTipoPersona(rs.getBoolean("tipoPersona"));
-                    if (rs.getBoolean("tipoPersona") == false) {
-                        emisor.setNombre(rs.getString("nombre"));
-                        emisor.setApMaterno(rs.getString("apellidoMaterno"));
-                        emisor.setApPaterno(rs.getString("apellidoPaterno"));
-                        emisor.setCurp(rs.getString("curp"));
+                String sql = "select u.tipoPersona,u.nombre,u.apellidoMaterno,u.apellidoPaterno,u.razonSocial,u.curp,u.rfc,u.mail, f.archivoFiel, c.noCertificado, c.archivoCSD, d.codigoPostal, d.calle ,d.nombreLocalidad,d.nombreMunicipio, d.nombreEstado from usuario u, csd c, fiel f, direccionusuario d where u.idUsuario = " + aux + " and c.idUsuario = u.idUsuario and f.idUsuario = u.idUsuario and d.idUsuario = u.idUsuario;";
+                ResultSet rsEmisor;
+                rsEmisor = s.consulta(sql);
+                
+                while (rsEmisor.next()) {
+                    //DATOS FISCALES DEL EMISOR
+                    emisor.setTipoPersona(rsEmisor.getBoolean("tipoPersona"));
+                    if (rsEmisor.getBoolean("tipoPersona") == false) {
+                        emisor.setNombre(rsEmisor.getString("nombre"));
+                        emisor.setApMaterno(rsEmisor.getString("apellidoMaterno"));
+                        emisor.setApPaterno(rsEmisor.getString("apellidoPaterno"));
+                        emisor.setCurp(rsEmisor.getString("curp"));
                     } else {
-                        emisor.setRazonSocial(rs.getString("razonSocial"));
+                        emisor.setRazonSocial(rsEmisor.getString("razonSocial"));
                     }
-                    emisor.setRFC(rs.getString("rfc"));
-                    emisor.setCorreo(rs.getString("mail"));
-                    //CSD DEL EMISOR
-                    csd.setArchivoCSD(rs.getBytes("archivoCSD"));
-                    csd.setNoCertificado(rs.getString("noCertificado"));
-                    emisor.setCSD(csd);
-                    //FIEL DEL EMISOR
-                    fiel.setArchivoFiel(rs.getBytes("archivoFiel"));
-                    fiel.setPassword(request.getParameter("passwordFiel"));
-                    emisor.setFiel(fiel);
+                    emisor.setRFC(rsEmisor.getString("rfc"));
+                    emisor.setCorreo(rsEmisor.getString("mail"));
+                    //OBTENIENDO .KEY DE LA FIEL
+                    FileOutputStream fosFiel = new FileOutputStream(archivoFiel);
+                    byte[] buffer = new byte[1];
+                    InputStream is = rsEmisor.getBinaryStream("archivoFiel");
+                    while (is.read(buffer) > 0) {
+                        fosFiel.write(buffer);
+                    }
+                    fosFiel.close();
+                    
+                    //OBTENIENDO .CER DEL CSD
+                    FileOutputStream fosCsd = new FileOutputStream(archivoFiel);
+                    byte[] bufferCsd = new byte[1];
+                    InputStream isCsd = rsEmisor.getBinaryStream("archivoCSD");
+                    while (isCsd.read(bufferCsd) > 0) {
+                        fosFiel.write(bufferCsd);
+                    }
+                    fosCsd.close();
+                    noCertificado=rsEmisor.getString("noCertificado");
                     //DIRECCION DEL EMISOR
-                    d.setCodigoPostal(rs.getString("codigoPostal"));
-                    d.setLocalidad(rs.getString("nombreLocalidad"));
-                    d.setMunicipio(rs.getString("nombreMunicipio"));
-                    d.setEstado(rs.getString("nombreEstado"));
-                    d.setCalle(rs.getString("calle"));
-                    emisor.setDireccion(d);
+                    direccionEmisor.setCodigoPostal(rsEmisor.getString("codigoPostal"));
+                    direccionEmisor.setLocalidad(rsEmisor.getString("nombreLocalidad"));
+                    direccionEmisor.setMunicipio(rsEmisor.getString("nombreMunicipio"));
+                    direccionEmisor.setEstado(rsEmisor.getString("nombreEstado"));
+                    direccionEmisor.setCalle(rsEmisor.getString("calle"));
+                    emisor.setDireccion(direccionEmisor);
                 }
-
+                //DATOS FIEL DEL EMISOR
+                InputStream is=new FileInputStream(archivoFiel); 
+                byte[] bFiel=new byte[(int)archivoFiel.length()]; 
+                int offset=0; 
+                int numRead=0;
+                while(offset<bFiel.length && (numRead=is.read(bFiel, offset,bFiel.length-offset))>=0){ 
+                    offset+=numRead;
+                }
+                fielEmisor.setArchivoFiel(bFiel);
+                //fielEmisor.setPassword(request.getParameter("passwordFiel"));//PARA RECIBIR EL PASSWORD DESDE EL FORMULARIO
+                fielEmisor.setPassword("a01234567889");
+                emisor.setFiel(fielEmisor);
+                //DATOS CSD DEL EMISOR
+                InputStream isCsd=new FileInputStream(archivoCsd); 
+                byte[] bCsd=new byte[(int)archivoCsd.length()]; 
+                offset=0;
+                numRead=0;
+                while(offset<bCsd.length && (numRead=isCsd.read(bCsd, offset,bCsd.length-offset))>=0){ 
+                    offset+=numRead;
+                }
+                csdEmisor.setArchivoCSD(bCsd);
+                csdEmisor.setNoCertificado(noCertificado);
+                emisor.setCSD(csdEmisor);
+                
+                
                 //DATOS DEL RECEPTOR (CLIENTE)
-                //out.println("b");
-                String sqlRec = "select c.tipoPersona,c.nombreCliente,c.APaternoCliente,c.AMaternoCliente,c.razonCliente,c.rfc, d.codigoPostal, d.calleCliente,d.nombreLocalidad,d.nombreMunicipio, d.nombreEstado from cliente c, direccioncliente d where c.idUsuario = " + aux + " and d.idCliente = c.idCliente;";
-                ResultSet rsRec;//SQLException after end of result set
-                rsRec = s.consulta(sqlRec);
-                while (rsRec.next()) {
-                    receptor.setTipoPersona(rsRec.getBoolean("tipoPersona"));
-                    if (rsRec.getBoolean("tipoPersona") == false) {
-                        out.println("a");
-                        receptor.setNombre(rsRec.getString("nombreCliente"));
-                        receptor.setApMaterno(rsRec.getString("APaternoCliente"));
-                        receptor.setApPaterno(rsRec.getString("AMaternoCliente"));
-                        out.println("b");
+                String sqlReceptor = "select c.tipoPersona,c.nombreCliente,c.APaternoCliente,c.AMaternoCliente,c.razonCliente,c.rfc, d.codigoPostal, d.calleCliente,d.nombreLocalidad,d.nombreMunicipio, d.nombreEstado from cliente c, direccioncliente d where c.idUsuario = " + aux + " and d.idCliente = c.idCliente;";
+                ResultSet rsReceptor;
+                rsReceptor = s.consulta(sqlReceptor);
+                while (rsReceptor.next()) {
+                    //DATOS FISCALES RECEPTOR
+                    receptor.setTipoPersona(rsReceptor.getBoolean("tipoPersona"));
+                    if (rsReceptor.getBoolean("tipoPersona") == false) {
+                        receptor.setNombre(rsReceptor.getString("nombreCliente"));
+                        receptor.setApMaterno(rsReceptor.getString("APaternoCliente"));
+                        receptor.setApPaterno(rsReceptor.getString("AMaternoCliente"));
                     } else {
-                        out.println("c");
-                        receptor.setRazonSocial(rsRec.getString("razonCliente"));
-                        out.println("d");
+                        receptor.setRazonSocial(rsReceptor.getString("razonCliente"));
                     }
-                    out.println(rsRec.getString("rfc"));
-                    receptor.setRFC(rsRec.getString("rfc"));out.println("1");
+                    receptor.setRFC(rsReceptor.getString("rfc"));
                     //DIRECCION DEL RECEPTOR
-                    dReceptor.setCodigoPostal(rsRec.getString("codigoPostal"));out.println("2");
-                    dReceptor.setLocalidad(rsRec.getString("nombreLocalidad"));out.println("3");
-                    dReceptor.setMunicipio(rsRec.getString("nombreMunicipio"));out.println("4");
-                    dReceptor.setEstado(rsRec.getString("nombreEstado"));out.println("5");
-                    dReceptor.setCalle(rsRec.getString("calleCliente"));out.println("6");
-                    receptor.setDireccion(dReceptor);
+                    direccionReceptor.setCodigoPostal(rsReceptor.getString("codigoPostal"));
+                    direccionReceptor.setLocalidad(rsReceptor.getString("nombreLocalidad"));
+                    direccionReceptor.setMunicipio(rsReceptor.getString("nombreMunicipio"));
+                    direccionReceptor.setEstado(rsReceptor.getString("nombreEstado"));
+                    direccionReceptor.setCalle(rsReceptor.getString("calleCliente"));
+                    receptor.setDireccion(direccionReceptor);
                 }
-
-                //DATOS DE LA FACTURA (CONCEPTOS,SUBTOTAL,IVA,DESCUENTO,TOTAL,EXPEDICIÓN,ETC)
-                Datos.Factura f = new Datos.Factura();
+                
+                
+                //DATOS DE LA FACTURA
                 //int numProductos=Integer.parseInt(request.getParameter("cantcampos"));//numero de productos que se recibiran
                 ArrayList<Datos.Concepto> productos = new ArrayList<Datos.Concepto>();
-                //DATOS DE LOS CONCEPTOS DE LA FACTURA
-
                 /**for(int i=0;i<numProductos;i++){
                     Datos.Concepto concepto = new Datos.Concepto();
                     concepto.setCantidad(Double.parseDouble(request.getParameter("cantidad"+i)));
@@ -173,7 +219,7 @@ public class Factura extends HttpServlet {
                     productos.add(concepto);
                 }*/
 
-                //DATOS DEL CONCEPTO PARA LA VERSION DE PRUEBA
+                //CONCEPTOS DE LA FACTURA
                 Datos.Concepto conceptos = new Datos.Concepto();
                 conceptos.setCantidad(Double.parseDouble(request.getParameter("cantidad")));
                 conceptos.setnombreProducto(request.getParameter("nombre"));
@@ -181,49 +227,45 @@ public class Factura extends HttpServlet {
                 conceptos.setImporte(Double.parseDouble(request.getParameter("total")));
                 conceptos.setDescripcion(conceptos.getnombreProducto() + ": " + request.getParameter("descripcion"));
                 productos.add(conceptos);
-                f.setConceptos(productos);
-
-                //DATOS GENERALES DE LA FACTURA
-                f.setFormaDePago(request.getParameter("formaDePago"));   //CAMPO A AGREGAR EN FORMULARIO
-                f.setSubTotal(Double.parseDouble(request.getParameter("subTotal")));
-                f.setIVA(Double.parseDouble(request.getParameter("iva")));
-                f.setDescuento(Double.parseDouble(request.getParameter("descuento")));
-                f.setTotal(Double.parseDouble(request.getParameter("GranTotal")));
-                f.setTipoDeComprobante(request.getParameter("tipoComprobante"));   //CAMPO A AGREGAR EN FORMULARIO
-                //
-                f.setEmisor(emisor);
-                f.setReceptor(receptor);
-                //FOLIO DE LA FACTURA
-                String sqlFolio = "select idFolio, numFolio from folios where usado=0 limit 1;";
-                ResultSet rsFolio;
-                rsFolio = s.consulta(sqlFolio);
-                rsFolio.next();
-                String idFolio = rsFolio.getString("idfolio");
-                String numFolio = rsFolio.getString("numfolio");
-                //
-                Folio folio = new Folio();
-                folio.setNoFolio(Long.parseLong(numFolio));
-                folio.setUUID(Long.parseLong(idFolio));
-                f.setFolio(folio);
-                //ESTABLECIENDO EL ESTADO DEL FOLIO USADO
-                String actualizaEstadoFolio = "update folios set usado=1 where usado=0 and idFolio = " + idFolio + " limit 1";
-                s.ejecutaUpdate(actualizaEstadoFolio);
-                //DATOS DEL LUGAR DE EXPEDCIÓN DE LA FACTURA
-                Direccion expedidoEn = new Direccion();
+                //DIRECCION EXPEDICION
                 expedidoEn.setCalle("JUAN DE DIOS BATIZ");
                 expedidoEn.setCodigoPostal("07738");
                 expedidoEn.setEstado("DISTRIO FEDERAL");
                 expedidoEn.setMunicipio("GUSTAVO A. MADERO");
-                f.setExpedidoEn(expedidoEn);
+                //FOLIO DE LA FACTURA
+                String sqlFolio = "select idFolio, numFolio from folios where usado=0 limit 1;";
+                ResultSet rsFolio;
+                rsFolio = s.consulta(sqlFolio);
+                String idFolio=null;
+                String numFolio=null;
+                while(rsFolio.next()){
+                    idFolio = rsFolio.getString("idfolio");
+                    numFolio = rsFolio.getString("numfolio");
+                }
+                folio.setNoFolio(Long.parseLong(numFolio));
+                folio.setUUID(Long.parseLong(idFolio));
+                //ESTABLECIENDO EL ESTADO DEL FOLIO USADO
+                String actualizaEstadoFolio = "update folios set usado=1 where usado=0 and idFolio = " + idFolio + " limit 1";
+                s.ejecutaUpdate(actualizaEstadoFolio);
 
+                //CARGANDO DATOS  A LA FACTURA
+                factura.setExpedidoEn(expedidoEn);
+                factura.setConceptos(productos);
+                factura.setFormaDePago(request.getParameter("formaDePago"));   //CAMPO A AGREGAR EN FORMULARIO
+                factura.setSubTotal(Double.parseDouble(request.getParameter("subTotal")));
+                factura.setIVA(Double.parseDouble(request.getParameter("iva")));
+                factura.setDescuento(Double.parseDouble(request.getParameter("descuento")));
+                factura.setTotal(Double.parseDouble(request.getParameter("GranTotal")));
+                factura.setTipoDeComprobante(request.getParameter("tipoComprobante"));
+                factura.setEmisor(emisor);
+                factura.setReceptor(receptor);
+                factura.setFolio(folio);
+                factura.setFecha(new Date());
+                
+                
                 //DATOS DE ISFE COMO PAC
-                XML xml = new XML();
-                Datos.ISFE isfe = new Datos.ISFE();
-                out.println("d");
-                String sqlISFE = "select u.idUsuario,f.archivoFiel,c.noCertificado,c.archivoCSD from fiel f,csd c,usuario u where u.idUsuario=1 and u.idFiel=f.idFiel and u.idCSD=c.idCSD;";
+                String sqlISFE = "select u.idUsuario,f.archivoFiel,c.noCertificado,c.archivoCSD from fiel f,csd c,usuario u where u.idUsuario=1 and u.idUsuario=f.idUsuario and u.idUsuario=c.idUsuario;";
                 ResultSet rsIsfe = s.consulta(sqlISFE);
-                Fiel fielISFE = new Fiel();
-                CSD csdISFE = new CSD();
                 while (rsIsfe.next()) {
                     fielISFE.setArchivoFiel(rsIsfe.getBytes("f.archivoFiel"));
                     csdISFE.setArchivoCSD(rsIsfe.getBytes("c.archivoCSD"));
@@ -233,20 +275,24 @@ public class Factura extends HttpServlet {
                 isfe.setFiel(fielISFE);
                 isfe.setCSD(csdISFE);
 
+                
                 //GENERACION DEL XML
-                Document facturaXML = xml.generarXML(f, isfe, "\\ISFE-20110020\\resources\\xml\\");
+                Document facturaXML = xml.generarXML(factura, isfe, pathAbsoluto+"\\ISFE-20110020\\resources\\xml\\");
                 File fXML = XML.generarArchivoXML(facturaXML, emisor.getRFC() + folio.getNoFolio() + receptor.getRFC() + ".xml");
 
+                
                 //ENVIO DEL XML AL CORREO DEL USUARIO
                 EnvioMail mail = new EnvioMail();
                 mail.EnvioMail(emisor.getCorreo(), "Entrega de Factura Electrónica ISFE " + new Date(), "ISFE, hace entrega de la factura electrónica en formato XML.\nHacemos de su conocimiento que en este momento el resguardo de la factura\nes responsabilidad de usted.\n\nGracias por utilizar ISFE.", fXML, emisor.getRFC() + folio.getNoFolio() + receptor.getRFC() + ".xml");
 
+                
                 //ALMACENAMIENTO DEL XML EN LA BASE DE DATOS DE ISFE
-                String sqlFactura = "instert into factura (facturaXML,formaPago,idUsuario,idFolio,nombreXML) values (" + fXML + ",'" + f.getFormaDePago() + "'," + aux + "," + idFolio + ",'" + emisor.getRFC() + folio.getNoFolio() + receptor.getRFC() + "');";
+                String sqlFactura = "instert into factura (facturaXML,formaPago,idUsuario,idFolio,nombreXML) values (" + fXML + ",'" + factura.getFormaDePago() + "'," + aux + "," + idFolio + ",'" + emisor.getRFC() + folio.getNoFolio() + receptor.getRFC() + "');";
                 s.consulta(sqlFactura);
                 fXML.delete();
                 out.println("Factura generada exitosamente, y se ha enviado al correo:\n " + emisor.getCorreo());
 
+                
                 //VARIABLES AUXILIARES PARA CONSULTAS SQL
                 idFolioPDF = idFolio;
                 idUsuario = aux;
