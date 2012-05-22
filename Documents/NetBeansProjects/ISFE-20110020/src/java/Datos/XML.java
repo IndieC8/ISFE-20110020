@@ -46,7 +46,7 @@ public class XML extends Formato{
         xml=timbrarCFDI(f,cfdi,isfe,path);
         return xml;
     }
-    private Document crearXML(Factura factura,CFDI cfdi,String path) throws IOException, SecurityException, NoSuchProviderException{
+    private Document crearXML(Factura factura,CFDI cfdi,String path) throws IOException, SecurityException, NoSuchProviderException, Exception{
         
         String cadOriginal = CadenaOriginal.generarCadenaOriginal(path+"cadOriginalCFDI_3.xslt",cfdi.generarCFDI());
         System.out.println(cadOriginal);

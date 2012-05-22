@@ -20,7 +20,7 @@ import java.util.logging.Logger;
  */
 public class MAIN3 {
 
-    public static void main(String[] args) throws InstantiationException, IllegalAccessException, NoSuchProviderException {
+    public static void main(String[] args) throws InstantiationException, IllegalAccessException, NoSuchProviderException, Exception {
         try {
             //File fiel=new File("FIEL-ISFE.key");
             //Sql s=new Sql();

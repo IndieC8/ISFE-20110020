@@ -49,7 +49,7 @@ public class Cifrado {
      * @throws IOException 
      * @throws SecurityException 
      */
-    private static byte[] descifrarLlavePrivada(byte[] LlavePrivadaCifrada,String Password) throws IOException,SecurityException{
+    private static byte[] descifrarLlavePrivada(byte[] LlavePrivadaCifrada,String Password) throws IOException,SecurityException, Exception{
         Security.addProvider(new BouncyCastleProvider());
         ASN1InputStream ais=new ASN1InputStream(new ByteArrayInputStream(LlavePrivadaCifrada));
         ASN1Sequence as=(ASN1Sequence)ais.readObject();
@@ -64,7 +64,7 @@ public class Cifrado {
         try{
             bbc.doFinal(datosDescifrados, tam);
         }catch(Exception ex){
-            System.err.println("ERROR: No se realizo el descifrado de la llave privada");
+            throw new Exception(ex);
         }
         return datosDescifrados;
     }
@@ -105,13 +105,13 @@ public class Cifrado {
             PrivateKey pk=kf.generatePrivate(p8ekp);
             return pk;
         }catch(InvalidKeySpecException ex){
-            Logger.getLogger(Cifrado.class.getName()).log(Level.SEVERE, null, ex);
+            //Logger.getLogger(Cifrado.class.getName()).log(Level.SEVERE, null, ex);
             throw new Exception(ex);
         }catch(NoSuchAlgorithmException ex){
-            Logger.getLogger(Cifrado.class.getName()).log(Level.SEVERE, null, ex);
+            //Logger.getLogger(Cifrado.class.getName()).log(Level.SEVERE, null, ex);
             throw new Exception(ex);
         }catch(NoSuchProviderException ex){
-            Logger.getLogger(Cifrado.class.getName()).log(Level.SEVERE, null, ex);
+            //Logger.getLogger(Cifrado.class.getName()).log(Level.SEVERE, null, ex);
             throw new Exception(ex);
         }
     }
@@ -166,18 +166,16 @@ public class Cifrado {
      * @param datos con los que se generará el digesto
      * @return digesto de los datos recibidos
      */
-    public static String digerir(byte[] datos){
+    public static String digerir(byte[] datos) throws Exception{
         Security.addProvider(new BouncyCastleProvider());
         try{
             MessageDigest digesto=MessageDigest.getInstance("SHA1","BC");
             digesto.update(datos);
             return codificarHex(digesto.digest());
         }catch(NoSuchAlgorithmException ex){
-            System.err.println("ERROR: ");
-            return null;
+            throw new Exception(ex);
         }catch(NoSuchProviderException ex){
-            System.err.println("ERROR: ");
-            return null;
+            throw new Exception(ex);
         }
     }
     /**
