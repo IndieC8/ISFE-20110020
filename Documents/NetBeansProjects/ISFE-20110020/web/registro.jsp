@@ -33,11 +33,11 @@
                     rules: {
                         passwordUsuario:{
                             required: true,
-                            minlength: 5
+                            minlength: 8
                         },
                         rePasswordUsuario: {
                             required: true,
-                            minlength: 5,
+                            minlength: 8,
                             equalTo: "#passwordUsuario"
                         }
                             
@@ -45,11 +45,11 @@
                     messages:{
                         passwordUsuario:{
                             required: "Ingresa una contaseña de acceso",
-                            minlength: "Ingresa más de 5 caracteres"
+                            minlength: "Ingresa más de 8 caracteres"
                         },
                         rePasswordUsuario: {
                             required: "Confirma tu contraseña de acceso",
-                            minlength: "Ingresa más de 5 caracteres",
+                            minlength: "Ingresa más de 8 caracteres",
                             equalTo: "Las contraseñas deben ser iguales"
                         }
                             
@@ -57,36 +57,14 @@
                 });
             });
             
-            
-            function SubirCer(){
-                $.ajax({
-                    url: "SubirArchivo.jsp",
-                    type: "POST",
-                    data: "",
-                    success: function(data){
-                        alert(data);
-                    }
-                });
+            function GuardarArchivo(){
+                document.upform.submit();
             }
             
         </script>
 
     </head>
-    <!--Aqui va el dialogo de Modificar Password-->
-    <div id="dialogPrivadaUsuario" title="ISFE- Registro de Usuario">
-        <p class="validateTips">
-            <img src="images/key.png" />
-            &nbsp;
-            Ingresa tu clave privada para válidar tu FIEL
-        </p>
-        <form>
-            <fieldset>  
-                Contraseña: &nbsp; &nbsp;
-                <input type="password" id="clavePrivadaUsuario" />
-            </fieldset>
-        </form>
-    </div>
-    <!--Aqui termina el dialogo de Modificar Password-->
+    
     <!--Dialogo de Confirmar Datos-->
     <div id="ConfirmarDatos" title="ISFE- Registro de Usuario">
         <p class="validateTips">
@@ -281,6 +259,7 @@
                             <label> Selecciona los archivos de FIEL y CSD a subir </label>
                             <br><br>
                             <form method="post" action="SubirArchivo" name="upform" enctype="multipart/form-data">
+                                <input type="text" name="idUsuario" id="idUsuarioArchivos" />
                                 <table width="60%" >
                                     <tr>
                                         <td width="40%">
@@ -288,6 +267,8 @@
                                             <input type="file" name="fileupload" id="archivoREQ" onclick="LimpiarError()" />
                                             <input type="hidden" name="mucho" value="upload"/>
                                             <label id="ErrorArchivoREQ"></label>     
+                                            <br/>
+                                            <label>Clave Privada:  <input type="password" id="llavePrivada" name="llavePrivada" /></label>
                                         </td>
 
                                         <td width="40%">
@@ -298,10 +279,12 @@
                                         </td>
                                     </tr>
                                 </table>
-                                <br/><br/>
+                                <br/>
+                                <label id="ErrorSubirArchivos"></label>
+                                <br/>
                                 <div align="right">
                                     <input type="hidden" name="registro" value="registro"/>
-                                    <input type="submit" value="&nbsp; &nbsp; Subir Archivos &nbsp; &nbsp;" name="subirCSD" class="ui-button ui-widget ui-state-default ui-corner-all" role="button" aria-disabled="false"/>
+                                    <input type="button" onclick="SubirKEY()" value="&nbsp; &nbsp; Subir Archivos &nbsp; &nbsp;" name="subirCSD" class="ui-button ui-widget ui-state-default ui-corner-all" role="button" aria-disabled="false"/>
                                 </div>
                             </form>
                             <script type="text/javascript">

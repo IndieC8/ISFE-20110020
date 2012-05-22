@@ -85,8 +85,7 @@
                         <li><a href="factura.jsp"><img src="images/icons/factura_ico.png" alt=""/> Factura</a>
                             <ul>
                                 <li><a href="factura/generarFacturaElectronica.jsp">Generar Factura Electr&oacute;nica</a></li>
-                                <li><a href="factura/generarFacturaImprimible.jsp">Generar Factura Imprimible</a></li>
-                                <li><a href="">Estado de la Factura</a></li>
+                                <li><a href="factura/EstadoFactura.jsp">Estado de la Factura</a></li>
                             </ul>
                         </li>                       
                         <li><a href="cerrar.jsp" id="cerrarSesion"><img src="images/icons/ingreso_ico.png"/> Cerrar Sesión &nbsp; &nbsp; <% out.println(contribuyente); %></a>
@@ -110,11 +109,7 @@
                                     <td>Generar Factura Electr&oacute;nica</td>
                                  </tr>
                                  <tr>
-                                    <td><a href="factura/generarFacturaImprimible.jsp"><img src="images/formularios/generar_factura_imprimible.png"/></a></td>
-                                    <td>Generar Factura Imprimible</td>
-                                 </tr>
-                                 <tr>
-                                      <td><a href=""><img width="64" src="images/formularios/estado_factura.png"/></a></td>
+                                      <td><a href="factura/EstadoFactura.jsp"><img width="64" src="images/formularios/estado_factura.png"/></a></td>
                                       <td>Estado de la Factura</td>
                                   </tr>
                               </tbody>

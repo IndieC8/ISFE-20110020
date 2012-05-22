@@ -108,10 +108,10 @@
             </p>
             <form>
                 <fieldset>  
-                    Contraseña: &nbsp; &nbsp;
+                    Contraseña: &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
                     <input type="password" id="pwdModificarPerfil" maxlength="30" />
                     <br>
-                    Repite tu Contraseña: &nbsp; &nbsp;
+                    Repite tu Contraseña: &nbsp; 
                     <input type="password" id="pwd2ModificarPerfil" maxlength="30" />
                 </fieldset>
             </form>
@@ -162,7 +162,7 @@
                         <li><a href="../factura.jsp"><img src="../images/icons/factura_ico.png" alt=""/> Factura</a>
                             <ul>
                                 <li><a href="../factura/generarFacturaElectronica.jsp">Generar Factura Electr&oacute;nica</a></li>
-                                <li><a href="../factura/generarFacturaImprimible.jsp">Generar Factura Imprimible</a></li>
+                                <li><a href="../factura/EstadoFactura.jsp">Estado de la Factura</a></li>
                             </ul>
                         </li>                       
                         <li><a href="../cerrar.jsp" id="cerrarSesion"><img src="../images/icons/ingreso_ico.png" alt=""/> Cerrar Sesión &nbsp; &nbsp;  <%out.println(contribuyente);%> </a></li>
