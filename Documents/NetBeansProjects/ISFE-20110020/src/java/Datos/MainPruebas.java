@@ -108,7 +108,7 @@ public class MainPruebas {
             f.generarTotal();
             XML xml=new XML();
             Document dXML=xml.generarXML(f, isfe,"");
-            File fXML=XML.generarArchivoXML(dXML, "f.xml");
+            File fXML=XML.generarArchivoXML(dXML, "f.xml","");
             File xslt=new File("cadOriginalCFDI_3.xslt");
             System.out.println(xslt);
             //System.out.println(fXML.getAbsolutePath());

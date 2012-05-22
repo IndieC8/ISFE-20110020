@@ -185,7 +185,7 @@ public class Main2 {
             f.setTipoDeComprobante("INGRESO");
             f.generarTotal();
             Document dXML=xml.generarXML(f, isfe,"");
-            File fXML=XML.generarArchivoXML(dXML, "f2.xml");
+            File fXML=XML.generarArchivoXML(dXML, "f2.xml","");
             BufferedReader br=new BufferedReader(new FileReader(fXML));
             String l=br.readLine();
             while(l!=null){

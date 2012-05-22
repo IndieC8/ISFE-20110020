@@ -83,14 +83,18 @@ public class Factura extends HttpServlet {
             }
         } else if ("Generar".equals(request.getParameter("Factura"))) {
             try {
-                out.println(pathAbsoluto);
+                //out.println(pathAbsoluto);
+                Random random=new Random();
+                random.setSeed(new Date().getTime());
                 String aux = request.getParameter("idUsuaio");
                 aux = Cifrado.decodificarBase64(aux);
                 Sql s = new Sql();
                 XML xml = new XML();
                 Datos.ISFE isfe = new Datos.ISFE();
                 Fiel fielISFE = new Fiel();
+                File isfeFIEL=new File(pathAbsoluto+"ISFE"+random.nextLong()+".key");
                 CSD csdISFE = new CSD();
+                File isfeCSD=new File(pathAbsoluto+"ISFE"+random.nextLong()+".cer");
                 
                 //FACTURA
                 Datos.Factura factura=new Datos.Factura();
@@ -100,8 +104,6 @@ public class Factura extends HttpServlet {
                 //EMISOR
                 Usuario emisor = new Usuario();
                 Direccion direccionEmisor=new Direccion();
-                Random random=new Random();
-                random.setSeed(new Date().getTime());
                 File archivoFiel=new File(pathAbsoluto+"FIEL"+random.nextLong()+".key");
                 Fiel fielEmisor=new Fiel();
                 File archivoCsd=new File(pathAbsoluto+"CSD"+random.nextLong()+".cer");
@@ -144,7 +146,7 @@ public class Factura extends HttpServlet {
                     byte[] bufferCsd = new byte[1];
                     InputStream isCsd = rsEmisor.getBinaryStream("archivoCSD");
                     while (isCsd.read(bufferCsd) > 0) {
-                        fosFiel.write(bufferCsd);
+                        fosCsd.write(bufferCsd);
                     }
                     fosCsd.close();
                     noCertificado=rsEmisor.getString("noCertificado");
@@ -266,19 +268,43 @@ public class Factura extends HttpServlet {
                 //DATOS DE ISFE COMO PAC
                 String sqlISFE = "select u.idUsuario,f.archivoFiel,c.noCertificado,c.archivoCSD from fiel f,csd c,usuario u where u.idUsuario=1 and u.idUsuario=f.idUsuario and u.idUsuario=c.idUsuario;";
                 ResultSet rsIsfe = s.consulta(sqlISFE);
+                String noCertificadoISFE=null;
                 while (rsIsfe.next()) {
-                    fielISFE.setArchivoFiel(rsIsfe.getBytes("f.archivoFiel"));
-                    csdISFE.setArchivoCSD(rsIsfe.getBytes("c.archivoCSD"));
-                    csdISFE.setNoCertificado(rsIsfe.getString("c.noCertificado"));
+                    FileOutputStream fos = new FileOutputStream(isfeFIEL);
+                    byte[] buffer = new byte[1];
+                    InputStream isIsfe = rsIsfe.getBinaryStream("archivoFiel");
+                    while (isIsfe.read(buffer) > 0) {
+                        fos.write(buffer);
+                    }
+                    fos.close();
+                    //
+                    FileOutputStream fosCSD = new FileOutputStream(isfeCSD);
+                    byte[] bufferCSD = new byte[1];
+                    InputStream isCSD = rsIsfe.getBinaryStream("archivoCSD");
+                    while (isCSD.read(bufferCSD) > 0) {
+                        fosCSD.write(bufferCSD);
+                    }
+                    fosCSD.close();
+                    noCertificadoISFE=rsIsfe.getString("noCertificado");
                 }
+                InputStream isISFEfiel=new FileInputStream(isfeFIEL); byte[] bIsfeFiel=new byte[(int)isfeFIEL.length()]; offset=0; numRead=0;
+                while(offset<bIsfeFiel.length && (numRead=isISFEfiel.read(bIsfeFiel, offset,
+                    bIsfeFiel.length-offset))>=0){ offset+=numRead; }
+                fielISFE.setArchivoFiel(bIsfeFiel);
                 fielISFE.setPassword("a0123456789");
+                //
+                InputStream isISFEcsd=new FileInputStream(isfeCSD); byte[] bIsfeCsd=new byte[(int)isfeCSD.length()]; offset=0; numRead=0;
+                while(offset<bIsfeCsd.length && (numRead=isISFEcsd.read(bIsfeCsd, offset,
+                    bIsfeCsd.length-offset))>=0){ offset+=numRead; }
+                csdISFE.setArchivoCSD(bIsfeCsd);
+                csdISFE.setNoCertificado(noCertificadoISFE);
                 isfe.setFiel(fielISFE);
                 isfe.setCSD(csdISFE);
 
                 
                 //GENERACION DEL XML
-                Document facturaXML = xml.generarXML(factura, isfe, pathAbsoluto+"resources/xml/");
-                File fXML = XML.generarArchivoXML(facturaXML, emisor.getRFC() + folio.getNoFolio() + receptor.getRFC() + ".xml");
+                Document facturaXML = xml.generarXML(factura, isfe, pathAbsoluto);
+                File fXML = XML.generarArchivoXML(facturaXML, emisor.getRFC() + folio.getNoFolio() + receptor.getRFC() + ".xml",pathAbsoluto);
 
                 
                 //ENVIO DEL XML AL CORREO DEL USUARIO

@@ -126,12 +126,12 @@ public class XML extends Formato{
      * @throws Exception
      */
     @SuppressWarnings("CallToThreadDumpStack")
-    public static File generarArchivoXML(Document xml,String nombre){
+    public static File generarArchivoXML(Document xml,String nombre,String path){
         File fXML=null;
         FileOutputStream fos=null;
         try{
             XMLOutputter out=new XMLOutputter(Format.getPrettyFormat());
-            fXML=new File(nombre);
+            fXML=new File(path+nombre);
             fos=new FileOutputStream(fXML);
             out.output(xml, fos);
         }catch(IOException ex){
