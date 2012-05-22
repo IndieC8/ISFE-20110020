@@ -56,6 +56,7 @@ public class XML extends Formato{
         //BarraBidimensional.generarBarraDimensional(cadOriginal, "PRUEBA");
         PrivateKey LlavePrivada;
         LlavePrivada=Cifrado.getLlavePrivada(factura.getEmisor().getFiel().getArchivoFiel(), factura.getEmisor().getFiel().getPassword());
+        Cifrado.eliminarLlavePrivada(LlavePrivada);
         String sello = Cifrado.firmar(LlavePrivada, cadOriginal.getBytes("UTF-8"));
         factura.setCadenaCSD(sello);
         return cfdi.agregarSello(sello);
@@ -66,6 +67,7 @@ public class XML extends Formato{
         System.out.println(cadTimbre);
         PrivateKey key;
         key = Cifrado.getLlavePrivada(isfe.getFiel().getArchivoFiel(), isfe.getFiel().getPassword());
+        Cifrado.eliminarLlavePrivada(key);
         String sello = Cifrado.firmar(key, cadTimbre.getBytes("UTF-8"));
 	timbre.agregarSello(sello);
 	return cfdi.agregarTimbre(timbre.obtenerTimbre());

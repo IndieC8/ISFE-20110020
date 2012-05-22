@@ -10,6 +10,8 @@ import java.security.cert.X509Certificate;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.PKCS8EncodedKeySpec;
 import java.util.Date;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.apache.commons.codec.DecoderException;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.codec.binary.Hex;
@@ -35,10 +37,10 @@ import org.bouncycastle.jce.provider.BouncyCastleProvider;
  * @author Trabajo Terminal 20110020 Implementación del Servicio de Facturación Electrónica acorde a la reforma de enero de 2011
  */
 public class Cifrado {
-    static{
+    /**static{
         if(Security.getProvider("BC")==null)
             Security.addProvider(new BouncyCastleProvider());
-    }
+    }*/
     /**
      * Método encargado de descifrar la llave privada de la FIEL
      * @param LlavePrivadaCifrada obtenida de la FIEL del Usuario
@@ -48,8 +50,7 @@ public class Cifrado {
      * @throws SecurityException 
      */
     private static byte[] descifrarLlavePrivada(byte[] LlavePrivadaCifrada,String Password) throws IOException,SecurityException{
-        if(Security.getProvider("BC")==null)
-            Security.addProvider(new BouncyCastleProvider());
+        Security.addProvider(new BouncyCastleProvider());
         ASN1InputStream ais=new ASN1InputStream(new ByteArrayInputStream(LlavePrivadaCifrada));
         ASN1Sequence as=(ASN1Sequence)ais.readObject();
         EncryptedPrivateKeyInfo epki=new EncryptedPrivateKeyInfo(as);
@@ -75,8 +76,7 @@ public class Cifrado {
      * @return Parametros de cifrado necesarias para descifrar la llave privada
      */
     private static CipherParameters getParametrosCifrado(EncryptedPrivateKeyInfo epki, char[] Password){
-        if(Security.getProvider("BC")==null)
-            Security.addProvider(new BouncyCastleProvider());
+        Security.addProvider(new BouncyCastleProvider());
         ASN1Sequence as=(ASN1Sequence)epki.getEncryptionAlgorithm().getParameters();
         PBES2Parameters pbe2p=new PBES2Parameters(as);
         PBKDF2Params pbkdf2p=PBKDF2Params.getInstance(pbe2p.getKeyDerivationFunc().getParameters());
@@ -97,23 +97,22 @@ public class Cifrado {
      * @throws IOException
      * @throws SecurityException 
      */
-    public static PrivateKey getLlavePrivada(byte[] LlavePrivadaCifrada,String Password) throws IOException,SecurityException, NoSuchProviderException{
-        if(Security.getProvider("BC")==null)
-            Security.addProvider(new BouncyCastleProvider());
+    public static PrivateKey getLlavePrivada(byte[] LlavePrivadaCifrada,String Password) throws IOException,SecurityException, NoSuchProviderException, Exception{
+        Security.addProvider(new BouncyCastleProvider());
         try{
             KeyFactory kf=KeyFactory.getInstance("RSA", "BC");
             PKCS8EncodedKeySpec p8ekp=new PKCS8EncodedKeySpec(descifrarLlavePrivada(LlavePrivadaCifrada,Password));
             PrivateKey pk=kf.generatePrivate(p8ekp);
             return pk;
         }catch(InvalidKeySpecException ex){
-            System.err.println("ERROR: No se puede generar una llave RSA con los datos actuales");
-            return null;
+            Logger.getLogger(Cifrado.class.getName()).log(Level.SEVERE, null, ex);
+            throw new Exception(ex);
         }catch(NoSuchAlgorithmException ex){
-            System.err.println("ERROR: El proveedor BC no es capaz de soportar el algoritmo RSA");
-            return null;
+            Logger.getLogger(Cifrado.class.getName()).log(Level.SEVERE, null, ex);
+            throw new Exception(ex);
         }catch(NoSuchProviderException ex){
-            System.err.println("ERROR: No es posible encontrar el proveedor BC");
-            return null;
+            Logger.getLogger(Cifrado.class.getName()).log(Level.SEVERE, null, ex);
+            throw new Exception(ex);
         }
     }
     /**
@@ -121,8 +120,7 @@ public class Cifrado {
      * @param LlavePrivada descifrada de la FIEL
      */
     public static void eliminarLlavePrivada(PrivateKey LlavePrivada){
-        if(Security.getProvider("BC")==null)
-            Security.addProvider(new BouncyCastleProvider());
+        Security.addProvider(new BouncyCastleProvider());
         byte[] datosLlave=LlavePrivada.getEncoded();
         try{
             SecureRandom sr=SecureRandom.getInstance("RSA");
@@ -141,26 +139,25 @@ public class Cifrado {
      * @return firma o sello del CFDI que se genere
      * @throws SecurityException 
      */
-    public static String firmar(PrivateKey LlavePrivada,byte[] datos) throws SecurityException{
-        if(Security.getProvider("BC")==null)
-            Security.addProvider(new BouncyCastleProvider());
+    public static String firmar(PrivateKey LlavePrivada,byte[] datos) throws SecurityException, Exception{
+        Security.addProvider(new BouncyCastleProvider());
         try{
             Signature s=Signature.getInstance("SHA1withRSA", "BC");
             s.initSign(LlavePrivada);
             s.update(datos);
             return codificarBase64(s.sign());
         }catch(SignatureException ex){
-            System.err.println("ERROR: No se puede crear la firma");
-            return null;
+            Logger.getLogger(Cifrado.class.getName()).log(Level.SEVERE, null, ex);
+            throw new Exception(ex);
         }catch(InvalidKeyException ex){
-            System.err.println("ERROR: La llave no es válida");
-            return null;
+            Logger.getLogger(Cifrado.class.getName()).log(Level.SEVERE, null, ex);
+            throw new Exception(ex);
         }catch(NoSuchAlgorithmException ex){
-            System.err.println("ERROR: El proveedor BC no es capaz de soportar SHA1withRSA");
-            return null;
+            Logger.getLogger(Cifrado.class.getName()).log(Level.SEVERE, null, ex);
+            throw new Exception(ex);
         }catch(NoSuchProviderException ex){
-            System.err.println("ERROR: No se encuentra ningún proveedor");
-            return null;
+            Logger.getLogger(Cifrado.class.getName()).log(Level.SEVERE, null, ex);
+            throw new Exception(ex);
         }
     }
     /**
@@ -170,8 +167,7 @@ public class Cifrado {
      * @return digesto de los datos recibidos
      */
     public static String digerir(byte[] datos){
-        if(Security.getProvider("BC")==null)
-            Security.addProvider(new BouncyCastleProvider());
+        Security.addProvider(new BouncyCastleProvider());
         try{
             MessageDigest digesto=MessageDigest.getInstance("SHA1","BC");
             digesto.update(datos);
