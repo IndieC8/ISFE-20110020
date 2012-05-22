@@ -33,11 +33,11 @@
                     rules: {
                         passwordUsuario:{
                             required: true,
-                            minlength: 5
+                            minlength: 8
                         },
                         rePasswordUsuario: {
                             required: true,
-                            minlength: 5,
+                            minlength: 8,
                             equalTo: "#passwordUsuario"
                         }
                             
@@ -45,11 +45,11 @@
                     messages:{
                         passwordUsuario:{
                             required: "Ingresa una contaseña de acceso",
-                            minlength: "Ingresa más de 5 caracteres"
+                            minlength: "Ingresa más de 8 caracteres"
                         },
                         rePasswordUsuario: {
                             required: "Confirma tu contraseña de acceso",
-                            minlength: "Ingresa más de 5 caracteres",
+                            minlength: "Ingresa más de 8 caracteres",
                             equalTo: "Las contraseñas deben ser iguales"
                         }
                             

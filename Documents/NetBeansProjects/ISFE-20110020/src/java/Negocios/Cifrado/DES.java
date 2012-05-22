@@ -4,6 +4,7 @@
  */
 package Negocios.Cifrado;
 
+import java.io.UnsupportedEncodingException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
@@ -28,8 +29,8 @@ public class DES {
              */
             SecretKeyFactory skf = SecretKeyFactory.getInstance("DES");
             DESKeySpec kspec = new DESKeySpec(clave.getBytes());
-             key = skf.generateSecret(kspec);
-            
+            key = skf.generateSecret(kspec);
+
             /*
              * PASO 2: Crear cifrador
              */
@@ -38,6 +39,7 @@ public class DES {
              * Algoritmo DES Modo : ECB (Electronic Code Book) Relleno :
              * PKCS5Padding
              */
+            System.out.println(key);
         } catch (NoSuchPaddingException ex) {
             Logger.getLogger(DES.class.getName()).log(Level.SEVERE, null, ex);
 
@@ -46,49 +48,56 @@ public class DES {
         } catch (InvalidKeyException ex) {
             Logger.getLogger(DES.class.getName()).log(Level.SEVERE, null, ex);
         } catch (InvalidKeySpecException ex) {
-                Logger.getLogger(DES.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(DES.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
     public String Cifrador(String Cadena) {
-        String textoCifrado = null;
+        String textoCifrado = new String();
         try {
-            /*
-             * PASO 3b: Inicializar cifrador en modo DESCIFRADO
-             */
             cifrador.init(Cipher.ENCRYPT_MODE, key);
-            byte[] cadenaBytes = Cadena.getBytes();
-            byte[] bufferCifrado = cifrador.doFinal(cadenaBytes);
-           textoCifrado = new String(bufferCifrado);
-            
+            byte[] cadena = Cadena.getBytes();
+            byte[] bufferCifrado = cifrador.update(cadena);
+
+            textoCifrado = textoCifrado + new String(bufferCifrado, "ISO-8859-1");
+
+           
+
+
+
         } catch (InvalidKeyException ex) {
             Logger.getLogger(DES.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (IllegalBlockSizeException ex) {
-                Logger.getLogger(DES.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (BadPaddingException ex) {
-                Logger.getLogger(DES.class.getName()).log(Level.SEVERE, null, ex);
-            }
+        } catch (UnsupportedEncodingException ex) {
+            Logger.getLogger(DES.class.getName()).log(Level.SEVERE, null, ex);
+        }
         return textoCifrado;
     }
-    
-    public String Descifrado(String textoCifrado){
-        String textoClaro = null;
+
+    public String Descifrado(String textoCifrado) {
+        String textoClaro = new String();
         try {
-            /*
-             * PASO 3a: Inicializar cifrador en modo CIFRADO
-             */
             cifrador.init(Cipher.DECRYPT_MODE, key);
-            byte[] bufferCifrado = cifrador.doFinal(textoCifrado.getBytes());
-           textoCifrado = new String(bufferCifrado);
+            byte[] cadena = textoCifrado.getBytes();
+            byte[] bufferCifrado = cifrador.update(cadena);
+            textoClaro = textoClaro + new String(bufferCifrado, "ISO-8859-1");
             
+
+
         } catch (InvalidKeyException ex) {
             Logger.getLogger(DES.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (IllegalBlockSizeException ex) {
-                Logger.getLogger(DES.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (BadPaddingException ex) {
-                Logger.getLogger(DES.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        
+        } catch (UnsupportedEncodingException ex) {
+            Logger.getLogger(DES.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
         return textoClaro;
+    }
+
+    public static void main(String arg[]) {
+        DES des = new DES("12345678");
+        String rfc = des.Cifrador("QUOG891212MDF");
+        System.out.println("RFC: QUOG891212MDF");
+        System.out.println(rfc);
+        String aux = des.Descifrado(rfc);
+        System.out.println("Cadena descifrada: " + aux);
     }
 }

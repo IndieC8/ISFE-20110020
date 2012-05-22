@@ -96,8 +96,8 @@ $(function() {
                     $("#pwd2ModificarPerfil").val("");
                     $("#pwdModificarPerfil").focus();
                     return false;
-                }else if(pwd1.length < 5){
-                    $("#errorModificarPwd").text("Ingresa más de 5 caracteres");
+                }else if(pwd1.length < 8){
+                    $("#errorModificarPwd").text("Ingresa más de 8 caracteres");
                     $("#pwdModificarPerfil").val("");
                     $("#pwd2ModificarPerfil").val("");
                     $("#pwdModificarPerfil").focus();

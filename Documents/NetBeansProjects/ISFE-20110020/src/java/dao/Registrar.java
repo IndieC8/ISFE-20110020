@@ -64,9 +64,9 @@ public class Registrar extends HttpServlet {
                 Sql sql = new Sql();
                 
                 DES des = new DES(password);
-                out.println("Cifrando rfc: "+des.Cifrador(rfc) +"\n");
+                //out.println("Cifrando rfc: "+des.Cifrador(rfc) +"\n");
 
-                /*if ("Moral".equals(request.getParameter("Tipo"))) {
+               /*if ("Moral".equals(request.getParameter("Tipo"))) {
                     String razon = request.getParameter("razon");
                     String consulta = "INSERT INTO usuario VALUES(0,true,null,null,null,'" + razon + "',null,'" + rfc + "','" + password + "',"
                             + "'" + mail + "','" + telefono + "','" + calle + "','" + exterior + "','" + interior + "','" + referencia + "'," + localidad + ")";
@@ -78,7 +78,7 @@ public class Registrar extends HttpServlet {
                     String materno = request.getParameter("materno");
                     String curp = request.getParameter("curp");
 
-                    String consulta = "INSERT INTO usuario VALUES(0,false,'" + nombre + "','" + paterno + "','" + materno + "',null,'" + curp + "','" + rfc + "','" + password + "',"
+                    String consulta = "INSERT INTO usuario VALUES(0,false,'" + nombre + "','" + materno + "','" + paterno + "',null,'" + curp + "','" + rfc + "','" + password + "',"
                             + "'" + mail + "','" + telefono + "','" + calle + "','" + exterior + "','" + interior + "','" + referencia + "'," + localidad + ")";
                     sql.ejecuta(consulta);
                 }*/

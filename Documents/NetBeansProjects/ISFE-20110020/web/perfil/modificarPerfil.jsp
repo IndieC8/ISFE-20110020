@@ -108,10 +108,10 @@
             </p>
             <form>
                 <fieldset>  
-                    Contraseña: &nbsp; &nbsp;
+                    Contraseña: &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
                     <input type="password" id="pwdModificarPerfil" maxlength="30" />
                     <br>
-                    Repite tu Contraseña: &nbsp; &nbsp;
+                    Repite tu Contraseña: &nbsp; 
                     <input type="password" id="pwd2ModificarPerfil" maxlength="30" />
                 </fieldset>
             </form>

@@ -26,17 +26,67 @@
         <link rel="stylesheet" type="text/css" href="../estilo/style.css" />
         <script type="text/javascript" src="../js/jquery-1.7.1.min.js"></script>
         <script type="text/javascript" src="../js/jquery-ui-1.8.17.custom.min.js"></script>
-        <script src="../../ui/jquery.ui.core.js"></script>
-        <script src="../../ui/jquery.ui.widget.js"></script>
-        <script src="../../ui/jquery.ui.datepicker.js"></script>
+        <script src="../js/ui/jquery.ui.core.js"></script>
+        <script src="../js/ui/jquery.ui.widget.js"></script>
+        <script src="../js/ui/jquery.ui.datepicker.js"></script>
+        <script src="../js/ui/jquery.ui.dialog.js"></script>
 
 
         <script type="text/javascript">
+            var id = 0;
+            $(function() {
+                // a workaround for a flaw in the demo system (http://dev.jqueryui.com/ticket/4375), ignore!
+                $( "#dialog:ui-dialog" ).dialog( "destroy" );
+		
                 
+                $("#dialogCancelar").dialog({
+                    autoOpen: false,
+                    height: 205,
+                    width: 330,
+                    modal: true,
+                    buttons: {
+                        "Aceptar": function() {
+                            $.ajax({
+                                url: "../Mensuales",
+                                type: "POST",
+                                data: "Factura=Cancelar&idFolio="+id,
+                                success: function(){
+                                    BuscarCancelacion();
+                                }
+                            });
+                            $( this ).dialog("close");
+                                        
+                        },
+                        Cancelar: function() {
+                            $("#ConfirmarModificacion").hide();
+                            $("#MensajeConfirmarModificacion").text("");
+                            $( this ).dialog( "close" );
+                        }
+                    },
+                    close: function() {
+                        allFields.val( "" ).removeClass( "ui-state-error" );
+                    }
+                });
+            });
+            
             $(function(){
 
                 // Tabs
                 $('#tabs').tabs();
+                
+                // Dialog			
+                $('#dialog').dialog({
+                    autoOpen: false,
+                    width: 600,
+                    buttons: {
+                        "Ok": function() { 
+                            $(this).dialog("close"); 
+                        }, 
+                        "Cancel": function() { 
+                            $(this).dialog("close"); 
+                        } 
+                    }
+                });
 
 				
             });
@@ -48,15 +98,58 @@
                     $( "#datepicker" ).datepicker( "option", "dateFormat", $( this ).val() );
                 });
                 
+                $("#cancelar").datepicker();
+                $( "#format" ).change(function() {
+                    $( "#cancelar" ).datepicker( "option", "dateFormat", $( this ).val() );
+                });
     
             });
+            
+            function BuscarCancelacion(){
+                $("#ErrorFechaCancelar").text("");
+                
+                var Fecha = new Date();
+                var fecha = $("#cancelar").val();
+                var aux =  fecha.split("/");
+                
+                if(aux[1].length == 2){
+                    var x = aux[1].split("");
+                    var mes = x[1];
+                }
+                
+                if( (Fecha.getMonth() + 1) != mes ){
+                    $("#ErrorFechaCancelar").text("Solo días de este mes!");
+                }else{
+                    fecha = aux[2]+aux[1]+aux[0];
+                    $.ajax({
+                        url: "../Mensuales",
+                        type: "POST",
+                        data: "Factura=Buscar&idUsuario=<%=id%>",
+                        success: function(data){
+                            if(data != 0){
+                                $("#TablaFacturasACancelar").html(data);
+                                $("#TablaFacturasACancelar").show();
+                            }else{
+                               $("#ErrorFechaCancelar").text("No hay facturas con esa fecha!"); 
+                            }
+                        }
+                    });
+                }
+            }
+            
+            function Cancelar(idFolio){
+                var nombre =  $("#Nombre_"+idFolio).text();
+                $("#instruccionCancelacion").text(nombre+".xml");
+                id = idFolio;
+                $("#dialogCancelar").dialog("open");
+            }
         
             function Buscar(){
                 $("#ErrorFechaElaboracion").text("");
                 var fecha = $("#datepicker").val();
                 if(fecha != ""){
                     var aux = fecha.split("/");
-                    fecha = aux[2]+aux[0]+aux[1];
+                    fecha = aux[2]+aux[1]+aux[0];
                     $.ajax({
                         url: "../Impresa",
                         type: "POST",
@@ -78,10 +171,26 @@
             
             function Limpiar(){
                 $("#ErrorFechaElaboracion").text("");
+                $("#ErrorFechaCancelar").text("");
             }
         </script>
     </head>
     <body>
+        <!--Aqui va el dialogo de Eliminar Cliente-->
+        <div id="dialogCancelar" title="ISFE- Cancelar Factura">
+            <p class="validateTips">
+                <img src="../images/important.gif" />
+                &nbsp; 
+                ¿Seguro que deseas cancelar tu facutura?
+            </p>
+            <form>
+                <fieldset>
+                     <label class="texto" id="instruccionCancelacion"></label>
+                </fieldset>
+            </form>
+        </div>
+        <!--Aqui termina el dialogo de Eliminar Cliente-->
+
     <center>
         <div class="principal">
             <div class="header">
@@ -126,6 +235,7 @@
                                 <font color="red">Ingrese la fecha de Elaboración de tu Factura</font><br>
                                 <table border="0">
                                     <tr>
+                                        <td rowspan="19"><img src="../images/formularios/factura_pdf.jpg"/></td>
                                         <td>Fecha de Elaboración: </td>
                                         <td>
                                             <input type="text" id="datepicker" onclick="Limpiar()" width="20"/>
@@ -139,7 +249,22 @@
                             <div id="ResultadoFacturas" style="display: none"></div>
                         </div>
                         <div id="tabs-2">
-
+                            <form id="buscarFacturasCancelar">
+                                <font color="red">Ingrese el día de Elaboración de tu Factura</font><br>
+                                <table border="0">
+                                    <tr>
+                                        <td rowspan="19"><img src="../images/formularios/factura_cancelar.jpg"/></td>
+                                        <td>Fecha de Elaboración: </td>
+                                        <td>
+                                            <input type="text" id="cancelar" onclick="Limpiar()" width="20"/>
+                                            <label id="ErrorFechaCancelar"></label>
+                                        </td>
+                                        <td><input type="button" onclick="BuscarCancelacion()" value="&nbsp; Buscar Facturas &nbsp;" class="ui-button ui-widget ui-state-default ui-corner-all" role="button" aria-disabled="false"/></td>
+                                    </tr>
+                                </table>
+                            </form>
+                            <br/><br/>
+                            <div id="TablaFacturasACancelar" style="display: none"></div>
                         </div>
                     </div>
                     <br><br>

@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.ServletException;
@@ -20,7 +21,7 @@ import javax.servlet.http.HttpServletResponse;
  *
  * @author lupe
  */
-public class Impresa extends HttpServlet {
+public class Mensuales extends HttpServlet {
 
     /**
      * Processes requests for both HTTP
@@ -36,60 +37,61 @@ public class Impresa extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         PrintWriter out = response.getWriter();
-        Sql s = new Sql();
+        Sql sql = new Sql();
         try {
-            /*
-             * TODO output your page here. You may use following sample code.
-             */
-            if ("Buscar".equals(request.getParameter("Factura"))) {
+            if("Cancelar".equals(request.getParameter("Factura"))){
+                String idFolio = request.getParameter("idFolio");
+                String consulta = "UPDATE folios SET usado = 2 WHERE idFolio = "+ Integer.parseInt(idFolio) +"";
+                sql.ejecuta(consulta);
+            }else if ("Buscar".equals(request.getParameter("Factura"))) {
+                String id = request.getParameter("idUsuario");
+                id = Cifrado.decodificarBase64(id);
 
-                String idUsuario = request.getParameter("idUsuario");
-                idUsuario = Cifrado.decodificarBase64(idUsuario);
-                String fecha = request.getParameter("Fecha");  /*
-                 * aaaa/mm/dd
-                 */
-
-                String consulta = "SELECT COUNT(*) as contador FROM factura WHERE idUsuario = " + Integer.parseInt(idUsuario) + " AND fechaElaboracion = " + fecha + "";
-                ResultSet rs;
-                rs = s.consulta(consulta);
-
-
+                Date fecha = new Date();
+                String mes = String.valueOf(fecha.getMonth() + 1);
                 int Columnas = 0;
-                if (rs.next()) {
+                                
+                String consulta = "SELECT COUNT(*) as contador FROM factura f, folios fo WHERE f.idUsuario = " + Integer.parseInt(id) + " AND MONTH(f.fechaElaboracion) = "+ mes +" AND f.idFolio = fo.idFolio AND fo.usado = 1" ;
+                ResultSet rs = sql.consulta(consulta);
+                if(rs.next()){
                     Columnas = rs.getInt("contador");
                 }
-
-                if (Columnas > 0) {
-                    out.println("<table align= \"center\" id=\"ResultadoBusquedaFactua\">");
+                
+                if(Columnas > 0){
+                    out.println("<table align= \"center\" id=\"FacturasCancelar\">");
                     out.println("<tr>");
                     out.println("<th  align=\"center\">&nbsp; &nbsp; &nbsp; Nombre de la Factura &nbsp; &nbsp;</th>");
                     out.println("<th  align=\"center\">&nbsp; &nbsp; &nbsp; Fecha &nbsp; &nbsp;</th>");
                     out.println("<th  align=\"center\">&nbsp; &nbsp;</th>");
                     out.println("</tr>");
-
-                    consulta = "SELECT f.idFactura,f.fechaElaboracion, f.nombreXML FROM factura f, folios fo WHERE f.idUsuario = " + Integer.parseInt(idUsuario) + " AND f.fechaElaboracion = " + fecha + " AND f.idFolio = fo.idFolio AND fo.usado = 1";
-                    rs = s.consulta(consulta);
-                    while (rs.next()) {
+                    
+                    consulta = "SELECT f.nombreXML, f.idFolio, f.fechaElaboracion FROM factura f, folios fo WHERE f.idUsuario = " + Integer.parseInt(id) + " AND MONTH(f.fechaElaboracion) = "+ mes +" AND f.idFolio = fo.idFolio AND fo.usado = 1";
+                    rs = sql.consulta(consulta);
+                    while(rs.next()){
                         out.println("<tr>");
-                        out.println("<td Style=\"font-size: 10px;\" align=\"center\">" + rs.getString("nombreXML") + "</td>");
+                        out.println("<td id=\"Nombre_"+rs.getInt("idFolio") +"\" Style=\"font-size: 10px;\" align=\"center\">" + rs.getString("nombreXML") + "</td>");
                         out.println("<td Style=\"font-size: 10px;\" align=\"center\">" + rs.getString("fechaElaboracion") + "</td>");
-                        out.println("<td align=\"center\"><span><img src=\"../images/formularios/pdfICON.jpg\" title=\"Generar PDF\" alt=\"Generar PDF\" style=\"cursor:pointer\" onClick=\"GenerarPDF(" + rs.getInt("idFactura") + ")\"/></span></td>");
+                        out.println("<td align=\"center\"><span><img src=\"../images/formularios/cancel.jpg\" title=\"Cancelar XML\" alt=\"Cancelar XML\" style=\"cursor:pointer\" onClick=\"Cancelar(" + rs.getInt("idFolio") + ")\"/></span></td>");
                         out.println("</tr>");
                     }
                     
                     out.println("</table>");
                     out.println("<br/><br/>");
-                } else {
+                }else{
                     out.println("0");
                 }
+                
+                
+
+
             }
         } catch (InstantiationException ex) {
-            Logger.getLogger(Impresa.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(Mensuales.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            Logger.getLogger(Impresa.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(Mensuales.class.getName()).log(Level.SEVERE, null, ex);
         } catch (SQLException ex) {
-            Logger.getLogger(Impresa.class.getName()).log(Level.SEVERE, null, ex);
-
+            out.println(ex);
+            //Logger.getLogger(Mensuales.class.getName()).log(Level.SEVERE, null, ex);
         } finally {
             out.close();
         }
