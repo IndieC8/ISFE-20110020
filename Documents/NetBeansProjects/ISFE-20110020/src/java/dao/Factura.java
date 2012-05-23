@@ -10,7 +10,6 @@ import Integracion.ConexionSAT.SAT;
 import Negocios.Cifrado.Cifrado;
 import Negocios.ObtenerFiel.Fiel;
 import Negocios.ObtenerFolios.Folio;
-import com.mysql.jdbc.Blob;
 import java.io.*;
 import java.security.NoSuchProviderException;
 import java.sql.ResultSet;
@@ -320,20 +319,24 @@ public class Factura extends HttpServlet {
 
                 
                 //ALMACENAMIENTO DEL XML EN LA BASE DE DATOS DE ISFE
-                String sqlFactura = "instert into factura (facturaXML,formaPago,idUsuario,idFolio,nombreXML) values (" + fXML + ",'" + factura.getFormaDePago() + "'," + aux + "," + idFolio + ",'" + emisor.getRFC() + folio.getNoFolio() + receptor.getRFC() + "');";
-                s.consulta(sqlFactura);
-                fXML.delete();
-                out.println("Factura generada exitosamente, y se ha enviado al correo:\n " + emisor.getCorreo());
+                //String sqlFactura = "instert into factura (facturaXML,formaPago,idUsuario,idFolio,nombreXML) values (" + fXML + ",'" + factura.getFormaDePago() + "'," + aux + "," + idFolio + ",'" + emisor.getRFC() + folio.getNoFolio() + receptor.getRFC() + "');";
+                //s.consulta(sqlFactura);
+                //fXML.delete();
+                //out.println("Factura generada exitosamente, y se ha enviado al correo:\n " + emisor.getCorreo());
 
                 //VARIABLES AUXILIARES PARA CONSULTAS SQL
                 idFolioPDF = idFolio;
                 idUsuario = aux;
                 
-                fXML.delete();
+                //fXML.delete();
                 isfeFIEL.delete();
                 isfeCSD.delete();
                 archivoFiel.delete();
                 archivoCsd.delete();
+                
+                //PRUEBA PDF
+                File pdf = PDF.generarArchivoPDF(fXML, pathAbsoluto+"/resources/xslt/", pathAbsoluto+factura.getEmisor().getRFC()+factura.getFolio().getNoFolio()+factura.getReceptor().getRFC() + ".pdf");
+                PDF.visualizarPDF(pdf, response, request);
 
             } catch (InstantiationException ex) {
                 Logger.getLogger(Factura.class.getName()).log(Level.SEVERE, null, ex);
@@ -379,7 +382,8 @@ public class Factura extends HttpServlet {
                 }
 
                 //GENERACIÓN DEL PDF (FACTURA IMPRESA) PARA VISUALIZARLO EN LA PAGINA WEB
-                File pdf = PDF.generarArchivoPDF(xml, pathAbsoluto+"/resources/xslt/", rsPDF.getString("nombreXML") + ".pdf");
+                String nombrePDF=pathAbsoluto+rsPDF.getString("nombreXML") + ".pdf";
+                File pdf = PDF.generarArchivoPDF(xml, pathAbsoluto+"/resources/xslt/", nombrePDF);
                 PDF.visualizarPDF(pdf, response, request);
             } catch (InstantiationException ex) {
                 Logger.getLogger(Factura.class.getName()).log(Level.SEVERE, null, ex);

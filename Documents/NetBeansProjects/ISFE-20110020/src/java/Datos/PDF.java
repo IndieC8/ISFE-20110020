@@ -1,6 +1,8 @@
 package Datos;
 
 import java.io.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.xml.transform.*;
@@ -96,13 +98,27 @@ public class PDF extends Formato{
      * @param request del jsp
      * @throws IOException Si hay errores de entrada/salida
      */
-    public static void visualizarPDF(File pdf,HttpServletResponse response,HttpServletRequest request)throws IOException{
-        String path=request.getSession().getServletContext().getRealPath("/");
-        response.setContentType("application/pdf");
-        byte[] bytePDF=new byte[(int)pdf.length()];
-        FileInputStream fis=new FileInputStream(pdf);
-        fis.read();
-        response.getOutputStream().write(bytePDF);
-        response.getOutputStream().close();
+    public static void visualizarPDF(File pdf,HttpServletResponse response,HttpServletRequest request){
+        InputStream in = null;
+        try {
+            in = new FileInputStream(pdf);
+            byte[] datos=new byte[in.available()];
+            in.read(datos);
+            response.setContentType("application/pdf");
+            response.setHeader("Content-Disposition", "attachment;filename=\""+pdf.getName()+"\";");
+            javax.servlet.ServletOutputStream sos = response.getOutputStream();
+            sos.write(datos);
+            sos.flush();
+            sos.close();
+        } catch (IOException ex) {
+            Logger.getLogger(PDF.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                in.close();
+            } catch (IOException ex) {
+                Logger.getLogger(PDF.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        
     }
 }

@@ -48,7 +48,7 @@ public class XML extends Formato{
     }
     private Document crearXML(Factura factura,CFDI cfdi,String path) throws IOException, SecurityException, NoSuchProviderException, Exception{
         
-        String cadOriginal = CadenaOriginal.generarCadenaOriginal(path+"cadOriginalCFDI_3.xslt",cfdi.generarCFDI());
+        String cadOriginal = CadenaOriginal.generarCadenaOriginal(path+"/resources/xml/"+"cadOriginalCFDI_3.xslt",cfdi.generarCFDI());
         System.out.println("CO:"+cadOriginal);
         SAT sat=new SAT();
         System.out.println("Fiel:"+factura.getEmisor().getFiel().getArchivoFiel());
@@ -60,7 +60,7 @@ public class XML extends Formato{
     }
     private Document timbrarCFDI(Factura factura,CFDI cfdi,ISFE isfe,String path) throws SecurityException, UnsupportedEncodingException, NoSuchProviderException, IOException, Exception{
         Timbre timbre=new Timbre();
-        String cadTimbre = CadenaOriginal.generarCadenaOriginal(path+"cadOriginalTFD_1.xslt", timbre.agregarTimbre(factura, isfe));
+        String cadTimbre = CadenaOriginal.generarCadenaOriginal(path+"/resources/xml/"+"cadOriginalTFD_1.xslt", timbre.agregarTimbre(factura, isfe));
         SAT sat=new SAT();
         String sello = sat.ValidarCadenaOriginal(cadTimbre,isfe.getFiel().getArchivoFiel(),isfe.getFiel().getPassword(),false);
 	timbre.agregarSello(sello);
