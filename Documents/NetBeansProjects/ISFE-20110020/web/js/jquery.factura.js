@@ -70,14 +70,20 @@ $(function() {
                 var unitario = new Array(col);
                 var totalProducto = new Array(col);
                 var descripcion = new Array(col);
+                var aux =$("#Algo").val();
+                var indice = 0;
+                
                 for(i=0;i<col;i++){
-                    cantidad[i]=$("#tbDetalleCantidad_"+i).val();
-                    nombre[i]=$("#tbDetalleNombre_"+i).val();
-                    unitario[i]=$("#tbDetalleImporte_"+i).val();
-                    totalProducto[i]=$("#tbDetalleTotal_"+i).val();
-                    descripcion[i]=$("#tbDetalleDescripcion_"+i).val();
+                    if( aux != $("#tbDetalleCantidad_"+i).val() ){
+                        cantidad[indice]=$("#tbDetalleCantidad_"+i).val();
+                        nombre[indice]=$("#tbDetalleNombre_"+i).val();
+                        unitario[indice]=$("#tbDetalleImporte_"+i).val();
+                        totalProducto[indice]=$("#tbDetalleTotal_"+i).val();
+                        descripcion[indice]=$("#tbDetalleDescripcion_"+i).val();
+                        indice++;
+                    }
                 }
-                GenerarXML(col,cantidad,nombre,unitario,totalProducto,descripcion,Sub,Iva,Total);
+                GenerarXML(indice,cantidad,nombre,unitario,totalProducto,descripcion,Sub,Iva,Total);
                 $( this ).dialog("close");
                                         
             },
@@ -305,15 +311,18 @@ function fill(nombreProducto,descripcionProducto,unidadProducto,valorUnitario,id
 
 function GenerarFactura(){
     
+    var aux = $("#Algo").val();
     col = parseInt($("#cant_campos").val() );
     Total = 0;
     Iva = 0;
     Sub = 0;
     
     for(i=0; i<col;i++){
-        Total = Total + parseFloat($("#tbDetalleTotal_"+i).val());
-        Iva = Iva + parseFloat($("#tbDetalleIVA_"+i).val());
-        Sub = Sub + parseFloat($("#tbDetalleSubtotal_"+i).val());
+        if( $("#tbDetalleTotal_"+i).val() != aux ){
+            Total = Total + parseFloat($("#tbDetalleTotal_"+i).val());
+            Iva = Iva + parseFloat($("#tbDetalleIVA_"+i).val());
+            Sub = Sub + parseFloat($("#tbDetalleSubtotal_"+i).val());
+        }
     }
     
        

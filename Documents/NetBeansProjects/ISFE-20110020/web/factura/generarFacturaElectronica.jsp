@@ -170,11 +170,11 @@
                 </select>
             </fieldset>
             <fieldset>  
-                <label class="texto">
-                    Tipo de Comprobante: &nbsp;
-                    <input type="radio" name="Comprobante" value="Egreso">Egreso
-                    <input type="radio" name="Comprobante" value="Ingreso">Ingreso
-                </label>
+                  Tipo de Comprobante: &nbsp; &nbsp;
+                  <select id="tipoComprobante">
+                      <option value="EGRESO">EGRESO</option>
+                      <option value="INGRESO">INGRESO</option>
+                  </select>
             </fieldset>
         </form>
     </div>
