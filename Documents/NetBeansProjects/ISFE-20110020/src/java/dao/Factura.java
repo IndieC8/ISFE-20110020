@@ -248,9 +248,7 @@ public class Factura extends HttpServlet {
                 }
                 folio.setNoFolio(Long.parseLong(numFolio));
                 folio.setUUID(Long.parseLong(idFolio));
-                //ESTABLECIENDO EL ESTADO DEL FOLIO USADO
-                String actualizaEstadoFolio = "update folios set usado=1 where usado=0 and idFolio = " + idFolio + " limit 1";
-                s.ejecutaUpdate(actualizaEstadoFolio);
+                
 
                 //CARGANDO DATOS  A LA FACTURA
                 factura.setExpedidoEn(expedidoEn);
@@ -322,8 +320,12 @@ public class Factura extends HttpServlet {
                 //String sqlFactura = "instert into factura (facturaXML,formaPago,idUsuario,idFolio,nombreXML) values (" + fXML + ",'" + factura.getFormaDePago() + "'," + aux + "," + idFolio + ",'" + emisor.getRFC() + folio.getNoFolio() + receptor.getRFC() + "');";
                 //s.consulta(sqlFactura);
                 //fXML.delete();
-                //out.println("Factura generada exitosamente, y se ha enviado al correo:\n " + emisor.getCorreo());
+                out.println("Factura generada exitosamente, y se ha enviado al correo:\n " + emisor.getCorreo());
 
+                //ESTABLECIENDO EL ESTADO DEL FOLIO USADO
+                String actualizaEstadoFolio = "update folios set usado=1 where usado=0 and idFolio = " + idFolio + " limit 1";
+                s.ejecutaUpdate(actualizaEstadoFolio);
+                
                 //VARIABLES AUXILIARES PARA CONSULTAS SQL
                 idFolioPDF = idFolio;
                 idUsuario = aux;
@@ -335,8 +337,8 @@ public class Factura extends HttpServlet {
                 archivoCsd.delete();
                 
                 //PRUEBA PDF
-                File pdf = PDF.generarArchivoPDF(fXML, pathAbsoluto+"/resources/xslt/", pathAbsoluto+factura.getEmisor().getRFC()+factura.getFolio().getNoFolio()+factura.getReceptor().getRFC() + ".pdf");
-                PDF.visualizarPDF(pdf, response, request);
+                //File pdf = PDF.generarArchivoPDF(fXML, pathAbsoluto+"/resources/xslt/", pathAbsoluto+factura.getEmisor().getRFC()+factura.getFolio().getNoFolio()+factura.getReceptor().getRFC() + ".pdf");
+                //PDF.visualizarPDF(pdf, response, request);
 
             } catch (InstantiationException ex) {
                 Logger.getLogger(Factura.class.getName()).log(Level.SEVERE, null, ex);
