@@ -10,7 +10,6 @@ import Integracion.ConexionSAT.SAT;
 import Negocios.Cifrado.Cifrado;
 import Negocios.ObtenerFiel.Fiel;
 import Negocios.ObtenerFolios.Folio;
-import com.mysql.jdbc.Blob;
 import java.io.*;
 import java.security.NoSuchProviderException;
 import java.sql.ResultSet;
@@ -249,9 +248,7 @@ public class Factura extends HttpServlet {
                 }
                 folio.setNoFolio(Long.parseLong(numFolio));
                 folio.setUUID(Long.parseLong(idFolio));
-                //ESTABLECIENDO EL ESTADO DEL FOLIO USADO
-                String actualizaEstadoFolio = "update folios set usado=1 where usado=0 and idFolio = " + idFolio + " limit 1";
-                s.ejecutaUpdate(actualizaEstadoFolio);
+                
 
                 //CARGANDO DATOS  A LA FACTURA
                 factura.setExpedidoEn(expedidoEn);
@@ -267,6 +264,7 @@ public class Factura extends HttpServlet {
                 factura.setFolio(folio);
                 factura.setFecha(new Date());
                 
+          
                 
                 //DATOS DE ISFE COMO PAC
                 String sqlISFE = "select u.idUsuario,f.archivoFiel,c.noCertificado,c.archivoCSD from fiel f,csd c,usuario u where u.idUsuario=1 and u.idUsuario=f.idUsuario and u.idUsuario=c.idUsuario;";
@@ -315,26 +313,32 @@ public class Factura extends HttpServlet {
                 
                 //ENVIO DEL XML AL CORREO DEL USUARIO
                 EnvioMail mail = new EnvioMail();
- //               mail.EnvioMail(emisor.getCorreo(), "Entrega de Factura Electrónica ISFE " + new Date(), "ISFE, hace entrega de la factura electrónica en formato XML.\nHacemos de su conocimiento que en este momento el resguardo de la factura\nes responsabilidad de usted.\n\nGracias por utilizar ISFE.", fXML, emisor.getRFC() + folio.getNoFolio() + receptor.getRFC() + ".xml");
-                mail.EnvioMail("manzana.pera@hotmail.com", "Entrega de Factura Electrónica ISFE " + new Date(), "ISFE, hace entrega de la factura electrónica en formato XML.\nHacemos de su conocimiento que en este momento el resguardo de la factura\nes responsabilidad de usted.\n\nGracias por utilizar ISFE.", fXML, emisor.getRFC() + folio.getNoFolio() + receptor.getRFC() + ".xml");
+                mail.EnvioMail(emisor.getCorreo(), "Entrega de Factura Electrónica ISFE " + new Date(), "ISFE, hace entrega de la factura electrónica en formato XML.\nHacemos de su conocimiento que en este momento el resguardo de la factura\nes responsabilidad de usted.\n\nGracias por utilizar ISFE.", fXML, emisor.getRFC() + folio.getNoFolio() + receptor.getRFC() + ".xml");
 
                 
                 //ALMACENAMIENTO DEL XML EN LA BASE DE DATOS DE ISFE
-                String sqlFactura = "insert into factura (facturaXML,formaPago,idUsuario,idFolio,nombreXML) values (" + fXML + ",'" + factura.getFormaDePago() + "'," + aux + "," + idFolio + ",'" + emisor.getRFC() + folio.getNoFolio() + receptor.getRFC() + "');";
-                System.out.println(sqlFactura);
-                s.ejecutaUpdate(sqlFactura);
-                fXML.delete();
+                //String sqlFactura = "instert into factura (facturaXML,formaPago,idUsuario,idFolio,nombreXML) values (" + fXML + ",'" + factura.getFormaDePago() + "'," + aux + "," + idFolio + ",'" + emisor.getRFC() + folio.getNoFolio() + receptor.getRFC() + "');";
+                //s.consulta(sqlFactura);
+                //fXML.delete();
                 out.println("Factura generada exitosamente, y se ha enviado al correo:\n " + emisor.getCorreo());
 
+                //ESTABLECIENDO EL ESTADO DEL FOLIO USADO
+                String actualizaEstadoFolio = "update folios set usado=1 where usado=0 and idFolio = " + idFolio + " limit 1";
+                s.ejecutaUpdate(actualizaEstadoFolio);
+                
                 //VARIABLES AUXILIARES PARA CONSULTAS SQL
                 idFolioPDF = idFolio;
                 idUsuario = aux;
                 
-                fXML.delete();
+                //fXML.delete();
                 isfeFIEL.delete();
                 isfeCSD.delete();
                 archivoFiel.delete();
                 archivoCsd.delete();
+                
+                //PRUEBA PDF
+                //File pdf = PDF.generarArchivoPDF(fXML, pathAbsoluto+"/resources/xslt/", pathAbsoluto+factura.getEmisor().getRFC()+factura.getFolio().getNoFolio()+factura.getReceptor().getRFC() + ".pdf");
+                //PDF.visualizarPDF(pdf, response, request);
 
             } catch (InstantiationException ex) {
                 Logger.getLogger(Factura.class.getName()).log(Level.SEVERE, null, ex);
@@ -380,7 +384,8 @@ public class Factura extends HttpServlet {
                 }
 
                 //GENERACIÓN DEL PDF (FACTURA IMPRESA) PARA VISUALIZARLO EN LA PAGINA WEB
-                File pdf = PDF.generarArchivoPDF(xml, pathAbsoluto+"/resources/xslt/", rsPDF.getString("nombreXML") + ".pdf");
+                String nombrePDF=pathAbsoluto+rsPDF.getString("nombreXML") + ".pdf";
+                File pdf = PDF.generarArchivoPDF(xml, pathAbsoluto+"/resources/xslt/", nombrePDF);
                 PDF.visualizarPDF(pdf, response, request);
             } catch (InstantiationException ex) {
                 Logger.getLogger(Factura.class.getName()).log(Level.SEVERE, null, ex);
