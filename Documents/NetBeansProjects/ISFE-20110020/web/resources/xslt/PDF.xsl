@@ -257,7 +257,7 @@
                                                     </fo:block>
                                                     <fo:block space-after="0.25cm">
                                                         <xsl:call-template name="QRCode">
-                                                            <xsl:with-param name="str" select="intersperse-with-zero-spaces"/>
+                                                            <xsl:with-param name="str" select="../../cfdi:Comprobante/@folio"/>
                                                         </xsl:call-template>
                                                     </fo:block>
 							<!--<fo:block>

@@ -79,7 +79,7 @@
                     url:"../Factura",
                     type: "POST",
                     data: "Factura=Generar&idUsuaio=<%=id%>&cant_campos="+campos+"&cantidad="+cantidad+"&nombre="+nombre+"&unitario="+unitario+"&total="+totalProducto+"&descripcion="+descripcion+"&formaDePago=Efectivo&subTotal="+sub+
-                        "&iva="+iva+"&descuento=0&GranTotal="+total+"&tipoComprobante=Egreso",
+                        "&iva="+iva+"&descuento=0&GranTotal="+total+"&tipoComprobante=INGRESO",
                     success: function(data){
                         alert(data);
                     }

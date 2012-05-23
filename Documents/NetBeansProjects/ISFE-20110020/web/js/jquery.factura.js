@@ -65,11 +65,18 @@ $(function() {
         modal: true,
         buttons: {
             "Aceptar": function() {
-                var cantidad = $("#tbDetalleCantidad_0").val();
-                var nombre = $("#tbDetalleNombre_0").val();
-                var unitario = $("#tbDetalleImporte_0").val();
-                var totalProducto = $("#tbDetalleTotal_0").val();
-                var descripcion = $("#tbDetalleDescripcion_0").val();
+                var cantidad = new Array(col);
+                var nombre = new Array(col);
+                var unitario = new Array(col);
+                var totalProducto = new Array(col);
+                var descripcion = new Array(col);
+                for(i=0;i<col;i++){
+                    cantidad[i]=$("#tbDetalleCantidad_"+i).val();
+                    nombre[i]=$("#tbDetalleNombre_"+i).val();
+                    unitario[i]=$("#tbDetalleImporte_"+i).val();
+                    totalProducto[i]=$("#tbDetalleTotal_"+i).val();
+                    descripcion[i]=$("#tbDetalleDescripcion_"+i).val();
+                }
                 GenerarXML(col,cantidad,nombre,unitario,totalProducto,descripcion,Sub,Iva,Total);
                 $( this ).dialog("close");
                                         

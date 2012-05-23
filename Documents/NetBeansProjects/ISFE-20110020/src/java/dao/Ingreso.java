@@ -44,9 +44,9 @@ public class Ingreso extends HttpServlet {
                 String rfc = request.getParameter("RFCLogin");
                 String pwd = request.getParameter("passwordLogin");
                 
-                DES des = new DES(pwd);
-                rfc = des.Cifrador(rfc);
-                pwd = Cifrado.codificarBase64(pwd);
+                //DES des = new DES(pwd);
+                //rfc = des.Cifrador(rfc);
+                //pwd = Cifrado.codificarBase64(pwd);
 
                 Sql sql = new Sql();
                 ResultSet rs = sql.consulta("SELECT idUsuario FROM usuario WHERE rfc='" + rfc + "' AND contrasena = '" + pwd + "'");

@@ -51,8 +51,8 @@ public class XML extends Formato{
         String cadOriginal = CadenaOriginal.generarCadenaOriginal(path+"/resources/xml/"+"cadOriginalCFDI_3.xslt",cfdi.generarCFDI());
         System.out.println("CO:"+cadOriginal);
         SAT sat=new SAT();
-        System.out.println("Fiel:"+factura.getEmisor().getFiel().getArchivoFiel());
-        System.out.println("PSWD:"+factura.getEmisor().getFiel().getPassword());
+        //System.out.println("Fiel:"+factura.getEmisor().getFiel().getArchivoFiel());
+        //System.out.println("PSWD:"+factura.getEmisor().getFiel().getPassword());
         String sello = sat.ValidarCadenaOriginal(cadOriginal,factura.getEmisor().getFiel().getArchivoFiel(),factura.getEmisor().getFiel().getPassword(),true);
         System.out.println("Sello: "+sello);
         factura.setCadenaCSD(sello);

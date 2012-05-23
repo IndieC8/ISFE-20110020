@@ -182,8 +182,8 @@ public class Factura extends HttpServlet {
                 csdEmisor.setNoCertificado(noCertificado);
                 emisor.setCSD(csdEmisor);
 
-                SAT sat=new SAT();
-                String firma=sat.ValidarCadenaOriginal("HOLA Usuario", bFiel, "a0123456789", true);
+                //SAT sat=new SAT();
+                //String firma=sat.ValidarCadenaOriginal("HOLA Usuario", bFiel, "a0123456789", true);
                 
                 //DATOS DEL RECEPTOR (CLIENTE)
                 String sqlReceptor = "select c.tipoPersona,c.nombreCliente,c.APaternoCliente,c.AMaternoCliente,c.razonCliente,c.rfc, d.codigoPostal, d.calleCliente,d.nombreLocalidad,d.nombreMunicipio, d.nombreEstado from cliente c, direccioncliente d where c.idUsuario = " + aux + " and d.idCliente = c.idCliente;";
@@ -211,26 +211,38 @@ public class Factura extends HttpServlet {
                 
                 
                 //DATOS DE LA FACTURA
-                //int numProductos=Integer.parseInt(request.getParameter("cantcampos"));//numero de productos que se recibiran
+                int numProductos=Integer.parseInt(request.getParameter("cant_campos"));//numero de productos que se recibiran
                 ArrayList<Datos.Concepto> productos = new ArrayList<Datos.Concepto>();
-                /**for(int i=0;i<numProductos;i++){
-                    Datos.Concepto concepto = new Datos.Concepto();
-                    concepto.setCantidad(Double.parseDouble(request.getParameter("cantidad"+i)));
-                    concepto.setnombreProducto(request.getParameter("nombre"+i));
-                    concepto.setValorUnitario(Double.parseDouble(request.getParameter("unitario"+i)));
-                    concepto.setImporte(Double.parseDouble(request.getParameter("total"+i)));
-                    concepto.setDescripcion(concepto.getnombreProducto() + ": " + request.getParameter("descripcion"+i));
+                String Cantidad = request.getParameter("cantidad");
+                String Nombre= request.getParameter("nombre");
+                String Unitario=request.getParameter("unitario");
+                String Total= request.getParameter("total");
+                String Descripcion= request.getParameter("descripcion");
+                
+                String[] arrayCantidad = Cantidad.split(",");
+                String[] arrayNombre = Nombre.split(",");
+                String[] arrayUnitario = Unitario.split(",");
+                String[] arrayTotal = Total.split(",");
+                String[] arrayDescripcion = Descripcion.split(",");
+                
+                for(int i=0;i<numProductos;i++){
+                    Datos.Concepto concepto = new Datos.Concepto();     
+                    concepto.setCantidad(Double.parseDouble(arrayCantidad[i]));
+                    concepto.setnombreProducto(arrayNombre[i]);
+                    concepto.setValorUnitario(Double.parseDouble(arrayUnitario[i]));
+                    concepto.setImporte(Double.parseDouble(arrayTotal[i]));
+                    concepto.setDescripcion(concepto.getnombreProducto() + ": " + arrayDescripcion[i]);
                     productos.add(concepto);
-                }*/
+                }
 
                 //CONCEPTOS DE LA FACTURA
-                Datos.Concepto conceptos = new Datos.Concepto();
+                /**Datos.Concepto conceptos = new Datos.Concepto();
                 conceptos.setCantidad(Double.parseDouble(request.getParameter("cantidad")));
                 conceptos.setnombreProducto(request.getParameter("nombre"));
                 conceptos.setValorUnitario(Double.parseDouble(request.getParameter("unitario")));
                 conceptos.setImporte(Double.parseDouble(request.getParameter("total")));
                 conceptos.setDescripcion(conceptos.getnombreProducto() + ": " + request.getParameter("descripcion"));
-                productos.add(conceptos);
+                productos.add(conceptos);*/
                 //DIRECCION EXPEDICION
                 expedidoEn.setCalle("JUAN DE DIOS BATIZ");
                 expedidoEn.setCodigoPostal("07738");
@@ -302,10 +314,10 @@ public class Factura extends HttpServlet {
                 isfe.setFiel(fielISFE);
                 isfe.setCSD(csdISFE);
                 
-                SAT sat2=new SAT();
-                String firma2=sat2.ValidarCadenaOriginal("HOLA ISFE", bIsfeFiel, "a0123456789", true);
-                System.out.println("Firma ISFE: "+firma2);
-                System.out.println("Firma Usuario: "+firma);
+                //SAT sat2=new SAT();
+                //String firma2=sat2.ValidarCadenaOriginal("HOLA ISFE", bIsfeFiel, "a0123456789", true);
+                //System.out.println("Firma ISFE: "+firma2);
+                //System.out.println("Firma Usuario: "+firma);
                 //GENERACION DEL XML
                 Document facturaXML = xml.generarXML(factura, isfe, pathAbsoluto);
                 File fXML = XML.generarArchivoXML(facturaXML, emisor.getRFC() + folio.getNoFolio() + receptor.getRFC() + ".xml",pathAbsoluto);
@@ -339,7 +351,7 @@ public class Factura extends HttpServlet {
                 //PRUEBA PDF
                 //File pdf = PDF.generarArchivoPDF(fXML, pathAbsoluto+"/resources/xslt/", pathAbsoluto+factura.getEmisor().getRFC()+factura.getFolio().getNoFolio()+factura.getReceptor().getRFC() + ".pdf");
                 //PDF.visualizarPDF(pdf, response, request);
-
+                
             } catch (InstantiationException ex) {
                 Logger.getLogger(Factura.class.getName()).log(Level.SEVERE, null, ex);
             } catch (IllegalAccessException ex) {
@@ -351,9 +363,10 @@ public class Factura extends HttpServlet {
                 Logger.getLogger(Factura.class.getName()).log(Level.SEVERE, null, ex);
             } catch (UnsupportedEncodingException ex) {
                 Logger.getLogger(Factura.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (NoSuchProviderException ex) {
-                Logger.getLogger(Factura.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (Exception ex){
+            } //catch (NoSuchProviderException ex) {
+                //Logger.getLogger(Factura.class.getName()).log(Level.SEVERE, null, ex);
+            //} 
+            catch (Exception ex){
                 Logger.getLogger(Factura.class.getName()).log(Level.SEVERE, null, ex);
             }
 
