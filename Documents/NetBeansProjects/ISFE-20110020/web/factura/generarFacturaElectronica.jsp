@@ -82,6 +82,9 @@
                         "&iva="+iva+"&descuento=0&GranTotal="+total+"&tipoComprobante=INGRESO",
                     success: function(data){
                         alert(data);
+                        $("#cant_campos").val("0");
+                        $("#tbDetalleProducto").html("");
+                        $("#mensajeConfirmacion").text("");
                     }
                 });
             }
