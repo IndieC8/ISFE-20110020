@@ -76,7 +76,7 @@
 									<xsl:value-of select="./cfdi:DomicilioFiscal/@calle"/>&#0160;
 									<xsl:value-of select="./cfdi:DomicilioFiscal/@noExterior"/>&#0160;
 									Col.
-									<xsl:value-of select="./cfdi:DomicilioFiscal/@colonia"/>&#0160;
+									<xsl:value-of select="./cfdi:DomicilioFiscal/@localidad"/>&#0160;
 								</fo:block>
 								<fo:block>
 									<xsl:if test="./cfdi:DomicilioFiscal/@estado = 'Distrito Federal'">Del. </xsl:if>

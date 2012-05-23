@@ -73,13 +73,13 @@
             } // lookup
             
             //Generación del XML
-            function GenerarXML(campos,cantidad,nombre,unitario,totalProducto,descripcion,sub,iva,total){
+            function GenerarXML(campos,cantidad,nombre,unitario,totalProducto,descripcion,sub,iva,total,unidad){
             
                 $.ajax({
                     url:"../Factura",
                     type: "POST",
                     data: "Factura=Generar&idUsuaio=<%=id%>&cant_campos="+campos+"&cantidad="+cantidad+"&nombre="+nombre+"&unitario="+unitario+"&total="+totalProducto+"&descripcion="+descripcion+"&formaDePago=Efectivo&subTotal="+sub+
-                        "&iva="+iva+"&descuento=0&GranTotal="+total+"&tipoComprobante=INGRESO",
+                        "&iva="+iva+"&descuento=0&GranTotal="+total+"&tipoComprobante=INGRESO&unidad="+unidad,
                     success: function(data){
                         alert(data);
                         $("#cant_campos").val("0");

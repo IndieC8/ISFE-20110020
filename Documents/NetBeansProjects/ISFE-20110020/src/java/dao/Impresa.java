@@ -4,9 +4,9 @@
  */
 package dao;
 
+import Datos.PDF;
 import Negocios.Cifrado.Cifrado;
-import java.io.IOException;
-import java.io.PrintWriter;
+import java.io.*;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.logging.Level;
@@ -15,6 +15,9 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.xml.transform.TransformerConfigurationException;
+import javax.xml.transform.TransformerException;
+import org.apache.fop.apps.FOPException;
 
 /**
  *
@@ -41,7 +44,32 @@ public class Impresa extends HttpServlet {
             /*
              * TODO output your page here. You may use following sample code.
              */
-            if ("Buscar".equals(request.getParameter("Factura"))) {
+            if ("PDF".equals(request.getParameter("Factura"))) {
+
+                Sql sqlPDF = new Sql();
+                String query = "select nombreXML,facturaXML from factura where idFactura=" + request.getParameter("idFactura") + ";";
+                ResultSet rs = sqlPDF.consulta(query);
+                String path=this.getServletContext().getRealPath("/");
+                File xml = null;
+                String nombre=null;
+                while (rs.next()) {
+                    nombre=rs.getString("nombreXML");
+                    xml = new File(path+nombre+".xml");
+                    FileOutputStream fos = new FileOutputStream(xml);
+                    byte[] buffer = new byte[1];
+                    InputStream is = rs.getBinaryStream(2);
+                    while (is.read(buffer) > 0) {
+                        fos.write(buffer);
+                    }
+                    fos.close();
+                }
+                
+                File pdf = PDF.generarArchivoPDF(xml, path, nombre+".pdf");
+                xml.delete();
+                PDF.visualizarPDF(pdf, response, request);
+                
+
+            } else if ("Buscar".equals(request.getParameter("Factura"))) {
 
                 String idUsuario = request.getParameter("idUsuario");
                 idUsuario = Cifrado.decodificarBase64(idUsuario);
@@ -76,13 +104,21 @@ public class Impresa extends HttpServlet {
                         out.println("<td align=\"center\"><span><img src=\"../images/formularios/pdfICON.jpg\" title=\"Generar PDF\" alt=\"Generar PDF\" style=\"cursor:pointer\" onClick=\"GenerarPDF(" + rs.getInt("idFactura") + ")\"/></span></td>");
                         out.println("</tr>");
                     }
-                    
+
                     out.println("</table>");
                     out.println("<br/><br/>");
                 } else {
                     out.println("0");
                 }
             }
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(Impresa.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (FOPException ex) {
+            Logger.getLogger(Impresa.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (TransformerConfigurationException ex) {
+            Logger.getLogger(Impresa.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (TransformerException ex) {
+            Logger.getLogger(Impresa.class.getName()).log(Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
             Logger.getLogger(Impresa.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {

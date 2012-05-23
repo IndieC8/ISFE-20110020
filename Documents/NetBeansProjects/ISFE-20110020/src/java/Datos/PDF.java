@@ -34,12 +34,12 @@ public class PDF extends Formato{
      */
     public static File generarArchivoPDF(File xml,String path,String nombre) throws FileNotFoundException, FOPException, TransformerConfigurationException, TransformerException, IOException{
         FopFactory fopFactory = FopFactory.newInstance();
-        File fPDF=new File(nombre);
+        File fPDF=new File(path+nombre);
         OutputStream out = new java.io.BufferedOutputStream(new java.io.FileOutputStream(fPDF));
         try{
             Fop fop = fopFactory.newFop(MimeConstants.MIME_PDF, out);
             TransformerFactory factory = TransformerFactory.newInstance();
-            javax.xml.transform.Transformer transformer = factory.newTransformer(new StreamSource(new File(path+"PDF.xsl")));
+            javax.xml.transform.Transformer transformer = factory.newTransformer(new StreamSource(new File(path+"resources/xslt/"+"PDF.xsl")));
             Source src = new StreamSource(xml);
             Result res = new SAXResult(fop.getDefaultHandler());
             transformer.transform(src, res);
@@ -98,26 +98,22 @@ public class PDF extends Formato{
      * @param request del jsp
      * @throws IOException Si hay errores de entrada/salida
      */
-    public static void visualizarPDF(File pdf,HttpServletResponse response,HttpServletRequest request){
+    public static byte[] visualizarPDF(File pdf,HttpServletResponse response,HttpServletRequest request){
         InputStream in = null;
+        byte[] datos=null;
         try {
             in = new FileInputStream(pdf);
-            byte[] datos=new byte[in.available()];
+            datos=new byte[in.available()];
             in.read(datos);
             response.setContentType("application/pdf");
             response.setHeader("Content-Disposition", "attachment;filename=\""+pdf.getName()+"\";");
-            javax.servlet.ServletOutputStream sos = response.getOutputStream();
-            sos.write(datos);
-            sos.flush();
-            sos.close();
+            response.sendRedirect(pdf.getName());
+            in.close();
+            pdf.deleteOnExit();
+            return datos;
         } catch (IOException ex) {
             Logger.getLogger(PDF.class.getName()).log(Level.SEVERE, null, ex);
-        } finally {
-            try {
-                in.close();
-            } catch (IOException ex) {
-                Logger.getLogger(PDF.class.getName()).log(Level.SEVERE, null, ex);
-            }
+            return null;
         }
         
     }

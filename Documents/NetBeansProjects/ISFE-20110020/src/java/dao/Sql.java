@@ -135,4 +135,35 @@ public class Sql {
         pst.execute();
         fis.close();
     }
+    /**
+     * Método encargado de insertar el xml de la factura electrónica
+     * @param sql consulta en la base de datos
+     * @param facturaXML factura electrónica en formato xml
+     * @param formaPago de la factura
+     * @param idUsuario del emisor
+     * @param idFolio de folio utilizado
+     * @param nombreXML del arhcivo xml;
+     * @throws InstantiationException
+     * @throws IllegalAccessException
+     * @throws SQLException
+     * @throws FileNotFoundException
+     * @throws IOException 
+     */
+    public void insertarXml(String sql,File facturaXML,String formaPago, int idUsuario, int idFolio, String nombreXML) throws InstantiationException, IllegalAccessException, SQLException, FileNotFoundException, IOException{
+        this.conectar();
+        PreparedStatement pst=conn.prepareStatement(sql);
+        pst.setString(1, null);
+        FileInputStream fis=new FileInputStream(facturaXML);
+        pst.setBinaryStream(2, fis, facturaXML.length());
+        pst.setString(3, formaPago);
+        pst.setInt(4, idUsuario);
+        pst.setInt(5, idFolio);
+        pst.setString(6, nombreXML);
+        java.util.Date now=new java.util.Date();
+        java.sql.Date fechaElaboracion=new java.sql.Date(now.getTime());
+        pst.setDate(7, fechaElaboracion);
+        
+        pst.execute();
+        fis.close();
+    }
 }

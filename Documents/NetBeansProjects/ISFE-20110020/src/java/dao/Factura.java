@@ -123,7 +123,7 @@ public class Factura extends HttpServlet {
                     //DATOS FISCALES DEL EMISOR
                     emisor.setTipoPersona(rsEmisor.getBoolean("tipoPersona"));
                     if (rsEmisor.getBoolean("tipoPersona") == false) {
-                        emisor.setNombre(rsEmisor.getString("nombre"));
+                        emisor.setNombre(rsEmisor.getString("nombre")+" "+rsEmisor.getString("apellidoMaterno")+" "+rsEmisor.getString("apellidoPaterno"));
                         emisor.setApMaterno(rsEmisor.getString("apellidoMaterno"));
                         emisor.setApPaterno(rsEmisor.getString("apellidoPaterno"));
                         emisor.setCurp(rsEmisor.getString("curp"));
@@ -182,6 +182,15 @@ public class Factura extends HttpServlet {
                 csdEmisor.setNoCertificado(noCertificado);
                 emisor.setCSD(csdEmisor);
 
+                if(archivoFiel.exists())
+                {
+                    archivoFiel.delete();
+                }
+                if(archivoCsd.exists())
+                {
+                    archivoCsd.delete();
+                }
+                
                 //SAT sat=new SAT();
                 //String firma=sat.ValidarCadenaOriginal("HOLA Usuario", bFiel, "a0123456789", true);
                 
@@ -193,7 +202,7 @@ public class Factura extends HttpServlet {
                     //DATOS FISCALES RECEPTOR
                     receptor.setTipoPersona(rsReceptor.getBoolean("tipoPersona"));
                     if (rsReceptor.getBoolean("tipoPersona") == false) {
-                        receptor.setNombre(rsReceptor.getString("nombreCliente"));
+                        receptor.setNombre(rsReceptor.getString("nombreCliente")+" "+rsReceptor.getString("APaternoCliente")+" "+rsReceptor.getString("AMaternoCliente"));
                         receptor.setApMaterno(rsReceptor.getString("APaternoCliente"));
                         receptor.setApPaterno(rsReceptor.getString("AMaternoCliente"));
                     } else {
@@ -218,12 +227,14 @@ public class Factura extends HttpServlet {
                 String Unitario=request.getParameter("unitario");
                 String Total= request.getParameter("total");
                 String Descripcion= request.getParameter("descripcion");
+                String Unidad=request.getParameter("unidad");
                 
                 String[] arrayCantidad = Cantidad.split(",");
                 String[] arrayNombre = Nombre.split(",");
                 String[] arrayUnitario = Unitario.split(",");
                 String[] arrayTotal = Total.split(",");
                 String[] arrayDescripcion = Descripcion.split(",");
+                String[] arrayUnidad= Unidad.split(",");
                 
                 for(int i=0;i<numProductos;i++){
                     Datos.Concepto concepto = new Datos.Concepto();     
@@ -232,6 +243,7 @@ public class Factura extends HttpServlet {
                     concepto.setValorUnitario(Double.parseDouble(arrayUnitario[i]));
                     concepto.setImporte(Double.parseDouble(arrayTotal[i]));
                     concepto.setDescripcion(concepto.getnombreProducto() + ": " + arrayDescripcion[i]);
+                    concepto.setUnidad(arrayUnidad[i]);
                     productos.add(concepto);
                 }
                 //out.println(numProductos);
@@ -315,7 +327,14 @@ public class Factura extends HttpServlet {
                 csdISFE.setNoCertificado(noCertificadoISFE);
                 isfe.setFiel(fielISFE);
                 isfe.setCSD(csdISFE);
-                
+                if(isfeFIEL.exists())
+                {
+                    isfeFIEL.delete();
+                }
+                if(isfeCSD.exists())
+                {
+                    isfeCSD.delete();
+                }
                 //SAT sat2=new SAT();
                 //String firma2=sat2.ValidarCadenaOriginal("HOLA ISFE", bIsfeFiel, "a0123456789", true);
                 //System.out.println("Firma ISFE: "+firma2);
@@ -324,15 +343,14 @@ public class Factura extends HttpServlet {
                 Document facturaXML = xml.generarXML(factura, isfe, pathAbsoluto);
                 File fXML = XML.generarArchivoXML(facturaXML, emisor.getRFC() + folio.getNoFolio() + receptor.getRFC() + ".xml",pathAbsoluto);
 
-                
                 //ENVIO DEL XML AL CORREO DEL USUARIO
                 //EnvioMail mail = new EnvioMail();
                 //mail.EnvioMail(emisor.getCorreo(), "Entrega de Factura Electrónica ISFE " + new Date(), "ISFE, hace entrega de la factura electrónica en formato XML.\nHacemos de su conocimiento que en este momento el resguardo de la factura\nes responsabilidad de usted.\n\nGracias por utilizar ISFE.", fXML, emisor.getRFC() + folio.getNoFolio() + receptor.getRFC() + ".xml");
 
                 
                 //ALMACENAMIENTO DEL XML EN LA BASE DE DATOS DE ISFE
-                //String sqlFactura = "instert into factura (facturaXML,formaPago,idUsuario,idFolio,nombreXML) values (" + fXML + ",'" + factura.getFormaDePago() + "'," + aux + "," + idFolio + ",'" + emisor.getRFC() + folio.getNoFolio() + receptor.getRFC() + "');";
-                //s.consulta(sqlFactura);
+                String sqlFactura = "insert into factura values (?,?,?,?,?,?,?);";
+                s.insertarXml(sqlFactura, fXML,factura.getFormaDePago() ,Integer.parseInt(aux), Integer.parseInt(idFolio), emisor.getRFC() + folio.getNoFolio() + receptor.getRFC());
                 //fXML.delete();
                 out.println("Factura generada exitosamente, y se ha enviado al correo:\n " + emisor.getCorreo());
 
@@ -345,11 +363,7 @@ public class Factura extends HttpServlet {
                 idUsuario = aux;
                 
                 //fXML.delete();
-                isfeFIEL.delete();
-                isfeCSD.delete();
-                archivoFiel.delete();
-                archivoCsd.delete();
-                
+                                
                 //PRUEBA PDF
                 //File pdf = PDF.generarArchivoPDF(fXML, pathAbsoluto+"/resources/xslt/", pathAbsoluto+factura.getEmisor().getRFC()+factura.getFolio().getNoFolio()+factura.getReceptor().getRFC() + ".pdf");
                 //PDF.visualizarPDF(pdf, response, request);

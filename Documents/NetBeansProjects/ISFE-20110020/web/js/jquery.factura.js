@@ -67,6 +67,7 @@ $(function() {
             "Aceptar": function() {
                 var cantidad = new Array(col);
                 var nombre = new Array(col);
+                var unidad = new Array(col);
                 var unitario = new Array(col);
                 var totalProducto = new Array(col);
                 var descripcion = new Array(col);
@@ -80,10 +81,11 @@ $(function() {
                         unitario[indice]=$("#tbDetalleImporte_"+i).val();
                         totalProducto[indice]=$("#tbDetalleTotal_"+i).val();
                         descripcion[indice]=$("#tbDetalleDescripcion_"+i).val();
+                        unidad[indice]=$("#tbDetalleUnidad_"+i).val();
                         indice++;
                     }
                 }
-                GenerarXML(indice,cantidad,nombre,unitario,totalProducto,descripcion,Sub,Iva,Total);
+                GenerarXML(indice,cantidad,nombre,unitario,totalProducto,descripcion,Sub,Iva,Total,unidad);
                 $( this ).dialog("close");
                                         
             },
@@ -400,4 +402,11 @@ function BuscarCancelacion(){
     }else{
         $("#ErrorFechaCancelar").text("Ingresa la fecha de Elaboración!");
     }
+}
+
+function GenerarPDF(idFactura){
+    $.ajax({
+        url: "../Impresa", type: "POST",
+        data:"Factura=PDF&idFactura="+idFactura
+    });
 }
