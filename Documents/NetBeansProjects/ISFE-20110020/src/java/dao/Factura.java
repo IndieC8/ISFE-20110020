@@ -182,8 +182,8 @@ public class Factura extends HttpServlet {
                 csdEmisor.setNoCertificado(noCertificado);
                 emisor.setCSD(csdEmisor);
 
-                //SAT sat=new SAT();
-                //String firma=sat.ValidarCadenaOriginal("HOLA Usuario", bFiel, "a0123456789", true);
+                SAT sat=new SAT();
+                String firma=sat.ValidarCadenaOriginal("HOLA Usuario", bFiel, "a0123456789", true);
                 
                 //DATOS DEL RECEPTOR (CLIENTE)
                 String sqlReceptor = "select c.tipoPersona,c.nombreCliente,c.APaternoCliente,c.AMaternoCliente,c.razonCliente,c.rfc, d.codigoPostal, d.calleCliente,d.nombreLocalidad,d.nombreMunicipio, d.nombreEstado from cliente c, direccioncliente d where c.idUsuario = " + aux + " and d.idCliente = c.idCliente;";
@@ -302,10 +302,10 @@ public class Factura extends HttpServlet {
                 isfe.setFiel(fielISFE);
                 isfe.setCSD(csdISFE);
                 
-                //SAT sat2=new SAT();
-                //String firma2=sat2.ValidarCadenaOriginal("HOLA ISFE", bIsfeFiel, "a0123456789", true);
-                //System.out.println("Firma ISFE: "+firma2);
-                //System.out.println("Firma Usuario: "+firma);
+                SAT sat2=new SAT();
+                String firma2=sat2.ValidarCadenaOriginal("HOLA ISFE", bIsfeFiel, "a0123456789", true);
+                System.out.println("Firma ISFE: "+firma2);
+                System.out.println("Firma Usuario: "+firma);
                 //GENERACION DEL XML
                 Document facturaXML = xml.generarXML(factura, isfe, pathAbsoluto);
                 File fXML = XML.generarArchivoXML(facturaXML, emisor.getRFC() + folio.getNoFolio() + receptor.getRFC() + ".xml",pathAbsoluto);
