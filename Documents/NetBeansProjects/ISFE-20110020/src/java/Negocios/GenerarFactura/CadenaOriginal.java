@@ -11,7 +11,7 @@ import org.jdom.transform.XSLTransformer;
  */
 public class CadenaOriginal {
     /**
-     * Método que tranforma el xml en base al xslt prporcionado por el SAT
+     * Método que tranforma el xml en base al xslt proporcionado por el SAT
      * @param xslt para transformar el xml con los lineamientos del SAT
      * @param xml a transformar
      * @return Cadena Original o Cadena del Timbre del XML

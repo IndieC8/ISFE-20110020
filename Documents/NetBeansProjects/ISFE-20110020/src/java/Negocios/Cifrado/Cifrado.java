@@ -210,6 +210,10 @@ public class Cifrado {
     public static String decodificarBase64(byte[] datos){
         return new String(Base64.decodeBase64(datos));
     }
+    
+    public static byte[] decodificarBase64Byte(String datos){
+        return Base64.decodeBase64(datos);
+    }
     /**
      * Método encargado de codificar a Hexadecimal una 
      * cadena de caracteres

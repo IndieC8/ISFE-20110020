@@ -3,6 +3,7 @@ var col;
 var Total = 0;
 var Iva = 0;
 var Sub = 0;
+var id = 0;
 
 $(function(){
     // Tabs
@@ -27,6 +28,35 @@ $(function(){
 $(function() {
     // a workaround for a flaw in the demo system (http://dev.jqueryui.com/ticket/4375), ignore!
     $( "#dialog:ui-dialog" ).dialog( "destroy" );
+    
+    $("#dialogCancelar").dialog({
+        autoOpen: false,
+        height: 205,
+        width: 330,
+        modal: true,
+        buttons: {
+            "Aceptar": function() {
+                $.ajax({
+                    url: "../Mensuales",
+                    type: "POST",
+                    data: "Factura=Cancelar&idFolio="+id,
+                    success: function(){
+                        BuscarCancelacion();
+                    }
+                });
+                $( this ).dialog("close");
+                                        
+            },
+            Cancelar: function() {
+                $("#ConfirmarModificacion").hide();
+                $("#MensajeConfirmarModificacion").text("");
+                $( this ).dialog( "close" );
+            }
+        },
+        close: function() {
+            allFields.val( "" ).removeClass( "ui-state-error" );
+        }
+    });
     
     $("#confirmacionFactura").dialog({
         autoOpen: false,
@@ -184,17 +214,11 @@ function agregarFila(){
 
 }
 
-/*
-             * Eliminar Productos que no deseo
-             **/
+/** Eliminar Productos que no deseo **/
 function eliminarFila(oId){
     $("#rowDetalle_" + oId).remove();
     return false;
 }
-
-
-
-
 
 function AgregarProducto(){
     var cantidad = $("#cantidadFactura").val();
@@ -232,7 +256,8 @@ function AgregarProducto(){
             NuevoProducto(nombre,descripcion,unidad,Importe);
         }
         $.ajax({
-            url: "../Producto", type: "POST",
+            url: "../Producto", 
+            type: "POST",
             data: "Producto=Actualizar&nombreProducto="+nombre+"&descripcion="+descripcion+"&unidad="+unidad+"&valorUnitario="+Importe+"&idProducto="+$("#idProductoFactura").val()
         });
         borrarProducto();
@@ -278,8 +303,6 @@ function GenerarFactura(){
     Iva = 0;
     Sub = 0;
     
-    
-    
     for(i=0; i<col;i++){
         Total = Total + parseFloat($("#tbDetalleTotal_"+i).val());
         Iva = Iva + parseFloat($("#tbDetalleIVA_"+i).val());
@@ -299,4 +322,66 @@ function GenerarFactura(){
     $("#confirmarSubTotalFactura").text("$ "+$("#auxConfirmacion").val());
         
     $("#confirmacionFactura").dialog("open"); 
+}
+
+$(function() {
+    $( "#datepicker" ).datepicker();
+                
+    $( "#format" ).change(function() {
+        $( "#datepicker" ).datepicker( "option", "dateFormat", $( this ).val() );
+    });
+                
+    $("#cancelar").datepicker();
+    $( "#format" ).change(function() {
+        $( "#cancelar" ).datepicker( "option", "dateFormat", $( this ).val() );
+    });
+    
+});
+            
+function Cancelar(idFolio){
+    var nombre =  $("#Nombre_"+idFolio).text();
+    $("#instruccionCancelacion").text(nombre+".xml");
+    id = idFolio;
+    $("#dialogCancelar").dialog("open");
+}
+            
+function Limpiar(){
+    $("#ErrorFechaElaboracion").text("");
+    $("#ErrorFechaCancelar").text("");
+}
+
+function Buscar(){
+    $("#ErrorFechaElaboracion").text("");
+    var fecha = $("#datepicker").val();
+    if(fecha != ""){
+        var aux = fecha.split("/");
+        fecha = aux[2]+aux[1]+aux[0];
+        AJAXBuscar(fecha);
+    }else{
+        $("#ErrorFechaElaboracion").text("Ingresa la fecha de elaboración");
+    }
+}
+
+function BuscarCancelacion(){
+    $("#ErrorFechaCancelar").text("");
+                
+    var Fecha = new Date();
+    var fecha = $("#cancelar").val();
+    if(fecha != ""){
+        var aux =  fecha.split("/");
+                
+        if(aux[1].length == 2){
+            var x = aux[1].split("");
+            var mes = x[1];
+        }
+                
+        if( (Fecha.getMonth() + 1) != mes ){
+            $("#ErrorFechaCancelar").text("Solo días de este mes!");
+        }else{
+            fecha = aux[2]+aux[1]+aux[0];
+            AJAXCancelar();
+        }
+    }else{
+        $("#ErrorFechaCancelar").text("Ingresa la fecha de Elaboración!");
+    }
 }

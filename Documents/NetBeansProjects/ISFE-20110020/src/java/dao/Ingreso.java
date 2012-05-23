@@ -1,6 +1,7 @@
 package dao;
 
 import Negocios.Cifrado.Cifrado;
+import Negocios.Cifrado.DES;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.ResultSet;
@@ -42,6 +43,10 @@ public class Ingreso extends HttpServlet {
             try {
                 String rfc = request.getParameter("RFCLogin");
                 String pwd = request.getParameter("passwordLogin");
+                
+                DES des = new DES(pwd);
+                rfc = des.Cifrador(rfc);
+                pwd = Cifrado.codificarBase64(pwd);
 
                 Sql sql = new Sql();
                 ResultSet rs = sql.consulta("SELECT idUsuario FROM usuario WHERE rfc='" + rfc + "' AND contrasena = '" + pwd + "'");

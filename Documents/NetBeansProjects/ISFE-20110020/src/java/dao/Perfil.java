@@ -5,12 +5,11 @@
 package dao;
 
 import Negocios.Cifrado.Cifrado;
+import Negocios.Cifrado.DES;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -37,63 +36,91 @@ public class Perfil extends HttpServlet {
         response.setContentType("text/html;charset=UTF-8");
         PrintWriter out = response.getWriter();
         Sql s = new Sql();
-        
+
         try {
 
             if ("Actualizar".equals(request.getParameter("Perfil"))) {
                 String aux = request.getParameter("idUsuario");
                 aux = Cifrado.decodificarBase64(aux);
-                
-                                
-                String mail = request.getParameter("mail");
-                String telefono = request.getParameter("telefono");
+
                 String pwd = request.getParameter("pwd");
+                DES des = new DES(pwd);
+
+                String nombre = request.getParameter("nombre");
+                String mail = request.getParameter("mail");
+                mail = des.Cifrador(mail);
+                String telefono = request.getParameter("telefono");
+                telefono = des.Cifrador(telefono);
                 String calle = request.getParameter("calle");
+                calle = des.Cifrador(calle);
                 String exterior = request.getParameter("exterior");
+                exterior = des.Cifrador(exterior);
                 String interior = request.getParameter("interior");
-                String localidad =  request.getParameter("idLocalidad");
-                String referencia  = request.getParameter("referencia");
+                if (interior != "") {
+                    interior = des.Cifrador(interior);
+                }
+                String localidad = request.getParameter("idLocalidad");
+                String referencia = request.getParameter("referencia");
                 
+                String rfc = request.getParameter("rfc");
+                String []auxRFC = rfc.split("-");
+                rfc = auxRFC[0]+auxRFC[1]+auxRFC[2];
+                rfc = des.Cifrador(rfc);
                 
-                
-                
-                String actualizar = "UPDATE usuario SET mail='"+mail+"' , telefono ='"+telefono+"' ,contrasena = '"+pwd+"' , calle = '"+calle+"' , "
-                        + "noExterior = '"+exterior+"' , noInterior = '"+interior+"' , idLocalidad = "+localidad+" , referencia = '"+referencia+"' "
-                        + "WHERE idUsuario =  "+ Integer.parseInt(aux) +" ";
-                
-             
-                
+                referencia = des.Cifrador(referencia);
+                pwd = Cifrado.codificarBase64(pwd);
+
+                String actualizar;
+                if ("Moral".equals(request.getParameter("tipo"))) {
+                    nombre = des.Cifrador(nombre);
+                    actualizar = "UPDATE usuario SET rfc = '"+ rfc +"' , razonSocial = '" + nombre + "', mail='" + mail + "' , telefono ='" + telefono + "' ,contrasena = '" + pwd + "' , calle = '" + calle + "' , "
+                            + "noExterior = '" + exterior + "' , noInterior = '" + interior + "' , idLocalidad = " + localidad + " , referencia = '" + referencia + "' "
+                            + "WHERE idUsuario =  " + Integer.parseInt(aux) + " ";
+
+                } else {
+                    String []auxNombre = nombre.split(" ");
+                    actualizar = "UPDATE usuario SET rfc = '"+ rfc +"' , nombre = '" + des.Cifrador(auxNombre[0]) + "', apellidoMaterno = '"+ des.Cifrador(auxNombre[1]) +"', apellidoPaterno = '"+ des.Cifrador(auxNombre[2]) +"' , mail='" + mail + "' , telefono ='" + telefono + "' ,contrasena = '" + pwd + "' , calle = '" + calle + "' , "
+                            + "noExterior = '" + exterior + "' , noInterior = '" + interior + "' , idLocalidad = " + localidad + " , referencia = '" + referencia + "' "
+                            + "WHERE idUsuario =  " + Integer.parseInt(aux) + " ";
+                }
+
                 String resultado = s.ejecuta(actualizar);
                 out.println(resultado);
-                
-            }else if("CSD".equals(request.getParameter("Archivo"))){
+
+            } else if ("CSD".equals(request.getParameter("Archivo"))) {
                 String file_name = request.getParameter("archivo");
                 out.println(file_name);
             } else {
-                
+
                 String aux = request.getParameter("idUsuario");
                 aux = Cifrado.decodificarBase64(aux);
+
 
                 String sql = "select tipoPersona,nombre,apellidoMaterno, apellidoPaterno,razonSocial,contrasena,mail,telefono,calle,noExterior,noInterior,referencia FROM usuario WHERE idUsuario = " + Integer.parseInt(aux) + ";";
                 ResultSet rs;
                 rs = s.consulta(sql);
 
                 while (rs.next()) {
+                    String pwd = rs.getString("contrasena");
+                    pwd = Cifrado.decodificarBase64(pwd);
+                    DES des = new DES(pwd);
 
                     if (rs.getBoolean("tipoPersona") == false) {
-                        out.println(rs.getString("nombre") + " " + rs.getString("apellidoPaterno") + " " + rs.getString("apellidoMaterno") + "/");
+                        out.println("Fisica/");
+                        out.println(des.Descifrado(rs.getString("nombre")) + " " + des.Descifrado(rs.getString("apellidoPaterno")) + " " + des.Descifrado(rs.getString("apellidoMaterno")) + "/");
 
                     } else {
-                        out.println(rs.getString("razonSocial") + "/");
+                        out.println("Moral/");
+                        out.println(des.Descifrado(rs.getString("razonSocial")) + "/");
                     }
 
-                    out.println(rs.getString("contrasena") + "/");
-                    out.println(rs.getString("mail") + "/");
-                    out.println(rs.getString("telefono") + "/");
-                    out.println(rs.getString("calle") + "/");
-                    out.println(rs.getString("noExterior") + "/");
-                    out.println(rs.getString("noInterior") + "/");
-                    out.println(rs.getString("referencia") + "/");
+                    out.println(pwd + "/");
+                    out.println(des.Descifrado(rs.getString("mail")) + "/");
+                    out.println(des.Descifrado(rs.getString("telefono")) + "/");
+                    out.println(des.Descifrado(rs.getString("calle")) + "/");
+                    out.println(des.Descifrado(rs.getString("noExterior")) + "/");
+                    out.println(des.Descifrado(rs.getString("noInterior")) + "/");
+                    out.println(des.Descifrado(rs.getString("referencia")) + "/");
 
                 }
 

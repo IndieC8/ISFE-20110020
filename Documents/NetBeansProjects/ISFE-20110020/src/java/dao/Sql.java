@@ -124,13 +124,14 @@ public class Sql {
      * @throws FileNotFoundExceptionSi hay errores con los archivos
      * @throws IOException Sihay errores de entrada y salida de datos
      */
-    public void insertarCsd(String sql,String noCSD,File csd) throws InstantiationException, IllegalAccessException, SQLException, FileNotFoundException, IOException{
+    public void insertarCsd(String sql,String noCSD,File csd,int idUsuario) throws InstantiationException, IllegalAccessException, SQLException, FileNotFoundException, IOException{
         this.conectar();
         PreparedStatement pst=conn.prepareStatement(sql);
         pst.setString(1, null);
         pst.setString(2, noCSD);
         FileInputStream fis=new FileInputStream(csd);
         pst.setBinaryStream(3, fis, csd.length());
+        pst.setInt(4, idUsuario);
         pst.execute();
         fis.close();
     }

@@ -30,149 +30,46 @@
         <script src="../js/ui/jquery.ui.widget.js"></script>
         <script src="../js/ui/jquery.ui.datepicker.js"></script>
         <script src="../js/ui/jquery.ui.dialog.js"></script>
+        <script src ="../js/jquery.factura.js"></script>
 
 
         <script type="text/javascript">
-            var id = 0;
-            $(function() {
-                // a workaround for a flaw in the demo system (http://dev.jqueryui.com/ticket/4375), ignore!
-                $( "#dialog:ui-dialog" ).dialog( "destroy" );
-		
-                
-                $("#dialogCancelar").dialog({
-                    autoOpen: false,
-                    height: 205,
-                    width: 330,
-                    modal: true,
-                    buttons: {
-                        "Aceptar": function() {
-                            $.ajax({
-                                url: "../Mensuales",
-                                type: "POST",
-                                data: "Factura=Cancelar&idFolio="+id,
-                                success: function(){
-                                    BuscarCancelacion();
-                                }
-                            });
-                            $( this ).dialog("close");
-                                        
-                        },
-                        Cancelar: function() {
-                            $("#ConfirmarModificacion").hide();
-                            $("#MensajeConfirmarModificacion").text("");
-                            $( this ).dialog( "close" );
+            function AJAXCancelar(){
+                $.ajax({
+                    url: "../Mensuales",
+                    type: "POST",
+                    data: "Factura=Buscar&idUsuario=<%=id%>",
+                    success: function(data){
+                        if(data != 0){
+                            $("#TablaFacturasACancelar").html(data);
+                            $("#TablaFacturasACancelar").show();
+                        }else{
+                            $("#ErrorFechaCancelar").text("No hay facturas con esa fecha!"); 
                         }
-                    },
-                    close: function() {
-                        allFields.val( "" ).removeClass( "ui-state-error" );
                     }
                 });
-            });
+            }
             
-            $(function(){
-
-                // Tabs
-                $('#tabs').tabs();
-                
-                // Dialog			
-                $('#dialog').dialog({
-                    autoOpen: false,
-                    width: 600,
-                    buttons: {
-                        "Ok": function() { 
-                            $(this).dialog("close"); 
-                        }, 
-                        "Cancel": function() { 
-                            $(this).dialog("close"); 
-                        } 
+            function AJAXBuscar(fecha){
+                $.ajax({
+                    url: "../Impresa",
+                    type: "POST",
+                    data: "Factura=Buscar&idUsuario=<%=id%>&Fecha="+fecha,
+                    success: function(data){
+                        if(data == 0){
+                            $("#ErrorFechaElaboracion").text("No hay factura con esa fecha!");
+                        }else{
+                            $("#ResultadoFacturas").html(data);
+                            $("#ResultadoFacturas").show();
+                        }
                     }
                 });
-
-				
-            });
-                        
-            $(function() {
-                $( "#datepicker" ).datepicker();
-                
-                $( "#format" ).change(function() {
-                    $( "#datepicker" ).datepicker( "option", "dateFormat", $( this ).val() );
-                });
-                
-                $("#cancelar").datepicker();
-                $( "#format" ).change(function() {
-                    $( "#cancelar" ).datepicker( "option", "dateFormat", $( this ).val() );
-                });
-    
-            });
-            
-            function BuscarCancelacion(){
-                $("#ErrorFechaCancelar").text("");
-                
-                var Fecha = new Date();
-                var fecha = $("#cancelar").val();
-                var aux =  fecha.split("/");
-                
-                if(aux[1].length == 2){
-                    var x = aux[1].split("");
-                    var mes = x[1];
-                }
-                
-                if( (Fecha.getMonth() + 1) != mes ){
-                    $("#ErrorFechaCancelar").text("Solo días de este mes!");
-                }else{
-                    fecha = aux[2]+aux[1]+aux[0];
-                    $.ajax({
-                        url: "../Mensuales",
-                        type: "POST",
-                        data: "Factura=Buscar&idUsuario=<%=id%>",
-                        success: function(data){
-                            if(data != 0){
-                                $("#TablaFacturasACancelar").html(data);
-                                $("#TablaFacturasACancelar").show();
-                            }else{
-                               $("#ErrorFechaCancelar").text("No hay facturas con esa fecha!"); 
-                            }
-                        }
-                    });
-                }
             }
             
-            function Cancelar(idFolio){
-                var nombre =  $("#Nombre_"+idFolio).text();
-                $("#instruccionCancelacion").text(nombre+".xml");
-                id = idFolio;
-                $("#dialogCancelar").dialog("open");
-            }
         
-            function Buscar(){
-                $("#ErrorFechaElaboracion").text("");
-                var fecha = $("#datepicker").val();
-                if(fecha != ""){
-                    var aux = fecha.split("/");
-                    fecha = aux[2]+aux[1]+aux[0];
-                    $.ajax({
-                        url: "../Impresa",
-                        type: "POST",
-                        data: "Factura=Buscar&idUsuario=<%=id%>&Fecha="+fecha,
-                        success: function(data){
-                            if(data == 0){
-                                $("#ErrorFechaElaboracion").text("No hay factura con esa fecha!");
-                            }else{
-                                $("#ResultadoFacturas").html(data);
-                                $("#ResultadoFacturas").show();
-                            }
-                        }
-                    });
-                    
-                }else{
-                    $("#ErrorFechaElaboracion").text("Ingresa la fecha de elaboración");
-                }
-            }
             
-            function Limpiar(){
-                $("#ErrorFechaElaboracion").text("");
-                $("#ErrorFechaCancelar").text("");
-            }
+            
+            
         </script>
     </head>
     <body>
@@ -185,7 +82,7 @@
             </p>
             <form>
                 <fieldset>
-                     <label class="texto" id="instruccionCancelacion"></label>
+                    <label class="texto" id="instruccionCancelacion"></label>
                 </fieldset>
             </form>
         </div>

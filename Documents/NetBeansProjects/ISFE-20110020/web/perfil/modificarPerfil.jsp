@@ -34,6 +34,8 @@
         <script src="../js/jquery.validate.js"></script>
 
         <script type="text/javascript">
+            var nombre;
+            var persona;
             $(document).ready(function(){
                 
                                
@@ -43,17 +45,18 @@
                     data:"idUsuario=<%=id%>",
                     success: function(data){
                         var aux = data.split("/");
-                            
-                        $("#nombreModificarPerfil").text(aux[0]+" \t Tu datos son:");
-                        $("#passwordModificarPerfil").val(aux[1]);
-                        $("#mailModificarPerfil").val(aux[2]);
-                        $("#telefonoModificarPerfil").val(aux[3]);
-                        $("#calleModificarPerfil").val(aux[4]);
-                        $("#exteriorModificarPerfil").val(aux[5]);
-                        $("#interiorModificarPerfil").val(aux[6]);
-                        $("#referenciaModificarPerfil").val(aux[7]);
-                        $("#ColoniaModificarPerfil").val(aux[8]);
-                        $("#idLocalidadModificar").val(aux[9]);
+                        persona = aux[0];
+                        nombre = aux[1];
+                        $("#nombreModificarPerfil").text(aux[1]+" \t Tu datos son:");
+                        $("#passwordModificarPerfil").val(aux[2]);
+                        $("#mailModificarPerfil").val(aux[3]);
+                        $("#telefonoModificarPerfil").val(aux[4]);
+                        $("#calleModificarPerfil").val(aux[5]);
+                        $("#exteriorModificarPerfil").val(aux[6]);
+                        $("#interiorModificarPerfil").val(aux[7]);
+                        $("#referenciaModificarPerfil").val(aux[8]);
+                        $("#ColoniaModificarPerfil").val(aux[9]);
+                        $("#idLocalidadModificar").val(aux[10]);
                         $("#MunicipioModificarPerfil").val(aux[10]);
                             
                     }
@@ -78,7 +81,7 @@
                     $.ajax({
                         type: "POST",
                         url: "../Perfil",
-                        data: "Perfil=Actualizar&idUsuario=<%=id%>&mail="+mail+"&telefono="+telefono+"&pwd="+pwd+"&calle="+calle+"&exterior="+exterior+"&interior="+interior+"&idLocalidad="+idLocalidad+"&referencia="+referencia,
+                        data: "Perfil=Actualizar&idUsuario=<%=id%>&rfc=<%=contribuyente%>&tipo="+persona+"&nombre="+nombre+"&mail="+mail+"&telefono="+telefono+"&pwd="+pwd+"&calle="+calle+"&exterior="+exterior+"&interior="+interior+"&idLocalidad="+idLocalidad+"&referencia="+referencia,
                         success: function(data){
                             if(data !=""){ 
                                 $("#ConfirmarModificacion").hide();

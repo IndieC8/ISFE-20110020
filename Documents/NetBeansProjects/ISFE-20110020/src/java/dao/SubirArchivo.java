@@ -99,11 +99,20 @@ public class SubirArchivo extends HttpServlet {
                         UploadFile file = (UploadFile) files.get("uploadfile");
                         if (file != null) {
                             out.println("El archivo: " + file.getFileName() + " se subio correctamente <br/>");
+                            nombreArchivo = file.getFileName();
                         }
                         upBean.store(mrequest, "uploadfile");
                     } else {
                         out.println("Archivos CER no subidos");
                     }
+                    /*
+                     * Guardar Archivo
+                     */
+                    
+                    String sentencia = "INSERT INTO fiel VALUES(?,?,?,?)";
+                    File archivoCSD = new File(direccion+"/"+ nombreArchivo);
+                    sql.insertarFiel(sentencia, archivoCSD,Integer.parseInt(idUsuario));
+                    out.println("<br/>Archivo CSD en base");
                 }
 
                 if ((mucho != null) && (mucho.equalsIgnoreCase("upload"))) {
@@ -130,10 +139,10 @@ public class SubirArchivo extends HttpServlet {
                      * Guardar Archivo
                      */
                     
-                    /*String sentencia = "INSERT INTO fiel VALUES(?,?,?)";
+                    String sentencia = "INSERT INTO fiel VALUES(?,?,?)";
                     File archivoFiel = new File(direccion+"/"+ nombreArchivo);
                     sql.insertarFiel(sentencia, archivoFiel,Integer.parseInt(idUsuario));
-                    out.println("Archivo en base");*/
+                    out.println("<br/>Archivo fiel en base");
                     
                 }
             }
@@ -141,14 +150,14 @@ public class SubirArchivo extends HttpServlet {
             //response.sendRedirect(page);
 
 
-        /*} catch (InstantiationException ex) {
+        } catch (InstantiationException ex) {
             Logger.getLogger(SubirArchivo.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
             Logger.getLogger(SubirArchivo.class.getName()).log(Level.SEVERE, null, ex);
         } catch (SQLException ex) {
             Logger.getLogger(SubirArchivo.class.getName()).log(Level.SEVERE, null, ex);
         } catch (FileNotFoundException ex) {
-            Logger.getLogger(SubirArchivo.class.getName()).log(Level.SEVERE, null, ex);*/
+            Logger.getLogger(SubirArchivo.class.getName()).log(Level.SEVERE, null, ex);
         } finally {
             out.close();
         }
