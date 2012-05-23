@@ -24,25 +24,14 @@ public class DES {
 
     public DES(String clave) {
         try {
-            /*
-             * PASO 1: Crear e inicializar clave
-             */
             SecretKeyFactory skf = SecretKeyFactory.getInstance("DES");
             DESKeySpec kspec = new DESKeySpec(clave.getBytes());
             key = skf.generateSecret(kspec);
 
-            /*
-             * PASO 2: Crear cifrador
-             */
-            cifrador = Cipher.getInstance("DES/ECB/PKCS5Padding");
-            /*
-             * Algoritmo DES Modo : ECB (Electronic Code Book) Relleno :
-             * PKCS5Padding
-             */
-            System.out.println(key);
+            cifrador = Cipher.getInstance("DES");
+
         } catch (NoSuchPaddingException ex) {
             Logger.getLogger(DES.class.getName()).log(Level.SEVERE, null, ex);
-
         } catch (NoSuchAlgorithmException ex) {
             Logger.getLogger(DES.class.getName()).log(Level.SEVERE, null, ex);
         } catch (InvalidKeyException ex) {
@@ -53,51 +42,55 @@ public class DES {
     }
 
     public String Cifrador(String Cadena) {
-        String textoCifrado = new String();
+        byte[] cifrado = null;
         try {
             cifrador.init(Cipher.ENCRYPT_MODE, key);
-            byte[] cadena = Cadena.getBytes();
-            byte[] bufferCifrado = cifrador.update(cadena);
-
-            textoCifrado = textoCifrado + new String(bufferCifrado, "ISO-8859-1");
-
-           
-
-
+            byte[] utf8 = Cadena.getBytes("UTF8");
+            cifrado = cifrador.doFinal(utf8);
+            //System.out.println("Cifrado: "+cifrado);
 
         } catch (InvalidKeyException ex) {
             Logger.getLogger(DES.class.getName()).log(Level.SEVERE, null, ex);
         } catch (UnsupportedEncodingException ex) {
             Logger.getLogger(DES.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IllegalBlockSizeException ex) {
+            Logger.getLogger(DES.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (BadPaddingException ex) {
+            Logger.getLogger(DES.class.getName()).log(Level.SEVERE, null, ex);
         }
-        return textoCifrado;
+
+        return Cifrado.codificarBase64(cifrado);
+
     }
 
-    public String Descifrado(String textoCifrado) {
-        String textoClaro = new String();
+    public String Descifrado(String cifra) {
+        String salida = null;
         try {
             cifrador.init(Cipher.DECRYPT_MODE, key);
-            byte[] cadena = textoCifrado.getBytes();
-            byte[] bufferCifrado = cifrador.update(cadena);
-            textoClaro = textoClaro + new String(bufferCifrado, "ISO-8859-1");
-            
+            byte[] dec = Cifrado.decodificarBase64Byte(cifra);
+            //System.out.println("Decodificado: "+dec);
+            byte[] utf8 = cifrador.doFinal(dec);
+            salida = new String(utf8, "UTF8");
 
 
-        } catch (InvalidKeyException ex) {
-            Logger.getLogger(DES.class.getName()).log(Level.SEVERE, null, ex);
         } catch (UnsupportedEncodingException ex) {
+            Logger.getLogger(DES.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IllegalBlockSizeException ex) {
+            Logger.getLogger(DES.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (BadPaddingException ex) {
+            Logger.getLogger(DES.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (InvalidKeyException ex) {
             Logger.getLogger(DES.class.getName()).log(Level.SEVERE, null, ex);
         }
 
-        return textoClaro;
+        return salida;
+    }
+    
+    public static void main(String args[]){
+        String base = "POPO999999POP";
+        DES des = new DES("lupe8912");
+        System.out.println(des.Cifrador(base));
     }
 
-    public static void main(String arg[]) {
-        DES des = new DES("12345678");
-        String rfc = des.Cifrador("QUOG891212MDF");
-        System.out.println("RFC: QUOG891212MDF");
-        System.out.println(rfc);
-        String aux = des.Descifrado(rfc);
-        System.out.println("Cadena descifrada: " + aux);
-    }
+    
 }

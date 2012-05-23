@@ -159,7 +159,15 @@
             </fieldset>
             <fieldset>  
                 Forma de Pago: &nbsp; &nbsp;
-                <input type="text"/>
+                <select id="FormaPago">
+                    <option value="EFECTIVO">EFECTIVO</option>    
+                    <option value="TRANSFERENCIA">TRANSFERENCIA ELECTRÓNICA</option>
+                    <option value="CHEQUE">CHEQUE</option>
+                    <option value="DEBITO">TARJETA DE DÉBITO</option>
+                    <option value="CREDITO">TARJETA DE CRÉDITO</option>
+                    <option value="SERVICIO">TARJETA DE SERVICIO</option>
+                    <option value="MONEDERO">MONEDERO ELECTRÓNICO</option>
+                </select>
             </fieldset>
             <fieldset>  
                 <label class="texto">

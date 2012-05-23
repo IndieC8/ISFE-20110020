@@ -2,6 +2,7 @@ package dao;
 
 import Datos.Contribuyente;
 import Datos.Usuario;
+import Negocios.Cifrado.Cifrado;
 import Negocios.Cifrado.DES;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -39,9 +40,11 @@ public class Registrar extends HttpServlet {
         response.setContentType("text/html;charset=UTF-8");
         PrintWriter out = response.getWriter();
         try {
-            
+
             if ("validar".equals(request.getParameter("usuario"))) {
-                /*Buscamos si no hay otro rfc*/
+                /*
+                 * Buscamos si no hay otro rfc
+                 */
                 String RFC = request.getParameter("rfc");
                 String sentencia = "SELECT idUsuario FROM usuario WHERE rfc = '" + RFC + "'";
                 c = new Contribuyente();
@@ -51,45 +54,68 @@ public class Registrar extends HttpServlet {
 
             } else if ("Guardar".equals(request.getParameter("usuario"))) {
 
-
+                String password = request.getParameter("password");
+                DES des = new DES(password);
+                
                 String rfc = request.getParameter("rfcUsuario");
+                rfc = des.Cifrador(rfc);
                 String telefono = request.getParameter("telefono");
+                telefono = des.Cifrador(telefono);
                 String calle = request.getParameter("calle");
+                calle = des.Cifrador(calle);
                 String interior = request.getParameter("interior");
+                if(interior != ""){ interior = des.Cifrador(interior); }
                 String exterior = request.getParameter("exterior");
+                exterior = des.Cifrador(exterior);
                 int localidad = Integer.parseInt(request.getParameter("localidad"));
                 String mail = request.getParameter("mail");
+                mail = des.Cifrador(mail);
                 String referencia = request.getParameter("referencia");
-                String password = request.getParameter("password");
-                Sql sql = new Sql();
+                referencia = des.Cifrador(referencia);
                 
-                DES des = new DES(password);
-                //out.println("Cifrando rfc: "+des.Cifrador(rfc) +"\n");
+                Sql sql = new Sql();
 
-               /*if ("Moral".equals(request.getParameter("Tipo"))) {
+                if ("Moral".equals(request.getParameter("Tipo"))) {
                     String razon = request.getParameter("razon");
+                    razon = des.Cifrador(razon);
+                    password = Cifrado.codificarBase64(password);
+                    
                     String consulta = "INSERT INTO usuario VALUES(0,true,null,null,null,'" + razon + "',null,'" + rfc + "','" + password + "',"
                             + "'" + mail + "','" + telefono + "','" + calle + "','" + exterior + "','" + interior + "','" + referencia + "'," + localidad + ")";
                     String resultado = sql.ejecuta(consulta);
+                    
 
                 } else {
                     String nombre = request.getParameter("nombre");
+                    nombre = des.Cifrador(nombre);
                     String paterno = request.getParameter("paterno");
+                    paterno = des.Cifrador(paterno);
                     String materno = request.getParameter("materno");
+                    materno = des.Cifrador(materno);
                     String curp = request.getParameter("curp");
+                    if(curp != ""){ curp = des.Cifrador(curp); }
+                    password = Cifrado.codificarBase64(password);
 
                     String consulta = "INSERT INTO usuario VALUES(0,false,'" + nombre + "','" + materno + "','" + paterno + "',null,'" + curp + "','" + rfc + "','" + password + "',"
                             + "'" + mail + "','" + telefono + "','" + calle + "','" + exterior + "','" + interior + "','" + referencia + "'," + localidad + ")";
                     sql.ejecuta(consulta);
-                }*/
+                }
 
-                /*String consulta = "SELECT idUsuario FROM usuario WHERE rfc='" + rfc + "'";
-                ResultSet rs = sql.consulta(consulta);
-                while(rs.next()) {
+                String consulta = "SELECT idUsuario FROM usuario WHERE rfc='" + rfc + "'";
+                ResultSet rs;
+                rs = sql.consulta(consulta);
+                while (rs.next()) {
                     out.println(rs.getInt("idUsuario"));
-                }*/
+                }
 
             }
+        } catch (InstantiationException ex) {
+            Logger.getLogger(Registrar.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IllegalAccessException ex) {
+            Logger.getLogger(Registrar.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException ex) {
+            Logger.getLogger(Registrar.class.getName()).log(Level.SEVERE, null, ex);
+           
         } finally {
             out.close();
         }

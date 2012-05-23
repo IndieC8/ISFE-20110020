@@ -238,15 +238,15 @@
                                         </tr>
                                         <tr>
                                             <td>E-mail*:</td>
-                                            <td><input type="text" id="emailUsuario" class="required email" name="email" value="" size="25" /></td>
+                                            <td><input type="text" id="emailUsuario" class="required email" name="email" maxlength="45" value="" size="25" /></td>
                                         </tr>
                                         <tr>
                                             <td>Contrase&ntilde;a*:</td>
-                                            <td><input type="password" id="passwordUsuario" name="passwordUsuario" size="25"  maxlength="45" /></td>
+                                            <td><input type="password" id="passwordUsuario" name="passwordUsuario" size="25"  maxlength="20" /></td>
                                         </tr>
                                         <tr>
                                             <td>Repita Contrase&ntilde;a*:</td>
-                                            <td><input type="password" id="rePasswordUsuario" name="rePasswordUsuario" size="25"  maxlength="45" /></td>
+                                            <td><input type="password" id="rePasswordUsuario" name="rePasswordUsuario" size="25"  maxlength="20" /></td>
                                         </tr>
                                         <tr align="center">
                                             <td colspan="2"><input type="reset" width="50" value="Cancelar" name="cancelar" class="ui-button ui-widget ui-state-default ui-corner-all" role="button" aria-disabled="false"/> <input  id="siguienteRegistro"type="submit" width="50" value="Siguiente" name="siguiente" class="ui-button ui-widget ui-state-default ui-corner-all" role="button" aria-disabled="false"/></td>
