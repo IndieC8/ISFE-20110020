@@ -267,6 +267,7 @@ public class Factura extends HttpServlet {
                 factura.setFolio(folio);
                 factura.setFecha(new Date());
                 
+          
                 
                 //DATOS DE ISFE COMO PAC
                 String sqlISFE = "select u.idUsuario,f.archivoFiel,c.noCertificado,c.archivoCSD from fiel f,csd c,usuario u where u.idUsuario=1 and u.idUsuario=f.idUsuario and u.idUsuario=c.idUsuario;";
