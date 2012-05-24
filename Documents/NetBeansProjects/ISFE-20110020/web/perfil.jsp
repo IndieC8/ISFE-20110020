@@ -28,40 +28,7 @@
         <link rel="stylesheet" type="text/css" href="estilo/style.css" />
         <script type="text/javascript" src="js/jquery-1.7.1.min.js"></script>
         <script type="text/javascript" src="js/jquery-ui-1.8.17.custom.min.js"></script>
-  
-
-        <script type="text/javascript">
-                
-            $(function(){
-
-                 // Tabs
-                $('#tabs').tabs();
-	
-
-                // Dialog			
-                $('#dialog').dialog({
-                    autoOpen: false,
-                    width: 600,
-                    buttons: {
-                        "Ok": function() { 
-                            $(this).dialog("close"); 
-                        }, 
-                        "Cancel": function() { 
-                            $(this).dialog("close"); 
-                        } 
-                    }
-                });
-		
-                			
-                //hover states on the static widgets
-                $('#dialog_link, ul#icons li').hover(
-                function() { $(this).addClass('ui-state-hover'); }, 
-                function() { $(this).removeClass('ui-state-hover'); }
-            );
-				
-            });
-        </script>
-        
+        <script type="text/javascript" src="js/jquery.menu.js"></script>
 
     </head>
 

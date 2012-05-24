@@ -27,20 +27,8 @@
             <link rel="stylesheet" type="text/css" href="estilo/style.css" />
             <script type="text/javascript" src="js/jquery-1.7.1.min.js"></script>
             <script type="text/javascript" src="js/jquery-ui-1.8.17.custom.min.js"></script>
-            <script src="js/ui/jquery.ui.core.js"></script>
-            <script src="js/ui/jquery.ui.widget.js"></script>
-            <script src="js/ui/jquery.effects.core.js"></script>
-            <script type="text/javascript">
-			$(function(){
-
-				// Slider
-				$('#slider').slider({
-					range: true,
-					values: [17, 67]
-				});
-			});
-		</script>
-                   
+            <script type="text/javascript" src="js/jquery.menu.js"></script>
+                  
 	<center>
             <div class="principal">
             <div class="header">

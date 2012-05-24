@@ -5,26 +5,6 @@ var Iva = 0;
 var Sub = 0;
 var id = 0;
 
-$(function(){
-    // Tabs
-    $('#tabs').tabs();
-    
-    // Dialog			
-    $('#dialog').dialog({
-        autoOpen: false,
-        width: 600,
-        buttons: {
-            "Ok": function() { 
-                $(this).dialog("close"); 
-            }, 
-            "Cancel": function() { 
-                $(this).dialog("close"); 
-            } 
-        }
-    });
-
-});
-
 $(function() {
     // a workaround for a flaw in the demo system (http://dev.jqueryui.com/ticket/4375), ignore!
     $( "#dialog:ui-dialog" ).dialog( "destroy" );
@@ -66,28 +46,29 @@ $(function() {
         buttons: {
             "Aceptar": function() {
                 var cantidad = new Array(col);
+                var unidad = new Array(col);
                 var nombre = new Array(col);
                 var unidad = new Array(col);
                 var unitario = new Array(col);
                 var totalProducto = new Array(col);
                 var descripcion = new Array(col);
-                var aux =$("#Algo").val();
+                var aux = $("#algo").val();
                 var indice = 0;
                 
                 for(i=0;i<col;i++){
-                    if( aux != $("#tbDetalleCantidad_"+i).val() ){
-                        cantidad[indice]=$("#tbDetalleCantidad_"+i).val();
-                        nombre[indice]=$("#tbDetalleNombre_"+i).val();
-                        unitario[indice]=$("#tbDetalleImporte_"+i).val();
-                        totalProducto[indice]=$("#tbDetalleTotal_"+i).val();
-                        descripcion[indice]=$("#tbDetalleDescripcion_"+i).val();
-                        unidad[indice]=$("#tbDetalleUnidad_"+i).val();
+                    if(aux != $("#tbDetalleCantidad_"+i).val() ){
+                        cantidad[indice] = $("#tbDetalleCantidad_"+i).val();
+                        nombre[indice] = $("#tbDetalleNombre_"+i).val();
+                        unitario[indice] = $("#tbDetalleImporte_"+i).val();
+                        totalProducto[indice] = $("#tbDetalleTotal_"+i).val();
+                        descripcion[indice] = $("#tbDetalleDescripcion_"+i).val();
+                        unidad[indice] = $("#tbDetalleUnidad_"+i).val();
                         indice++;
                     }
-                }
-                GenerarXML(indice,cantidad,nombre,unitario,totalProducto,descripcion,Sub,Iva,Total,unidad);
-                $( this ).dialog("close");
-                                        
+                    //alert("Campos: "+indice+"Canitdad "+cantidad+"Nombre: "+nombre+"Unitario: "+unitario+"Total: "+totalProducto+"Descripcion: "+descripcion);
+                    GenerarXML(col,cantidad,nombre,unitario,totalProducto,descripcion,Sub,Iva,Total,unidad);
+                    $( this ).dialog("close");
+                }                      
             },
             Cancelar: function() {
                 $( this ).dialog( "close" );
@@ -194,6 +175,7 @@ function borrarProducto(){
 function agregarFila(){
     var oId = parseInt($("#cant_campos").val() );
     $("#cant_campos").val( oId + 1);
+    $("#confrimarFecturaXML").show();
 
     var cantidad = $("#cantidadFactura").val();
     var nombre = $("#nombreProducto").val().toUpperCase();
@@ -232,7 +214,6 @@ function agregarFila(){
 /** Eliminar Productos que no deseo **/
 function eliminarFila(oId){
     $("#rowDetalle_" + oId).remove();
-    return false;
 }
 
 function AgregarProducto(){
@@ -312,7 +293,7 @@ function fill(nombreProducto,descripcionProducto,unidadProducto,valorUnitario,id
 }
 
 function GenerarFactura(){
-    
+
     var aux = $("#Algo").val();
     col = parseInt($("#cant_campos").val() );
     Total = 0;
@@ -326,7 +307,6 @@ function GenerarFactura(){
             Sub = Sub + parseFloat($("#tbDetalleSubtotal_"+i).val());
         }
     }
-    
        
     addComas(Total,document.getElementById("auxConfirmacion"));
     $("#confirmarTotalFactura").text("$ "+$("#auxConfirmacion").val());
@@ -338,8 +318,10 @@ function GenerarFactura(){
     
     addComas(Sub,document.getElementById("auxConfirmacion"));
     $("#confirmarSubTotalFactura").text("$ "+$("#auxConfirmacion").val());
-        
+     
+    
     $("#confirmacionFactura").dialog("open"); 
+
 }
 
 $(function() {
@@ -404,9 +386,4 @@ function BuscarCancelacion(){
     }
 }
 
-function GenerarPDF(idFactura){
-    $.ajax({
-        url: "../Impresa", type: "POST",
-        data:"Factura=PDF&idFactura="+idFactura
-    });
-}
+

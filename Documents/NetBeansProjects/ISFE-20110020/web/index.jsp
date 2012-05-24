@@ -21,25 +21,10 @@
             <script src="/ISFE-20110020/js/jquery.menu.js"></script>
 
             <script type="text/javascript">
-			$(function(){
-
-				// Slider
-				$('#slider').slider({
-					range: true,
-					values: [17, 67]
-				});
-			});
-
-                        jQuery(function(){
-                            $("#RFCLogin").mask("aaa*-999999-aa*");
+			 jQuery(function(){
+                            $("#RFCLogin").mask("aaaa-999999-***");
                          });
-		</script>
-
-            <script>
-                    $(function() {
-                        $( "input:submit, a, button", ".demo" ).button();
-                        $( "a", ".demo" ).click(function() { return false; });
-                    });
+		
 
                     /*Validar login*/
                     function Sesion(){

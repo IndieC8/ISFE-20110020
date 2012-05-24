@@ -20,7 +20,7 @@
 <%        } else {
     contribuyente = (String) sesionOk.getAttribute("contribuyente");//Recoge la session
     id = (String) sesionOk.getAttribute("identificador");//Recoge la session
-%>
+ %>
 
 <!DOCTYPE html>
 <html>
@@ -32,6 +32,7 @@
         <script src="../js/jquery.perfil.js"></script>
         <script src="../js/ui/jquery.ui.dialog.js"></script>
         <script src="../js/jquery.validate.js"></script>
+        <script src="../js/jquery.menu.js"></script>
 
         <script type="text/javascript">
             var nombre;
