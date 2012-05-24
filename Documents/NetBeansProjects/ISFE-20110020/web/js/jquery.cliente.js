@@ -126,9 +126,9 @@ function regresarModificacion(){
 
 /*Mascara de validacion de RFC del cliente*/
 jQuery(function(){
-    $("#RFCCliente").mask("aaa*-999999-aa*");
-    $("#rfcClienteModificar").mask("aaa*-999999-aa*");
-    $("#rfcClienteEliminar").mask("aaa*-999999-aa*");
+    $("#RFCCliente").mask("aaaa-999999-***");
+    $("#rfcClienteModificar").mask("aaaa-999999-***");
+    $("#rfcClienteEliminar").mask("aaaa-999999-***");
 });
                 
                              

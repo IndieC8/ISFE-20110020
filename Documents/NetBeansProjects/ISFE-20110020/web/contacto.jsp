@@ -11,27 +11,11 @@
             <link rel="stylesheet" type="text/css" href="estilo/style.css" />
             <script type="text/javascript" src="js/jquery-1.7.1.min.js"></script>
             <script type="text/javascript" src="js/jquery-ui-1.8.17.custom.min.js"></script>
-            <script src="js/jquery.fileUploader.js" type="text/javascript"></script>
-            <script src="js/ui/jquery.ui.core.js"></script>
+            <script src="js/ui/jquery.menu.js"></script>
             <script src="js/ui/jquery.ui.widget.js"></script>
-            <script src="js/ui/jquery.ui.mouse.js"></script>
-            <script src="js/ui/jquery.ui.button.js"></script>
-            <script src="js/ui/jquery.ui.draggable.js"></script>
-            <script src="js/ui/jquery.ui.position.js"></script>
-            <script src="js/ui/jquery.ui.resizable.js"></script>
-            <script src="js/ui/jquery.ui.dialog.js"></script>
-            <script src="js/ui/jquery.effects.core.js"></script>
+             
             
-            <script type="text/javascript">
-			$(function(){
-				//hover states on the static widgets
-				$('#dialog_link, ul#icons li').hover(
-					function() { $(this).addClass('ui-state-hover'); }, 
-					function() { $(this).removeClass('ui-state-hover'); }
-				);
-				
-			});
-		</script>
+           
 	<center>
             <div class="principal">
             <div class="header">
@@ -71,8 +55,8 @@
                                     type: 'profile',
                                     rpp: 4,
                                     interval: 30000,
-                                    width: 250,
-                                    height: 300,
+                                    width: 292,
+                                    height: 500,
                                     theme: {
                                         shell: {
                                         background: '#333333',

@@ -55,6 +55,7 @@ public class SubirArchivo extends HttpServlet {
             contextPage = pageContext;
             upBean = (javazoom.upload.UploadBean) contextPage.getAttribute("upBean", javax.servlet.jsp.PageContext.PAGE_SCOPE);
             String page = null;
+            String pageError = null;
             String idUsuario = null;
             String nombreArchivo = null;
             Sql sql = new Sql();
@@ -86,10 +87,13 @@ public class SubirArchivo extends HttpServlet {
 
                 if ("registro".equals(mrequest.getParameter("registro"))) {
                     page = "registro.jsp?valor=Registro";
+                    pageError = "registro.jsp?valor=Error";
                 } else if ("certificado".equals(mrequest.getParameter("registro"))) {
                     page = "perfil/administrarFIELyCSD.jsp?valor=cer";
+                    pageError = "perfil/administrarFIELyCSD.jsp?valor=cerError";
                 } else {
                     page = "perfil/administrarFIELyCSD.jsp?valor=fiel";
+                    pageError = "perfil/administrarFIELyCSD.jsp?valor=fielError";
                 }
 
 
@@ -175,13 +179,14 @@ public class SubirArchivo extends HttpServlet {
                     byte[] bufferFiel = new byte[(int) archivoFiel.length()];
                     int offset = 0;
                     int numRead = 0;
-
+                    
                     while (offset < bufferFiel.length && (numRead = ISFiel.read(bufferFiel, offset, bufferFiel.length - offset)) >= 0) {
                         offset += numRead;
                     }
                     ISFiel.close();
                     PrivateKey keyFiel = null;
                     keyFiel = Cifrado.getLlavePrivada(bufferFiel, privada);
+                    
 
                     if (keyFiel != null) {
                         if ("modificar".equals(accion)) {
@@ -194,7 +199,8 @@ public class SubirArchivo extends HttpServlet {
                             out.println("<br/>Archivo fiel en base");
                         }
                     } else {
-                        out.println("<br/>La llave no concuerda!");
+                        out.println("Error");
+                        response.sendRedirect(pageError);
                     }
                 }
             }

@@ -30,23 +30,22 @@
         <script type="text/javascript" src="../js/jquery-1.7.1.min.js"></script>
         <script type="text/javascript" src="../js/jquery-ui-1.8.17.custom.min.js"></script>
         <script type="text/javascript" src="../js/jquery.MultiFile.js"></script> <!-- Validar los archivos a subir -->
-        <script type="text/javascript" src="../js/jquery.menu.js"></script>
         <script type="text/javascript" src="../js/ui/jquery.ui.dialog.js"></script>
-        
+        <script src="../js/jquery.perfil.js"></script>
+        <script src="../js/jquery.menu.js"></script>
+
         <script type="text/javascript">
-            
             $(document).ready(function(){
                 $("#idUsuario").val("<%=id%>");
                 $("#idUsuarioCER").val("<%=id%>");
                 
                 if("<%=valor%>" == "cer"){
-                    $("#mensajeConfirmarPerfil").text("Tu CSD se ha actualizado!");
-                    $("#DialogoConfirmarArchivo").dialog("open");
+                    $("#ErrorClavePrivada").text("Tu CSD se ha actualizado!");
                 }
                 
                 if("<%=valor%>" == "fiel"){
-                    $("#mensajeConfirmarPerfil").text("Tu FIEL se ha actualizado!");
-                    $("#DialogoConfirmarArchivo").dialog("open");
+                    $("#ErrorClavePrivada").text("Tu FIEL se ha actualizado!");
+                    
                 }
                 
             });
@@ -74,49 +73,19 @@
                 });
             });
             
-            $(function() {
-                // a workaround for a flaw in the demo system (http://dev.jqueryui.com/ticket/4375), ignore!
-                $( "#dialog:ui-dialog" ).dialog( "destroy" );
-    
-                $("#DialogoConfirmarArchivo").dialog({
-                    autoOpen: false,
-                    height: 200,
-                    width: 350,
-                    modal: true,
-                    buttons: {
-                        "Aceptar": function() {
-                            $( this ).dialog("close");                        
-                        }
-                    },
-                    close: function() {
-                        allFields.val( "" ).removeClass( "ui-state-error" );
-                    }
-                });
-            });
-            
             function ValidarPrivadaFIEL(){
-               $("#ErrorClavePrivada").text("");
-               if( $("#llavePrivada").val() != ""){
-                   document.upformFIEL.submit();
-               }else{
-                   $("#ErrorClavePrivada").text("Ingresa tu clave Privada");
-                   return false;
-               }
+                $("#ErrorClavePrivada").text("");
+                if( $("#llavePrivada").val() != ""){
+                    document.upformFIEL.submit();
+                }else{
+                    $("#ErrorClavePrivada").text("Ingresa tu clave Privada");
+                    return false;
+                }
             }
               
         </script>
     </head>
     <body>
-        <!--Dialogo de Confirmar Perfil-->
-        <div id="DialogoConfirmarArchivo" title="ISFE- Administrar FIEL y CSD">
-            <p class="validateTips">
-                <img src="../images/confirmar.jpg" />
-                &nbsp;  
-                <label class="texto" id="mensajeConfirmarPerfil"></label>
-            </p>
-        </div>
-        <!--Termina el dialogo de Confirmacion de Perfil-->
-
     <center>
         <div class="principal">
             <div class="header">

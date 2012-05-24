@@ -19,10 +19,10 @@
         <script type="text/javascript" src="js/jquery-ui-1.8.17.custom.min.js"></script>
         <script type="text/javascript" src="js/jquery.MultiFile.js"></script>
         <script type="text/javascript" src="js/jquery.menu.js"></script>
+        <script src="/ISFE-20110020/js/jquery.maskedinput.js"></script>
         <!--Este script es para la validacion de los formularios-->
         <script src="js/jquery.validate.js"></script>
-        <script src="js/jquery.maskedinput.js"></script>
-        <script src="js/ui/jquery.ui.dialog.js"></script>
+         <script src="js/ui/jquery.ui.dialog.js"></script>
         <script src="js/jquery.perfil.js"></script>
 
 

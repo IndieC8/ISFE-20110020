@@ -33,19 +33,9 @@
         <script type="text/javascript" src="js/jquery-1.7.1.min.js"></script>
         <script type="text/javascript" src="js/jquery-ui-1.8.17.custom.min.js"></script>
         <script src="js/ui/jquery.ui.widget.js"></script>
-        <script src="js/ui/jquery.ui.draggable.js"></script>
-        <script src="js/ui/jquery.effects.core.js"></script>
+        <script src="js/jquery.menu.js"></script>
 
-        <script type="text/javascript">
-            $(function(){
-                //hover states on the static widgets
-                $('#dialog_link, ul#icons li').hover(
-                function() { $(this).addClass('ui-state-hover'); }, 
-                function() { $(this).removeClass('ui-state-hover'); }
-            );
-				
-            });
-        </script>
+        
 
     <center>
         <div class="principal">
@@ -103,8 +93,8 @@
                                         type: 'profile',
                                         rpp: 4,
                                         interval: 30000,
-                                        width: 250,
-                                        height: 300,
+                                        width: 292,
+                                        height: 500,
                                         theme: {
                                             shell: {
                                                 background: '#333333',
@@ -122,7 +112,7 @@
                                             live: true,
                                             behavior: 'all'
                                         }
-                                    }).render().setUser('kawatoto').start();
+                                    }).render().setUser('ISFEtt20110020').start();
                                     </script>
                                 </td>
                                 <td align="center">
@@ -136,7 +126,7 @@
                                     </h3>
                                 </td>
                                 <td>
-                                    <div class="fb-activity" data-site="https://www.facebook.com/events/239407649488864/" data-width="250" data-height="300" data-header="true" data-font="verdana" data-recommendations="true"></div>
+                                    <iframe src="//www.facebook.com/plugins/likebox.php?href=https%3A%2F%2Fwww.facebook.com%2FISFE20110020&amp;width=292&amp;height=590&amp;colorscheme=light&amp;show_faces=true&amp;border_color&amp;stream=true&amp;header=true" scrolling="no" frameborder="0" style="border:none; overflow:hidden; width:292px; height:590px;" allowTransparency="true"></iframe>
                                 </td>
                             </tr>
                         </tbody>
