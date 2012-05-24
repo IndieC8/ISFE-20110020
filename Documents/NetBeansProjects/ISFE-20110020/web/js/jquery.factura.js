@@ -404,9 +404,3 @@ function BuscarCancelacion(){
     }
 }
 
-function GenerarPDF(idFactura){
-    $.ajax({
-        url: "../Impresa", type: "POST",
-        data:"Factura=PDF&idFactura="+idFactura
-    });
-}

@@ -66,7 +66,10 @@
                 });
             }
             
-        
+            function GenerarPDF(idFactura){
+                $("#idFacturaImpresa").val(idFactura);
+                document.GenerarPDF.submit();
+            }
             
             
             
@@ -160,6 +163,7 @@
                                     </tr>
                                 </table>
                             </form>
+                            <form action="../Impresa" name="GenerarPDF" method="POST"> <input type="hidden" name="idFacturaImpresa" value="idFacturaImpresa"/></form>
                             <br/><br/>
                             <div id="TablaFacturasACancelar" style="display: none"></div>
                         </div>

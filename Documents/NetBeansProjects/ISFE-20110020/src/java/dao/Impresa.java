@@ -44,32 +44,7 @@ public class Impresa extends HttpServlet {
             /*
              * TODO output your page here. You may use following sample code.
              */
-            if ("PDF".equals(request.getParameter("Factura"))) {
-
-                Sql sqlPDF = new Sql();
-                String query = "select nombreXML,facturaXML from factura where idFactura=" + request.getParameter("idFactura") + ";";
-                ResultSet rs = sqlPDF.consulta(query);
-                String path=this.getServletContext().getRealPath("/");
-                File xml = null;
-                String nombre=null;
-                while (rs.next()) {
-                    nombre=rs.getString("nombreXML");
-                    xml = new File(path+nombre+".xml");
-                    FileOutputStream fos = new FileOutputStream(xml);
-                    byte[] buffer = new byte[1];
-                    InputStream is = rs.getBinaryStream(2);
-                    while (is.read(buffer) > 0) {
-                        fos.write(buffer);
-                    }
-                    fos.close();
-                }
-                
-                File pdf = PDF.generarArchivoPDF(xml, path, nombre+".pdf");
-                xml.delete();
-                PDF.visualizarPDF(pdf, response, request);
-                
-
-            } else if ("Buscar".equals(request.getParameter("Factura"))) {
+            if ("Buscar".equals(request.getParameter("Factura"))) {
 
                 String idUsuario = request.getParameter("idUsuario");
                 idUsuario = Cifrado.decodificarBase64(idUsuario);
@@ -110,6 +85,29 @@ public class Impresa extends HttpServlet {
                 } else {
                     out.println("0");
                 }
+            }else if("generarPDF".equals(request.getParameter("Factura"))){
+                Sql sqlPDF = new Sql();
+                String query = "select nombreXML,facturaXML from factura where idFactura=" + request.getParameter("idFacturaImpresa") + ";";
+                ResultSet rs = sqlPDF.consulta(query);
+                String path=this.getServletContext().getRealPath("/");
+                File xml = null;
+                String nombre=null;
+                while (rs.next()) {
+                    nombre=rs.getString("nombreXML");
+                    xml = new File(path+nombre+".xml");
+                    FileOutputStream fos = new FileOutputStream(xml);
+                    byte[] buffer = new byte[1];
+                    InputStream is = rs.getBinaryStream(2);
+                    while (is.read(buffer) > 0) {
+                        fos.write(buffer);
+                    }
+                    fos.close();
+                }
+                
+                File pdf = PDF.generarArchivoPDF(xml, path, nombre+".pdf");
+                response.sendRedirect("PDF.jsp?nombrePDF="+nombre);
+                //PDF.visualizarPDF(pdf, response, request);
+                
             }
         } catch (FileNotFoundException ex) {
             Logger.getLogger(Impresa.class.getName()).log(Level.SEVERE, null, ex);

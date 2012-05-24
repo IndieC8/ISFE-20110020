@@ -344,8 +344,8 @@ public class Factura extends HttpServlet {
                 File fXML = XML.generarArchivoXML(facturaXML, emisor.getRFC() + folio.getNoFolio() + receptor.getRFC() + ".xml",pathAbsoluto);
 
                 //ENVIO DEL XML AL CORREO DEL USUARIO
-                //EnvioMail mail = new EnvioMail();
-                //mail.EnvioMail(emisor.getCorreo(), "Entrega de Factura Electrónica ISFE " + new Date(), "ISFE, hace entrega de la factura electrónica en formato XML.\nHacemos de su conocimiento que en este momento el resguardo de la factura\nes responsabilidad de usted.\n\nGracias por utilizar ISFE.", fXML, emisor.getRFC() + folio.getNoFolio() + receptor.getRFC() + ".xml");
+                EnvioMail mail = new EnvioMail();
+                mail.EnvioMail(emisor.getCorreo(), "Entrega de Factura Electrónica ISFE " + new Date(), "ISFE, hace entrega de la factura electrónica en formato XML.\nHacemos de su conocimiento que en este momento el resguardo de la factura\nes responsabilidad de usted.\n\nGracias por utilizar ISFE.", fXML, emisor.getRFC() + folio.getNoFolio() + receptor.getRFC() + ".xml");
 
                 
                 //ALMACENAMIENTO DEL XML EN LA BASE DE DATOS DE ISFE
@@ -365,7 +365,7 @@ public class Factura extends HttpServlet {
                 //fXML.delete();
                                 
                 //PRUEBA PDF
-                //File pdf = PDF.generarArchivoPDF(fXML, pathAbsoluto+"/resources/xslt/", pathAbsoluto+factura.getEmisor().getRFC()+factura.getFolio().getNoFolio()+factura.getReceptor().getRFC() + ".pdf");
+                //File pdf = PDF.generarArchivoPDF(fXML, pathAbsoluto+"resources/xslt/", pathAbsoluto+factura.getEmisor().getRFC()+factura.getFolio().getNoFolio()+factura.getReceptor().getRFC() + ".pdf");
                 //PDF.visualizarPDF(pdf, response, request);
                 
             } catch (InstantiationException ex) {
@@ -414,7 +414,7 @@ public class Factura extends HttpServlet {
 
                 //GENERACIÓN DEL PDF (FACTURA IMPRESA) PARA VISUALIZARLO EN LA PAGINA WEB
                 String nombrePDF=pathAbsoluto+rsPDF.getString("nombreXML") + ".pdf";
-                File pdf = PDF.generarArchivoPDF(xml, pathAbsoluto+"/resources/xslt/", nombrePDF);
+                File pdf = PDF.generarArchivoPDF(xml, pathAbsoluto+"resources/xslt/", nombrePDF);
                 PDF.visualizarPDF(pdf, response, request);
             } catch (InstantiationException ex) {
                 Logger.getLogger(Factura.class.getName()).log(Level.SEVERE, null, ex);

@@ -18,17 +18,17 @@
 					<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
 						<rdf:Description rdf:about="" xmlns:dc="http://purl.org/dc/elements/1.1/">
 						<!-- Dublin Core properties go here -->
-							<dc:title>Factura emitida con ISFE</dc:title>
-							<dc:creator>ISFE</dc:creator>
-							<dc:description>CFDI</dc:description>
+							<dc:title>Factura emitida con ISFE-20110020</dc:title>
+							<dc:creator>ISFE-20110020</dc:creator>
+							<dc:description>Representación impresa de un CFDI</dc:description>
 						</rdf:Description>
 						<rdf:Description rdf:about="" xmlns:xmp="http://ns.adobe.com/xap/1.0/">
 						<!-- XMP properties go here -->
-							<xmp:CreatorTool>SFE</xmp:CreatorTool>
+							<xmp:CreatorTool>ISFE-20110020</xmp:CreatorTool>
 						</rdf:Description>
 						<rdf:Description rdf:about="" xmlns:pdf="http://ns.adobe.com/pdf/1.3/">
 							<!-- XMP properties go here -->
-							<pdf:Producer>ISFE - Apache FOP</pdf:Producer>
+							<pdf:Producer>ISFE powered by Apache FOP</pdf:Producer>
 						</rdf:Description>
 					</rdf:RDF>
 				</x:xmpmeta>
@@ -36,7 +36,7 @@
 
 			<fo:page-sequence master-reference="Factura" font-size="11pt">
 				<fo:static-content flow-name="xsl-region-after" font-size="11pt">
-					<fo:block text-align-last="justify">
+					<fo:block text-align-last="center">
 						Este documento es una representación impresa de un CFDI
 						<!--<fo:leader leader-pattern="space"/>-->
 						<!--<fo:page-number/> de-->
@@ -44,7 +44,7 @@
 					</fo:block>
 				</fo:static-content>
 				<fo:static-content flow-name="xsl-region-before" font-size="14pt" font-weight="bold">
-					<fo:block text-align="center">Factura emitida con ISFE.</fo:block>
+					<fo:block text-align="center">Factura emitida con ISFE-20110020.</fo:block>
 				</fo:static-content>
                                 <fo:flow flow-name="xsl-region-body">
                                     <fo:block>
@@ -260,14 +260,6 @@
                                                             <xsl:with-param name="str" select="../../cfdi:Comprobante/@folio"/>
                                                         </xsl:call-template>
                                                     </fo:block>
-							<!--<fo:block>
-								<fo:external-graphic src="url('http://localhost:8084/ISFE/resources/QR.gif')" content-height="40" content-width="40"/>
-                                                                <fo:instream-foreign-object>
-                                                                    <qr:qrcode xmlns:qr="http://code.google.com/p/fop-qrcode" 
-                                                                        length="40" cellsize="8" margin="5" type="9" correction="H" message='{$str}'>
-                                                                    </qr:qrcode>
-                                                                </fo:instream-foreign-object>
-                                                        </fo:block>-->
 						</fo:table-cell>
 						<fo:table-cell space-start="0.25cm">
 							<fo:block font-weight="bold">

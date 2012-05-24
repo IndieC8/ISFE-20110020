@@ -117,4 +117,14 @@ public class PDF extends Formato{
         }
         
     }
+    public static void visualizarPDF(String pdf,HttpServletResponse response,HttpServletRequest request){
+        try {
+            File archivoPDF=new File(pdf);
+            response.setContentType("application/pdf");
+            response.setHeader("Content-Disposition", "attachment;filename=\""+archivoPDF.getName()+"\";");
+            response.sendRedirect(archivoPDF.getName());
+        } catch (IOException ex) {
+            Logger.getLogger(PDF.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
 }

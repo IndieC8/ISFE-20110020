@@ -15,9 +15,14 @@
     </head>
     <body>
         <%
+        if(request.getParameter("nombrePDF")==null)
+            response.sendRedirect("PDF.jsp?nombrePDF=F");
+        else{
+        String nombrePDF=request.getParameter("nombrePDF");
         String pathAbsoluto=this.getServletContext().getRealPath("/");
-        File pdf=new File(pathAbsoluto+"F.pdf");
-        PDF.visualizarPDF(pdf, response, request);
+        //out.println(pathAbsoluto+nombrePDF+".pdf");
+        //File pdf=new File(pathAbsoluto+nombrePDF+".pdf");
+        PDF.visualizarPDF(pathAbsoluto+nombrePDF+".pdf", response, request);}
         %>
     </body>
 </html>
