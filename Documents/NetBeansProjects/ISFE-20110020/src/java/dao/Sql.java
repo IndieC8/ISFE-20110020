@@ -113,6 +113,26 @@ public class Sql {
         pst.setInt(3, idUsuario);
         pst.execute();
     }
+    
+    public void actualizarFiel(File fiel,String idUsuario) throws InstantiationException, IllegalAccessException, SQLException, FileNotFoundException{
+        this.conectar();
+        String sql = "UPDATE fiel SET archivoFiel = ? WHERE idUsuario = "+idUsuario;
+        PreparedStatement pst=conn.prepareStatement(sql);
+        FileInputStream fis=new FileInputStream(fiel);
+        pst.setBinaryStream(1, fis, fiel.length());
+        pst.execute();
+        
+    }
+    
+    public void actualizarCSD(File fiel, String idUsuario,String noCSD) throws InstantiationException, IllegalAccessException, SQLException, FileNotFoundException{
+        this.conectar();
+        String sql = "UPDATE csd SET noCertificado = ? , archivoCSD = ? WHERE idUsuario = "+idUsuario;
+        PreparedStatement pst=conn.prepareStatement(sql);
+        FileInputStream fis=new FileInputStream(fiel);
+        pst.setString(1, noCSD);
+        pst.setBinaryStream(2, fis, fiel.length());
+        pst.execute();
+    }
     /**
      * Método encargado de subir el CSD a la base de datos
      * @param sql Instrucción para isnertar el archivo en la base de datos

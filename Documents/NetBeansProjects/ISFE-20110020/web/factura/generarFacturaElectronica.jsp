@@ -28,6 +28,7 @@
         <script type="text/javascript" src="../js/jquery-ui-1.8.17.custom.min.js"></script>
         <script src="../js/ui/jquery.ui.autocomplete.js"></script> <!--Realiza el autocomplete de los productos-->
         <script src="../js/jquery.factura.js"></script>
+        <script src="../js/jquery.menu.js"></script>
 
         <script type="text/javascript">
             $(document).ready(function(){
@@ -79,7 +80,7 @@
                     url:"../Factura",
                     type: "POST",
                     data: "Factura=Generar&idUsuaio=<%=id%>&cant_campos="+campos+"&cantidad="+cantidad+"&nombre="+nombre+"&unitario="+unitario+"&total="+totalProducto+"&descripcion="+descripcion+"&formaDePago=Efectivo&subTotal="+sub+
-                        "&iva="+iva+"&descuento=0&GranTotal="+total+"&tipoComprobante=INGRESO&unidad="+unidad,
+                        "&iva="+iva+"&descuento=0&GranTotal="+total+"&unidad="+unidad+"&tipoComprobante=INGRESO",
                     success: function(data){
                         alert(data);
                         $("#cant_campos").val("0");
@@ -173,11 +174,11 @@
                 </select>
             </fieldset>
             <fieldset>  
-                  Tipo de Comprobante: &nbsp; &nbsp;
-                  <select id="tipoComprobante">
-                      <option value="EGRESO">EGRESO</option>
-                      <option value="INGRESO">INGRESO</option>
-                  </select>
+                Tipo de Comprobante: &nbsp; &nbsp;
+                <select id="tipoPago">
+                    <option value="EGRESO">EGRESO</option>
+                    <option value="INGRESO">INGRESO</option>
+                </select>
             </fieldset>
         </form>
     </div>
@@ -306,7 +307,6 @@
                         <div id="tabs-2">
                             <br/>
                             <br/>
-                            <!--<input type="text" id="num_campos" name="num_campos" value="0" /> -->
                             <input type="hidden" id="cant_campos" name="cant_campos" value="0" />
                             <table id="TablaProductosFacturas">
                                 <thead>
@@ -324,7 +324,7 @@
                                 </tbody>
                             </table>
                             <br/><br/>
-                            <div align="right">
+                            <div id="confrimarFecturaXML" style="display:none" align="right">
                                 <input  type="button" onclick="GenerarFactura()" width="50" value="Confirmar Factura" class="ui-button ui-widget ui-state-default ui-corner-all" role="button" aria-disabled="false"/>
                             </div>
                         </div>

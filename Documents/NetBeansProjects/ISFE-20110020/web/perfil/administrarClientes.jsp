@@ -35,6 +35,7 @@
         <script src="../js/jquery.validate.js"></script> <!--Validar Formulario -->
         <script src="../js/jquery.cliente.js"></script> <!--Funciones del  Formulario -->
         <script src="../js/jquery.perfil.js"></script>
+        <script src="../js/jquery.menu.js"></script>
 
         <script type="text/javascript">
             $(document).ready(function(){

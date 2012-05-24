@@ -8,7 +8,7 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@ page language="java" import="dao.*" %>
 <%
-    String nombre = "";
+    String valor = (String) request.getParameter("valor");
 %>
 <!DOCTYPE html>
 <html>
@@ -19,15 +19,20 @@
         <script type="text/javascript" src="js/jquery-ui-1.8.17.custom.min.js"></script>
         <script type="text/javascript" src="js/jquery.MultiFile.js"></script>
         <script type="text/javascript" src="js/jquery.menu.js"></script>
+        <script src="/ISFE-20110020/js/jquery.maskedinput.js"></script>
         <!--Este script es para la validacion de los formularios-->
         <script src="js/jquery.validate.js"></script>
-        <script src="js/jquery.maskedinput.js"></script>
-        <script src="js/ui/jquery.ui.dialog.js"></script>
+         <script src="js/ui/jquery.ui.dialog.js"></script>
         <script src="js/jquery.perfil.js"></script>
 
 
         <script type="text/javascript">
             $(document).ready(function(){
+                
+                if("<%=valor%>" == "Registro"){
+                    $("#mensajeConfirmarRegistro").text("Tu Registro se ha completado!");
+                    $("#ConfirmarRegistro").dialog("open");
+                }
                                        
                 $("#formulario_registro").validate({
                     rules: {
@@ -64,7 +69,15 @@
         </script>
 
     </head>
-    
+    <!--Dialogo de Confirmar Registro-->
+    <div id="ConfirmarRegistro" title="ISFE- Registro de Usuario">
+        <p class="validateTips">
+          <img src="images/confirmar.jpg" />
+          &nbsp;  
+          <label class="texto" id="mensajeConfirmarRegistro"></label>
+        </p>
+    </div>
+    <!--Termina el dialogo de Confirmacion de Registro-->
     <!--Dialogo de Confirmar Datos-->
     <div id="ConfirmarDatos" title="ISFE- Registro de Usuario">
         <p class="validateTips">
@@ -144,7 +157,7 @@
                     <div id="tabs">
                         <ul>
                             <li><a href="#tabs-1">Datos de Usuario</a></li>
-                            <li><a id="FIELCSDUsuario" href="#tabs-2">FIEL y CSD</a></li>
+                            <li><a id="FIELCSDUsuario" href="#tabs-2">Cargar FIEL y CSD</a></li>
                         </ul>
                         <div id="tabs-1">
                             <font color="red">Los campos marcados con (*) son obligatorios</font><br><br>
@@ -259,17 +272,24 @@
                             <label> Selecciona los archivos de FIEL y CSD a subir </label>
                             <br><br>
                             <form method="post" action="SubirArchivo" name="upform" enctype="multipart/form-data">
-                                <input type="text" name="idUsuario" id="idUsuarioArchivos" />
+                                <div style="display: none" ><input type="text" name="idUsuario" id="idUsuarioArchivos" /></div>
                                 <table width="60%" >
-                                    <tr>
-                                        <td width="40%">
+                                    <tr rowspan="2">
+                                        <td  width="40%" >
                                             Archivo .KEY de la FIEL
                                             <input type="file" name="fileupload" id="archivoREQ" onclick="LimpiarError()" />
                                             <input type="hidden" name="mucho" value="upload"/>
                                             <label id="ErrorArchivoREQ"></label>     
-                                            <br/>
-                                            <label>Clave Privada:  <input type="password" id="llavePrivada" name="llavePrivada" /></label>
                                         </td>
+                                        
+                                        <td width="40%">
+                                            Clave Privada de FIEL<input type="password" id="llavePrivada" name="llavePrivada" />
+                                        </td>
+                                    </tr>
+                                </table>
+                                <br/><br/>
+                                <table width="60%">
+                                    <tr>
 
                                         <td width="40%">
                                             Archivo .CER del CSD

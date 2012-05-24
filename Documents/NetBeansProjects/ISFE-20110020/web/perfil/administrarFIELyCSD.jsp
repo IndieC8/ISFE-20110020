@@ -18,6 +18,8 @@
 <%        } else {
     contribuyente = (String) sesionOk.getAttribute("contribuyente");//Recoge la session
     id = (String) sesionOk.getAttribute("identificador");//Recoge la session
+
+    String valor = (String) request.getParameter("valor");
 %>
 
 <!DOCTYPE html>
@@ -28,18 +30,27 @@
         <script type="text/javascript" src="../js/jquery-1.7.1.min.js"></script>
         <script type="text/javascript" src="../js/jquery-ui-1.8.17.custom.min.js"></script>
         <script type="text/javascript" src="../js/jquery.MultiFile.js"></script> <!-- Validar los archivos a subir -->
-        <script type="text/javascript" src="../js/jquery.menu.js"></script>
-        <script type="text/javascript">
-                
-                
-            $(function(){
-                // Tabs
-                $('#tabs').tabs();
+        <script type="text/javascript" src="../js/ui/jquery.ui.dialog.js"></script>
+        <script src="../js/jquery.perfil.js"></script>
+        <script src="../js/jquery.menu.js"></script>
 
-							
+        <script type="text/javascript">
+            $(document).ready(function(){
+                $("#idUsuario").val("<%=id%>");
+                $("#idUsuarioCER").val("<%=id%>");
+                
+                if("<%=valor%>" == "cer"){
+                    $("#ErrorClavePrivada").text("Tu CSD se ha actualizado!");
+                }
+                
+                if("<%=valor%>" == "fiel"){
+                    $("#ErrorClavePrivada").text("Tu FIEL se ha actualizado!");
+                    
+                }
+                
             });
-                                
-                                                                           
+            
+                                                                          
             $(function(){
                 $("#archivoREQAdministrar").MultiFile({
                     accept:'key', max:1, STRING: {
@@ -61,6 +72,16 @@
                     }
                 });
             });
+            
+            function ValidarPrivadaFIEL(){
+                $("#ErrorClavePrivada").text("");
+                if( $("#llavePrivada").val() != ""){
+                    document.upformFIEL.submit();
+                }else{
+                    $("#ErrorClavePrivada").text("Ingresa tu clave Privada");
+                    return false;
+                }
+            }
               
         </script>
     </head>
@@ -108,43 +129,55 @@
                             <br/>
                             <label class="Instrucciones"> Selecciona el archivo FIEL</label>
                             <br/>
-                            <form method="post" action="../SubirArchivo" name="upform" id="subirFIELAdministrar" enctype="multipart/form-data">
+
+                            <form method="post" action="../SubirArchivo" name="upformFIEL" id="subirFIELAdministrar" enctype="multipart/form-data">
                                 <table width="60%">
                                     <tr>
                                         <td width="30%">
+                                            Archivo .KEY de la FIEL
                                             <input type="file" name="fileupload" id="archivoREQAdministrar" onclick="LimpiarError()" />
                                             <input type="hidden" name="mucho" value="upload"/>
                                             <label id="ErrorArchivoREQ"></label>
                                         </td>
 
                                         <td>
+                                            Clave Privada:  <input type="password" id="llavePrivada" name="llavePrivada" />
+                                        </td>
+
+                                        <td>
+                                            <input type="hidden" name="idUsuario" id="idUsuario"/>
+                                            <input type="hidden" name="accion" value="modificar"/>
                                             <input type="hidden" name="registro" value="fiel"/>
-                                            <input type="submit" value="&nbsp; &nbsp; Subir FIEL &nbsp; &nbsp;" name="subirFIEL" class="ui-button ui-widget ui-state-default ui-corner-all" role="button" aria-disabled="false"/>
+                                            <input type="button" onclick="ValidarPrivadaFIEL()" value="&nbsp; &nbsp; Subir FIEL &nbsp; &nbsp;" name="subirFIEL" class="ui-button ui-widget ui-state-default ui-corner-all" role="button" aria-disabled="false"/>
                                         </td>
                                     </tr>
                                 </table>
                             </form>
+                            <label id="ErrorClavePrivada"></label>
                         </div>
                         <div id="tabs-2">
                             <br/>
                             <label class="Instrucciones"> Selecciona el archivo CER</label>
                             <br/>
                             <form method="post" action="../SubirArchivo" name="upform" id="subirCSDAdministrar" enctype="multipart/form-data">
-                            <table width="60%">
-                                   <tr>
+                                <table width="60%">
+                                    <tr>
                                         <td width="30%">
+                                            Archivo .CER de la Certificado CSD
                                             <input type="file" name="uploadfile" id="archivoCERAdministrar" onclick="LimpiarError()"/>
                                             <input type="hidden" name="todo" value="upload"/>
                                             <label id="ErrorArchivoCER"></label>
                                         </td>
 
                                         <td>
+                                            <input type="hidden" name="idUsuario" id="idUsuarioCER"/>
+                                            <input type="hidden" name="accion" value="modificar"/>
                                             <input type="hidden" name="registro" value="certificado"/>
                                             <input type="submit" value="&nbsp; &nbsp; Subir CSD &nbsp; &nbsp;" name="subirCSD" class="ui-button ui-widget ui-state-default ui-corner-all" role="button" aria-disabled="false"/>
                                         </td>
                                     </tr>
-                            </table>
-                                </form>
+                                </table>
+                            </form>
                         </div>
                     </div>
                     <br><br>

@@ -9,41 +9,24 @@ var contribuyente;
 var rfc, tel, calle, exterior, interior, col , mail , referencia, pwd, nombre, paterno, materno , curp,razon;
 var Archivo = "NO";
 
-/*Funciones Generales del Menu del Usuario y Registro*/
-$(function(){
-
-    // Tabs
-    $('#tabs').tabs();
-	
-
-    // Dialog			
-    $('#dialog').dialog({
-        autoOpen: false,
-        width: 600,
-        buttons: {
-            "Ok": function() { 
-                $(this).dialog("close"); 
-            }, 
-            "Cancel": function() { 
-                $(this).dialog("close"); 
-            } 
-        }
-    });
-				
-    // Dialog Link
-    $('#dialog_link').click(function(){
-        $('#dialog').dialog('open');
-        return false;
-    });
-
-				
-});
-            
-                        
-
 $(function() {
     // a workaround for a flaw in the demo system (http://dev.jqueryui.com/ticket/4375), ignore!
     $( "#dialog:ui-dialog" ).dialog( "destroy" );
+    
+    $("#ConfirmarRegistro").dialog({
+        autoOpen: false,
+        height: 200,
+        width: 350,
+        modal: true,
+        buttons: {
+            "Aceptar": function() {
+                $( this ).dialog("close");                        
+            }
+        },
+        close: function() {
+            allFields.val( "" ).removeClass( "ui-state-error" );
+        }
+    });
 		
                 
     $("#dialogDireccionPerfil").dialog({
@@ -134,8 +117,9 @@ $(function() {
                     url: "Registrar",
                     data: "usuario=Guardar&Tipo="+contribuyente+"&nombre="+nombre+"&paterno="+paterno+"&materno="+materno+"&razon="+razon+"&rfcUsuario="+rfc+"&curp="+curp+"&telefono="+tel+"&calle="+calle+"&interior="+interior+"&exterior="+exterior+"&localidad="+col+"&mail="+mail+"&referencia="+referencia+"&password="+pwd,
                     success: function(data){
-                        alert(data);
-                        //$("#idUsuarioArchivos").val(data);
+                        $("#mensajeConfirmarRegistro").text("Para completar tu registro carga tu FIEL y CSD!");
+                        $("#ConfirmarRegistro").dialog("open");
+                        $("#idUsuarioArchivos").val(data);
                         LimpiarRegistro();
                                 
                     }
@@ -294,9 +278,14 @@ function validarRFC(){
         }
     });
 }
+
+function LimpiarError(){
+    $("#ErrorArchivoCER").text("");
+    $("#ErrorArchivoREQ").text("");
+}
     
 jQuery(function(){
-    $("#UsuarioRFC").mask("aaaa-999999-aaa");
+    $("#UsuarioRFC").mask("aaaa-999999-***");
     $("#CURPUsuario").mask("aaaa999999aaaaaa99");
 });
 

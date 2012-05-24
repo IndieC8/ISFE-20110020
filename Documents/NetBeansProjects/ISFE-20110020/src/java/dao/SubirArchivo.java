@@ -4,10 +4,15 @@
  */
 package dao;
 
+import Negocios.Cifrado.Cifrado;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.PrintWriter;
+import java.security.NoSuchProviderException;
+import java.security.PrivateKey;
 import java.sql.SQLException;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -50,6 +55,7 @@ public class SubirArchivo extends HttpServlet {
             contextPage = pageContext;
             upBean = (javazoom.upload.UploadBean) contextPage.getAttribute("upBean", javax.servlet.jsp.PageContext.PAGE_SCOPE);
             String page = null;
+            String pageError = null;
             String idUsuario = null;
             String nombreArchivo = null;
             Sql sql = new Sql();
@@ -69,20 +75,25 @@ public class SubirArchivo extends HttpServlet {
                 MultipartFormDataRequest mrequest = new MultipartFormDataRequest(request);
                 String todo = null;
                 String mucho = null;
+                String accion = null;
 
                 if (mrequest != null) {
                     todo = mrequest.getParameter("todo");
                     mucho = mrequest.getParameter("mucho");
                     idUsuario = mrequest.getParameter("idUsuario");
                     privada = mrequest.getParameter("llavePrivada");
+                    accion = mrequest.getParameter("accion");
                 }
-                
+
                 if ("registro".equals(mrequest.getParameter("registro"))) {
-                    page = "registro.jsp?valor=archivos";
+                    page = "registro.jsp?valor=Registro";
+                    pageError = "registro.jsp?valor=Error";
                 } else if ("certificado".equals(mrequest.getParameter("registro"))) {
                     page = "perfil/administrarFIELyCSD.jsp?valor=cer";
+                    pageError = "perfil/administrarFIELyCSD.jsp?valor=cerError";
                 } else {
                     page = "perfil/administrarFIELyCSD.jsp?valor=fiel";
+                    pageError = "perfil/administrarFIELyCSD.jsp?valor=fielError";
                 }
 
 
@@ -105,16 +116,40 @@ public class SubirArchivo extends HttpServlet {
                     } else {
                         out.println("Archivos CER no subidos");
                     }
+
                     /*
                      * Guardar Archivo
                      */
-                    
-                    String sentencia = "INSERT INTO fiel VALUES(?,?,?,?)";
-                    File archivoCSD = new File(direccion+"/"+ nombreArchivo);
-                    sql.insertarFiel(sentencia, archivoCSD,Integer.parseInt(idUsuario));
-                    out.println("<br/>Archivo CSD en base");
+                    String sentencia = "INSERT INTO csd VALUES(?,?,?,?)";
+                    File archivoCSD = new File(direccion + "/" + nombreArchivo);
+                    InputStream ISCSD = new FileInputStream(archivoCSD);
+                    byte[] bufferCSD = new byte[(int) archivoCSD.length()];
+                    int offset = 0;
+                    int numRead = 0;
+                    while (offset < bufferCSD.length && (numRead = ISCSD.read(bufferCSD, offset, bufferCSD.length - offset)) >= 0) {
+                        offset += numRead;
+                    }
+                    ISCSD.close();
+                    String noCertificado = null;
+                    noCertificado = Cifrado.obtenerNumeroCertificado(bufferCSD);
+                    if (noCertificado != null) {
+                        if ("modificar".equals(accion)) {
+                            sql.actualizarCSD(archivoCSD, Cifrado.decodificarBase64(idUsuario),noCertificado);
+                        } else {
+                            sql.insertarCsd(sentencia, noCertificado, archivoCSD, Integer.parseInt(idUsuario));
+                            out.println(".Archivo CSD en base");
+                        }
+                    } else {
+                        out.println(".No se puede obtener noCetificado");
+                    }
+
+
+
                 }
 
+                /*
+                 * ARCHIVO FIEL
+                 */
                 if ((mucho != null) && (mucho.equalsIgnoreCase("upload"))) {
                     Hashtable archivos = mrequest.getFiles();
                     if ((archivos != null) && (!archivos.isEmpty())) {
@@ -138,16 +173,39 @@ public class SubirArchivo extends HttpServlet {
                     /*
                      * Guardar Archivo
                      */
+
+                    File archivoFiel = new File(direccion + "/" + nombreArchivo);
+                    InputStream ISFiel = new FileInputStream(archivoFiel);
+                    byte[] bufferFiel = new byte[(int) archivoFiel.length()];
+                    int offset = 0;
+                    int numRead = 0;
                     
-                    String sentencia = "INSERT INTO fiel VALUES(?,?,?)";
-                    File archivoFiel = new File(direccion+"/"+ nombreArchivo);
-                    sql.insertarFiel(sentencia, archivoFiel,Integer.parseInt(idUsuario));
-                    out.println("<br/>Archivo fiel en base");
+                    while (offset < bufferFiel.length && (numRead = ISFiel.read(bufferFiel, offset, bufferFiel.length - offset)) >= 0) {
+                        offset += numRead;
+                    }
+                    ISFiel.close();
+                    PrivateKey keyFiel = null;
+                    keyFiel = Cifrado.getLlavePrivada(bufferFiel, privada);
                     
+
+                    if (keyFiel != null) {
+                        if ("modificar".equals(accion)) {
+                            sql.actualizarFiel(archivoFiel, Cifrado.decodificarBase64(idUsuario));
+                            archivoFiel.delete();
+                            out.println("<br/> Actualizardo Fiel " + Cifrado.decodificarBase64(idUsuario));
+                        } else {
+                            String sentencia = "INSERT INTO fiel VALUES(?,?,?)";
+                            sql.insertarFiel(sentencia, archivoFiel, Integer.parseInt(idUsuario));
+                            out.println("<br/>Archivo fiel en base");
+                        }
+                    } else {
+                        out.println("Error");
+                        response.sendRedirect(pageError);
+                    }
                 }
             }
 
-            //response.sendRedirect(page);
+            response.sendRedirect(page);
 
 
         } catch (InstantiationException ex) {
@@ -157,6 +215,12 @@ public class SubirArchivo extends HttpServlet {
         } catch (SQLException ex) {
             Logger.getLogger(SubirArchivo.class.getName()).log(Level.SEVERE, null, ex);
         } catch (FileNotFoundException ex) {
+            Logger.getLogger(SubirArchivo.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SecurityException ex) {
+            Logger.getLogger(SubirArchivo.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (NoSuchProviderException ex) {
+            Logger.getLogger(SubirArchivo.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (Exception ex) {
             Logger.getLogger(SubirArchivo.class.getName()).log(Level.SEVERE, null, ex);
         } finally {
             out.close();

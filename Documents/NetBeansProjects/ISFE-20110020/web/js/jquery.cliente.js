@@ -126,40 +126,12 @@ function regresarModificacion(){
 
 /*Mascara de validacion de RFC del cliente*/
 jQuery(function(){
-    $("#RFCCliente").mask("aaa*-999999-aa*");
-    $("#rfcClienteModificar").mask("aaa*-999999-aa*");
-    $("#rfcClienteEliminar").mask("aaa*-999999-aa*");
+    $("#RFCCliente").mask("aaaa-999999-***");
+    $("#rfcClienteModificar").mask("aaaa-999999-***");
+    $("#rfcClienteEliminar").mask("aaaa-999999-***");
 });
                 
-                
-$(function(){
-    // Tabs
-    $('#tabs').tabs();
-
-    // Dialog			
-    $('#dialog').dialog({
-        autoOpen: false,
-        width: 600,
-        buttons: {
-            "Ok": function() { 
-                $(this).dialog("close"); 
-            }, 
-            "Cancel": function() { 
-                $(this).dialog("close"); 
-            } 
-        }
-    });
-				
-    // Dialog Link
-    $('#dialog_link').click(function(){
-        $('#dialog').dialog('open');
-        return false;
-    });
-
-				
-});
-
-               
+                             
 /*Evalua la opción si es Persona Fisica o moral*/
 var Tipo="";
 function ContribuyenteCliente(value){
